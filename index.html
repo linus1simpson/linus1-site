@@ -654,6 +654,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
     style="font-family:'Cormorant Garamond',serif;font-size:.75rem;font-style:italic;color:#1a1612;background:transparent;border:none;border-bottom:1px solid rgba(26,22,18,.2);outline:none;width:80px;padding:.1rem .15rem;"
     onblur="if(this.value.trim())saveVisitorName(this.value.trim());"
     onkeydown="if(event.key==='Enter')this.blur();">
+  <span id="name-welcome" onclick="editName()" title="Click to change your name" style="font-family:'Cormorant Garamond',serif;font-size:.75rem;font-style:italic;color:var(--forest);margin-left:.4rem;opacity:0;transition:opacity .5s;cursor:pointer;"></span>
 </div>
 
 <!-- NAV -->
@@ -1916,13 +1917,39 @@ function filterGallery(tag, btn){
 
 /* ── Returning visitor name — saves to Supabase ── */
 const _n=localStorage.getItem('ln');
-if(_n){const _i=document.getElementById('visitor-name');if(_i){_i.value=_n;_i.style.width='auto';}}
+if(_n){
+  const _i=document.getElementById('visitor-name');
+  const _w=document.getElementById('name-welcome');
+  if(_i) _i.style.display='none';
+  if(_w){ _w.style.display=''; _w.textContent='welcome back, '+_n+' ◈'; setTimeout(()=>_w.style.opacity='1',200); }
+  document.querySelectorAll('.visitor-name-display').forEach(el=>el.textContent=_n);
+}
+
+function editName(){
+  const inp=document.getElementById('visitor-name');
+  const wel=document.getElementById('name-welcome');
+  if(inp&&wel){
+    wel.style.opacity='0';
+    setTimeout(()=>{wel.style.display='none';inp.style.display='';inp.value=localStorage.getItem('ln')||'';inp.focus();inp.select();},300);
+  }
+}
 
 async function saveVisitorName(name){
   if(!name.trim()) return;
-  localStorage.setItem('ln', name.trim());
+  const clean = name.trim();
+  localStorage.setItem('ln', clean);
+  const inp = document.getElementById('visitor-name');
+  const wel = document.getElementById('name-welcome');
+  if(inp) inp.style.display='none';
+  if(wel){
+    wel.style.display='';
+    wel.textContent='welcome, '+clean+' ◈';
+    setTimeout(()=>wel.style.opacity='1',50);
+  }
+  // Update anywhere else the name appears on the page
+  document.querySelectorAll('.visitor-name-display').forEach(el=>el.textContent=clean);
   try{
-    await _sb.from('visitors').insert([{ visitor_name: name.trim() }]);
+    await _sb.from('visitors').insert([{ visitor_name: clean }]);
   }catch(e){ console.log('Supabase:', e); }
 }
 
