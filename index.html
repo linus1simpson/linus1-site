@@ -11,6 +11,14 @@
   gtag('js', new Date());
   gtag('config', 'G-XT0THRSTMS');
 </script>
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const _sb = supabase.createClient(
+    'https://oekmxznmtxzaxdglvigi.supabase.co',
+    'sb_publishable_MSFymwjA5to20Q2jBX05QQ_2On2Vrh7'
+  );
+</script>
 <title>L1 — The Lounge · Linus Simpson</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,600&display=swap" rel="stylesheet"/>
 <style>
@@ -644,7 +652,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
   <input id="visitor-name" type="text" maxlength="20" placeholder="your name"
     autocomplete="off"
     style="font-family:'Cormorant Garamond',serif;font-size:.75rem;font-style:italic;color:#1a1612;background:transparent;border:none;border-bottom:1px solid rgba(26,22,18,.2);outline:none;width:80px;padding:.1rem .15rem;"
-    onblur="if(this.value.trim())localStorage.setItem('ln',this.value.trim());"
+    onblur="if(this.value.trim())saveVisitorName(this.value.trim());"
     onkeydown="if(event.key==='Enter')this.blur();">
 </div>
 
@@ -1906,9 +1914,17 @@ function filterGallery(tag, btn){
 }
 
 
-/* ── Returning visitor name ── */
+/* ── Returning visitor name — saves to Supabase ── */
 const _n=localStorage.getItem('ln');
 if(_n){const _i=document.getElementById('visitor-name');if(_i){_i.value=_n;_i.style.width='auto';}}
+
+async function saveVisitorName(name){
+  if(!name.trim()) return;
+  localStorage.setItem('ln', name.trim());
+  try{
+    await _sb.from('visitors').insert([{ visitor_name: name.trim() }]);
+  }catch(e){ console.log('Supabase:', e); }
+}
 
 /* ══ SCROLL REVEAL ══ */
 const allR=document.querySelectorAll('.reveal');
@@ -2127,51 +2143,70 @@ if(vaultFrame){
    Randomizes 5 questions every page load.
    History · Current Events · Culture · Music · General Knowledge */
 const questionBank=[
-  /* History */
-  {q:"Who was the first President of the United States?",opts:["A. Thomas Jefferson","B. Abraham Lincoln","C. George Washington","D. Benjamin Franklin"],ans:"C"},
-  {q:"In what year did World War II end?",opts:["A. 1942","B. 1945","C. 1948","D. 1950"],ans:"B"},
-  {q:"What country launched the first satellite into space?",opts:["A. United States","B. Germany","C. China","D. Soviet Union"],ans:"D"},
-  {q:"Martin Luther King Jr. gave his 'I Have a Dream' speech in which city?",opts:["A. Atlanta","B. Chicago","C. Washington D.C.","D. Birmingham"],ans:"C"},
-  {q:"The Berlin Wall fell in which year?",opts:["A. 1979","B. 1985","C. 1989","D. 1991"],ans:"C"},
-  {q:"What ancient wonder was located in Alexandria, Egypt?",opts:["A. The Colosseum","B. The Great Lighthouse","C. The Hanging Gardens","D. The Sphinx"],ans:"B"},
-  {q:"Who invented the telephone?",opts:["A. Nikola Tesla","B. Thomas Edison","C. Alexander Graham Bell","D. Guglielmo Marconi"],ans:"C"},
-  {q:"The Civil Rights Act in the US was signed in which decade?",opts:["A. 1950s","B. 1960s","C. 1970s","D. 1940s"],ans:"B"},
-  /* Current Events / Culture */
-  {q:"What app became the most downloaded app in the world around 2020-2022?",opts:["A. Instagram","B. Snapchat","C. TikTok","D. Twitter"],ans:"C"},
-  {q:"Which streaming platform created the show 'Stranger Things'?",opts:["A. Hulu","B. HBO Max","C. Disney+","D. Netflix"],ans:"D"},
-  {q:"What does AI stand for?",opts:["A. Automated Interface","B. Artificial Intelligence","C. Advanced Internet","D. Applied Innovation"],ans:"B"},
-  {q:"What city hosted the 2024 Summer Olympics?",opts:["A. Tokyo","B. Los Angeles","C. Paris","D. London"],ans:"C"},
-  {q:"Which social media platform is known for disappearing photo messages?",opts:["A. Twitter","B. Snapchat","C. LinkedIn","D. Pinterest"],ans:"B"},
-  {q:"What does 'streaming' mean in the music industry?",opts:["A. Playing music live on stage","B. Listening to music online without downloading it","C. Selling physical CDs","D. Licensing music to films"],ans:"B"},
-  {q:"What is the most followed account on Instagram as of recent years?",opts:["A. Beyoncé","B. Cristiano Ronaldo","C. Kim Kardashian","D. LeBron James"],ans:"B"},
-  {q:"What does 'going viral' mean online?",opts:["A. Getting a computer virus","B. A post spreading rapidly to millions of people","C. Live streaming an event","D. Posting every day"],ans:"B"},
-  /* Music & Sound */
-  {q:"What does a vinyl record need to play music?",opts:["A. Bluetooth","B. A needle and a turntable","C. WiFi","D. A USB drive"],ans:"B"},
-  {q:"Which of these is a music streaming platform?",opts:["A. Dropbox","B. Spotify","C. Google Docs","D. Zoom"],ans:"B"},
-  {q:"What does 'BPM' stand for in music?",opts:["A. Bass Per Minute","B. Beats Per Measure","C. Beats Per Minute","D. Base Production Mode"],ans:"C"},
+  /* Music & Artists */
+  {q:"What does BPM stand for in music?",opts:["A. Bass Per Minute","B. Beats Per Measure","C. Beats Per Minute","D. Base Production Mode"],ans:"C"},
   {q:"What California city is known as the birthplace of West Coast hip-hop?",opts:["A. San Francisco","B. Oakland","C. Compton","D. San Diego"],ans:"C"},
-  {q:"What is a 'music producer' responsible for?",opts:["A. Selling concert tickets","B. Shaping the sound and arrangement of a recording","C. Managing the artist's schedule","D. Designing album artwork"],ans:"B"},
-  {q:"What does SoundCloud allow artists to do?",opts:["A. Only listen to major label music","B. Upload and share their own music directly","C. Book live shows","D. Print vinyl records"],ans:"B"},
-  {q:"Which genre blends R&B, soul, and urban influences into modern pop?",opts:["A. Heavy metal","B. Country","C. Neo-soul / Alternative R&B","D. Classic rock"],ans:"C"},
   {q:"What is a 'sample' in hip-hop production?",opts:["A. A free trial of an album","B. A snippet of one song used in a new song","C. A live guitar solo","D. A music video clip"],ans:"B"},
-  /* General Knowledge & SoCal */
-  {q:"What ocean borders California on the west?",opts:["A. Atlantic","B. Arctic","C. Indian","D. Pacific"],ans:"D"},
-  {q:"What is the capital of California?",opts:["A. Los Angeles","B. San Francisco","C. Sacramento","D. San Diego"],ans:"C"},
-  {q:"The city of San Juan Capistrano is located in which county?",opts:["A. Los Angeles County","B. San Diego County","C. Orange County","D. Riverside County"],ans:"C"},
-  {q:"What does 'bilingual' mean?",opts:["A. Having two jobs","B. Speaking two languages","C. Playing two instruments","D. Living in two cities"],ans:"B"},
-  {q:"Which of these is a Spanish word for 'friend'?",opts:["A. Hermano","B. Primo","C. Amigo","D. Abuela"],ans:"C"},
-  {q:"What is the name of the famous music festival held annually in Indio, California?",opts:["A. Lollapalooza","B. Coachella","C. Bonnaroo","D. SXSW"],ans:"B"},
-  {q:"What does RSVP stand for?",opts:["A. Reserve Seats Via Phone","B. Répondez s'il vous plaît (please reply)","C. Request Special Venue Pass","D. Really Simple Verified Plan"],ans:"B"},
-  {q:"Which of these cities is in Southern California?",opts:["A. San Jose","B. Sacramento","C. Fresno","D. San Juan Capistrano"],ans:"D"},
-  /* Pop Culture & Tech */
+  {q:"What does a vinyl record need to play music?",opts:["A. Bluetooth","B. A needle and a turntable","C. WiFi","D. A USB drive"],ans:"B"},
+  {q:"What does SoundCloud allow artists to do?",opts:["A. Only listen to major label music","B. Upload and share their own music directly","C. Book live shows","D. Print vinyl records"],ans:"B"},
+  {q:"What is a 'music producer' responsible for?",opts:["A. Selling concert tickets","B. Shaping the sound and arrangement of a recording","C. Managing the artist's schedule","D. Designing album artwork"],ans:"B"},
+  {q:"Which genre blends R&B, soul, and urban influences into modern pop?",opts:["A. Heavy metal","B. Country","C. Neo-soul / Alternative R&B","D. Classic rock"],ans:"C"},
   {q:"What does 'dropping an album' mean?",opts:["A. Accidentally breaking a record","B. Releasing new music to the public","C. Canceling a tour","D. Signing with a label"],ans:"B"},
-  {q:"What is a 'collab' in music?",opts:["A. A collaboration between two or more artists","B. A type of music contract","C. A remix album","D. A solo acoustic set"],ans:"A"},
+  {q:"What is 'merch' short for?",opts:["A. Mercury","B. Merchant","C. Merchandise","D. Marketing"],ans:"C"},
   {q:"What does 'independent artist' mean?",opts:["A. An artist who doesn't perform live","B. An artist who releases music without a major label","C. An artist who only makes instrumental music","D. An artist from another country"],ans:"B"},
+  {q:"What does 'dropping a single' mean?",opts:["A. Losing a music award","B. Releasing one song to the public","C. Breaking a vinyl record","D. Leaving a music group"],ans:"B"},
+  {q:"What is a 'collab' in music?",opts:["A. A collaboration between two or more artists","B. A type of music contract","C. A remix album","D. A solo acoustic set"],ans:"A"},
+  {q:"What does 'streaming' mean in the music industry?",opts:["A. Playing music live on stage","B. Listening to music online without downloading it","C. Selling physical CDs","D. Licensing music to films"],ans:"B"},
+  {q:"Which of these is a music streaming platform?",opts:["A. Dropbox","B. Spotify","C. Google Docs","D. Zoom"],ans:"B"},
+  {q:"What instrument does a DJ primarily use to mix music?",opts:["A. Guitar","B. Piano","C. Turntables","D. Saxophone"],ans:"C"},
+  {q:"What does 'A&R' stand for in the music industry?",opts:["A. Artists and Revenue","B. Audio and Recording","C. Artists and Repertoire","D. Album and Release"],ans:"C"},
+  {q:"What is a music 'feature'?",opts:["A. The main hook of a song","B. A guest artist appearing on someone else's track","C. The album artwork","D. A bonus track at the end"],ans:"B"},
+  {q:"What does 'going platinum' mean for a song or album?",opts:["A. Winning a Grammy","B. Selling or streaming over 1 million copies","C. Signing to a major label","D. Performing at a sold out show"],ans:"B"},
+  /* SoCal & Culture */
+  {q:"What ocean borders California on the west?",opts:["A. Atlantic","B. Arctic","C. Indian","D. Pacific"],ans:"D"},
+  {q:"The city of San Juan Capistrano is located in which county?",opts:["A. Los Angeles County","B. San Diego County","C. Orange County","D. Riverside County"],ans:"C"},
+  {q:"What is the name of the famous music festival held annually in Indio, California?",opts:["A. Lollapalooza","B. Coachella","C. Bonnaroo","D. SXSW"],ans:"B"},
+  {q:"Which of these cities is in Southern California?",opts:["A. San Jose","B. Sacramento","C. Fresno","D. Dana Point"],ans:"D"},
+  {q:"What is the capital of California?",opts:["A. Los Angeles","B. San Francisco","C. Sacramento","D. San Diego"],ans:"C"},
+  {q:"What Spanish mission is located in San Juan Capistrano?",opts:["A. Mission San Diego","B. Mission Santa Barbara","C. Mission San Juan Capistrano","D. Mission San Luis Obispo"],ans:"C"},
+  {q:"Which of these is a Spanish word for friend?",opts:["A. Hermano","B. Primo","C. Amigo","D. Abuela"],ans:"C"},
+  {q:"What does bilingual mean?",opts:["A. Having two jobs","B. Speaking two languages","C. Playing two instruments","D. Living in two cities"],ans:"B"},
+  {q:"What city in California is known for its surf culture and beaches?",opts:["A. Bakersfield","B. Fresno","C. Huntington Beach","D. Modesto"],ans:"C"},
+  {q:"What freeway connects Los Angeles to San Diego?",opts:["A. I-80","B. I-5","C. I-10","D. I-405"],ans:"B"},
+  /* Art & Creativity */
+  {q:"What does 'abstract art' mean?",opts:["A. Art that looks exactly like real life","B. Art that uses shapes and colors rather than realistic images","C. Art made only with watercolors","D. Art from ancient civilizations"],ans:"B"},
+  {q:"Which of these is a drawing tool?",opts:["A. A lathe","B. A Sharpie marker","C. A socket wrench","D. A soldering iron"],ans:"B"},
+  {q:"What is a 'zine'?",opts:["A. A type of electric guitar","B. A self-published small magazine or booklet","C. A music genre","D. A video editing app"],ans:"B"},
+  {q:"What does 'mixed media' mean in art?",opts:["A. Art made only with paint","B. Art that combines different materials and techniques","C. Art made for TV commercials","D. Digital art only"],ans:"B"},
+  {q:"What artist is known for drip painting on large canvases on the floor?",opts:["A. Pablo Picasso","B. Andy Warhol","C. Jackson Pollock","D. Salvador Dali"],ans:"C"},
+  {q:"What is a 'commission' in the art world?",opts:["A. A percentage taken by a streaming platform","B. When someone pays an artist to create a specific piece","C. A fine for using copyrighted images","D. An art school degree"],ans:"B"},
+  {q:"What does Jean-Michel Basquiat's work primarily reflect?",opts:["A. Abstract geometry","B. Street culture, race, and urban experience","C. Landscape painting","D. Classical mythology"],ans:"B"},
+  /* Tech & Social Media */
+  {q:"What does AI stand for?",opts:["A. Automated Interface","B. Artificial Intelligence","C. Advanced Internet","D. Applied Innovation"],ans:"B"},
+  {q:"What does 'going viral' mean online?",opts:["A. Getting a computer virus","B. A post spreading rapidly to millions of people","C. Live streaming an event","D. Posting every day"],ans:"B"},
+  {q:"What app became the most downloaded app in the world around 2020-2022?",opts:["A. Instagram","B. Snapchat","C. TikTok","D. Twitter"],ans:"C"},
   {q:"What year was Instagram launched?",opts:["A. 2008","B. 2010","C. 2012","D. 2006"],ans:"B"},
   {q:"What does 'content creator' mean in today's world?",opts:["A. A journalist at a newspaper","B. Someone who makes original videos, music, or posts online","C. A movie director","D. A video game designer"],ans:"B"},
   {q:"Which platform is primarily used for short-form video content?",opts:["A. LinkedIn","B. Pinterest","C. TikTok","D. Reddit"],ans:"C"},
-  {q:"What is 'merch' short for?",opts:["A. Mercury","B. Merchant","C. Merchandise","D. Marketing"],ans:"C"},
-  {q:"What does 'dropping a single' mean?",opts:["A. Losing a music award","B. Releasing one song to the public","C. Breaking a vinyl record","D. Leaving a music group"],ans:"B"}
+  {q:"What does 'algorithm' mean in the context of social media?",opts:["A. A type of computer virus","B. The system that decides what content you see","C. A new programming language","D. A digital art filter"],ans:"B"},
+  {q:"What does NFT stand for?",opts:["A. New Financial Technology","B. Non-Fungible Token","C. Network File Transfer","D. Next Future Trend"],ans:"B"},
+  {q:"What is a 'podcast'?",opts:["A. A live radio show","B. An on-demand audio show you can listen to anytime","C. A music video series","D. A type of social media post"],ans:"B"},
+  {q:"What does 'bandwidth' refer to in internet terms?",opts:["A. The size of your screen","B. How much data can be transferred at one time","C. The number of websites you visit","D. Your wifi password strength"],ans:"B"},
+  /* Pop Culture & History */
+  {q:"Who was the first President of the United States?",opts:["A. Thomas Jefferson","B. Abraham Lincoln","C. George Washington","D. Benjamin Franklin"],ans:"C"},
+  {q:"In what year did World War II end?",opts:["A. 1942","B. 1945","C. 1948","D. 1950"],ans:"B"},
+  {q:"Martin Luther King Jr. gave his I Have a Dream speech in which city?",opts:["A. Atlanta","B. Chicago","C. Washington D.C.","D. Birmingham"],ans:"C"},
+  {q:"The Berlin Wall fell in which year?",opts:["A. 1979","B. 1985","C. 1989","D. 1991"],ans:"C"},
+  {q:"Which streaming platform created the show Stranger Things?",opts:["A. Hulu","B. HBO Max","C. Disney+","D. Netflix"],ans:"D"},
+  {q:"What city hosted the 2024 Summer Olympics?",opts:["A. Tokyo","B. Los Angeles","C. Paris","D. London"],ans:"C"},
+  {q:"What does RSVP stand for?",opts:["A. Reserve Seats Via Phone","B. Répondez s'il vous plaît — please reply","C. Request Special Venue Pass","D. Really Simple Verified Plan"],ans:"B"},
+  {q:"Which decade did hip-hop originate in?",opts:["A. 1960s","B. 1970s","C. 1980s","D. 1990s"],ans:"B"},
+  {q:"What sport is LeBron James famous for?",opts:["A. Football","B. Baseball","C. Soccer","D. Basketball"],ans:"D"},
+  {q:"What does the word 'renaissance' mean?",opts:["A. Revolution","B. Rebirth","C. Resistance","D. Reflection"],ans:"B"},
+  {q:"What is the Grammy Award given for?",opts:["A. Best film of the year","B. Outstanding achievements in the music industry","C. Best TV performance","D. Most social media followers"],ans:"B"},
+  {q:"Who is known as the Queen of Pop?",opts:["A. Rihanna","B. Beyoncé","C. Madonna","D. Mariah Carey"],ans:"C"},
+  {q:"What does it mean to be an entrepreneur?",opts:["A. Someone who works at a large corporation","B. Someone who starts and runs their own business or venture","C. Someone who invests in the stock market only","D. Someone who works in government"],ans:"B"},
+  {q:"What is a 'brand' in the context of business?",opts:["A. A logo only","B. The overall identity, values, and image of a person or company","C. A type of trademark registration","D. A social media handle"],ans:"B"}
 ];
 
 // Pick 5 random questions from the bank — new set every load
