@@ -16,7 +16,7 @@
 <script>
   const _sb = supabase.createClient(
     'https://oekmxznmtxzaxdglvigi.supabase.co',
-    'sb_publishable_MSFymwjA5to20Q2jBX05QQ_2On2Vrh7'
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9la214em5tdHh6YXhkZ2x2aWdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3Nzc3MTQsImV4cCI6MjA5NDM1MzcxNH0.cs3fjloDk2j6znoXYS0W_ewmZZlYKvq7J2UyRHCKOuo'
   );
 </script>
 <title>L1 — The Lounge · Linus Simpson</title>
@@ -641,38 +641,32 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
   </div>
   <p style="font-family:'IBM Plex Mono',monospace;font-size:.46rem;letter-spacing:.25em;color:rgba(250,248,244,.2);position:relative;">Sound · Art · Community</p>
   <button
-    onclick="document.getElementById('entrance').style.display='none';spawnAmbients();"
+    onclick="document.getElementById('entrance').style.display='none';const _nt=document.getElementById('name-tag');if(_nt)setTimeout(()=>{_nt.style.display='flex';},600);spawnAmbients();"
     style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;background:linear-gradient(180deg,#d96515 0%,#c4580a 50%,#8a3a06 100%);color:#faf8f4;padding:1.1rem 2.8rem;border:none;cursor:pointer;border-radius:14px;position:relative;box-shadow:0 4px 0 #6a2a04,0 6px 16px rgba(0,0,0,.4);">
     ◈ &nbsp;Enter the Space
   </button>
 </div>
 
-<!-- VISITOR NAME — fixed, sits right of nav logo -->
-<div id="name-tag" style="position:fixed;top:18px;left:90px;z-index:600;display:flex;align-items:center;">
+<!-- VISITOR NAME — upper left, like signing your name on a piece of paper -->
+<div id="name-tag" style="position:fixed;top:14px;left:115px;z-index:9999;display:none;align-items:center;gap:.3rem;">
   <input id="visitor-name" type="text" maxlength="20" placeholder="your name"
     autocomplete="off"
-    style="font-family:'Cormorant Garamond',serif;font-size:.75rem;font-style:italic;color:#1a1612;background:transparent;border:none;border-bottom:1px solid rgba(26,22,18,.2);outline:none;width:80px;padding:.1rem .15rem;"
-    onblur="if(this.value.trim())saveVisitorName(this.value.trim());"
+    style="font-family:'Cormorant Garamond',serif;font-size:.78rem;font-style:italic;color:var(--ink);background:transparent;border:none;border-bottom:1px solid rgba(26,22,18,.15);outline:none;width:76px;padding:.1rem .1rem;transition:width .25s,border-color .2s;"
+    onfocus="this.style.width='110px';this.style.borderColor='rgba(26,22,18,.4)';"
+    onblur="this.style.width=this.value?'auto':'76px';this.style.borderColor='rgba(26,22,18,.15)';if(this.value.trim())saveVisitorName(this.value.trim());"
     onkeydown="if(event.key==='Enter')this.blur();">
-  <span id="name-welcome" onclick="editName()" title="Click to change your name" style="font-family:'Cormorant Garamond',serif;font-size:.75rem;font-style:italic;color:var(--forest);margin-left:.4rem;opacity:0;transition:opacity .5s;cursor:pointer;"></span>
+  <span id="name-welcome" onclick="editName()" title="Click to change" style="font-family:'Cormorant Garamond',serif;font-size:.78rem;font-style:italic;color:var(--forest);opacity:0;transition:opacity .5s;cursor:pointer;display:none;white-space:nowrap;"></span>
 </div>
 
 <!-- NAV -->
 <nav>
   <a href="#home" class="nav-logo">L<em>1</em> <div class="pip"></div></a>
   <ul class="nav-rooms">
-    <li><a href="#home" class="active">Entrance</a></li>
     <li><a href="#sound">The Booth</a></li>
-    <li><a href="#vault">The Vault</a></li>
-    <li><a href="#maze-section">The Maze</a></li>
-    <li><a href="#scantron-section">The Test</a></li>
-    <li><a href="#arcade">The Arcade</a></li>
     <li><a href="#gallery">Gallery</a></li>
     <li><a href="#dispatch">Dispatch</a></li>
     <li><a href="#pullup">Pull Up</a></li>
     <li><a href="#community">The Board</a></li>
-    <li><a href="#about">The Bar</a></li>
-    <li><a href="#artists">Back Room</a></li>
   </ul>
   <button class="btn btn-orange btn-sm" onclick="document.querySelector('#artists').scrollIntoView({behavior:'smooth'})">Get Early Access</button>
 </nav>
@@ -1015,9 +1009,6 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
   </div>
 </section>
 
-<!-- GALLERY — hidden until maze is completed or skipped -->
-<div id="gallery-wrapper" style="display:block;overflow:hidden;opacity:1;transform:translateY(0);">
-<div class="room-div"><div class="rd-line"></div><div class="rd-badge"><span class="rd-num">04</span>Gallery Wall — Collection I</div><div class="rd-line"></div></div>
 <section id="gallery">
   <div class="g-top reveal">
     <div><div class="kicker"><div class="kd"></div>On the Wall</div><h2 class="h2">Works &amp; <span class="emg">Frequencies</span></h2></div>
@@ -2170,8 +2161,10 @@ const _n=localStorage.getItem('ln');
 if(_n){
   const _i=document.getElementById('visitor-name');
   const _w=document.getElementById('name-welcome');
+  const _nt=document.getElementById('name-tag');
   if(_i) _i.style.display='none';
   if(_w){ _w.style.display=''; _w.textContent='welcome back, '+_n+' ◈'; setTimeout(()=>_w.style.opacity='1',200); }
+  if(_nt) _nt.style.display='flex';
   document.querySelectorAll('.visitor-name-display').forEach(el=>el.textContent=_n);
 }
 
@@ -2874,6 +2867,7 @@ window.postPullUp=function(){
   _origPostPullUp();
   SFX.tap();
 };
+
 
 // Rchip reactions (board cards)
 document.addEventListener('click',e=>{
