@@ -2189,11 +2189,18 @@ async function saveVisitorName(name){
     wel.textContent='welcome, '+clean+' ◈';
     setTimeout(()=>wel.style.opacity='1',50);
   }
-  // Update anywhere else the name appears on the page
   document.querySelectorAll('.visitor-name-display').forEach(el=>el.textContent=clean);
   try{
-    await _sb.from('visitors').insert([{ visitor_name: clean }]);
-  }catch(e){ console.log('Supabase:', e); }
+    console.log('Supabase: attempting insert for', clean);
+    const { data, error } = await _sb.from('visitors').insert([{ visitors_name: clean }]);
+    if(error){
+      console.error('Supabase insert error:', error.message, error.details, error.hint);
+    } else {
+      console.log('Supabase: insert success', data);
+    }
+  }catch(e){
+    console.error('Supabase exception:', e);
+  }
 }
 
 /* ══ SCROLL REVEAL ══ */
