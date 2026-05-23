@@ -622,6 +622,19 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
   .gallery-piece:hover{transform:none;}
 }
 
+
+/* Social share card */
+#share-overlay{position:fixed;inset:0;z-index:9500;background:rgba(10,15,20,.92);display:none;align-items:center;justify-content:center;padding:1.5rem;}
+#share-overlay.open{display:flex;}
+#share-card{background:var(--navy);border-radius:16px;padding:2rem;text-align:center;max-width:340px;width:100%;position:relative;border:1px solid rgba(176,125,42,.2);}
+.share-close{position:absolute;top:12px;right:14px;background:transparent;border:none;color:rgba(250,248,244,.4);font-size:1.1rem;cursor:pointer;}
+.share-logo{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;color:var(--white);margin-bottom:.3rem;}
+.share-logo em{color:var(--gold2);}
+.share-msg{font-family:'DM Sans',sans-serif;font-size:.88rem;color:rgba(250,248,244,.7);line-height:1.5;margin:.8rem 0 1.2rem;}
+.share-url{font-family:'IBM Plex Mono',monospace;font-size:.45rem;letter-spacing:.15em;color:rgba(176,125,42,.7);margin-bottom:1.5rem;}
+.share-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;}
+.share-btn{font-family:'IBM Plex Mono',monospace;font-size:.42rem;letter-spacing:.12em;text-transform:uppercase;padding:.5rem 1rem;border-radius:8px;border:1px solid rgba(250,248,244,.2);background:rgba(250,248,244,.06);color:rgba(250,248,244,.7);cursor:pointer;transition:all .18s;}
+.share-btn:hover{background:rgba(250,248,244,.12);border-color:rgba(250,248,244,.4);}
 </style>
 </head>
 <body>
@@ -648,14 +661,14 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
 </div>
 
 <!-- VISITOR NAME — upper left, like signing your name on a piece of paper -->
-<div id="name-tag" style="position:fixed;top:14px;left:115px;z-index:9999;display:none;align-items:center;gap:.3rem;">
-  <input id="visitor-name" type="text" maxlength="20" placeholder="your name"
+<div id="name-tag" style="position:fixed;top:14px;left:115px;z-index:9999;display:none;align-items:center;gap:.3rem;max-width:140px;">
+  <input id="visitor-name" type="text" maxlength="14" placeholder="your name"
     autocomplete="off"
-    style="font-family:'Cormorant Garamond',serif;font-size:.78rem;font-style:italic;color:var(--ink);background:transparent;border:none;border-bottom:1px solid rgba(26,22,18,.15);outline:none;width:76px;padding:.1rem .1rem;transition:width .25s,border-color .2s;"
-    onfocus="this.style.width='110px';this.style.borderColor='rgba(26,22,18,.4)';"
-    onblur="this.style.width=this.value?'auto':'76px';this.style.borderColor='rgba(26,22,18,.15)';if(this.value.trim())saveVisitorName(this.value.trim());"
+    style="font-family:'Cormorant Garamond',serif;font-size:.78rem;font-style:italic;color:var(--ink);background:transparent;border:none;border-bottom:1px solid rgba(26,22,18,.15);outline:none;width:76px;max-width:120px;padding:.1rem .1rem;transition:width .25s,border-color .2s;"
+    onfocus="this.style.borderColor='rgba(26,22,18,.4)';"
+    onblur="this.style.borderColor='rgba(26,22,18,.15)';if(this.value.trim())saveVisitorName(this.value.trim());"
     onkeydown="if(event.key==='Enter')this.blur();">
-  <span id="name-welcome" onclick="editName()" title="Click to change" style="font-family:'Cormorant Garamond',serif;font-size:.78rem;font-style:italic;color:var(--forest);opacity:0;transition:opacity .5s;cursor:pointer;display:none;white-space:nowrap;"></span>
+  <span id="name-welcome" onclick="editName()" title="Click to change" style="font-family:'Cormorant Garamond',serif;font-size:.78rem;font-style:italic;color:var(--forest);opacity:0;transition:opacity .5s;cursor:pointer;display:none;white-space:nowrap;max-width:130px;overflow:hidden;text-overflow:ellipsis;"></span>
 </div>
 
 <!-- NAV -->
@@ -667,6 +680,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
     <li><a href="#dispatch">Dispatch</a></li>
     <li><a href="#pullup">Pull Up</a></li>
     <li><a href="#community">The Board</a></li>
+    <li><a href="#guestbook">Guestbook</a></li>
   </ul>
   <button class="btn btn-orange btn-sm" onclick="document.querySelector('#artists').scrollIntoView({behavior:'smooth'})">Get Early Access</button>
 </nav>
@@ -1495,6 +1509,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
     <div class="pu-card color-c" onclick="setQ(this,'What\'s a culture or tradition from your background you want to keep alive?')"><span class="pu-icon">🌍</span><p class="pu-q">What's a culture or tradition you want to keep alive?</p><p class="pu-hint">Food, music, language, anything.</p></div>
     <div class="pu-card color-d" onclick="setQ(this,'Do you think people are more scared to try or more scared to fail?')"><span class="pu-icon">🔥</span><p class="pu-q">More scared to try or more scared to fail?</p><p class="pu-hint">Which one actually stops most people.</p></div>
     <div class="pu-card color-n" onclick="setQ(this,'What\'s something everyone pretends to like that you actually don\'t?')"><span class="pu-icon">🙃</span><p class="pu-q">Something everyone pretends to like — that you don't.</p><p class="pu-hint">No judgment. Say it.</p></div>
+    <div class="pu-card color-g" onclick="setQ(this,'Who wins the 2026 NBA Championship and why?')"><span class="pu-icon">🏀</span><p class="pu-q">Who wins the 2026 NBA Championship — and why?</p><p class="pu-hint">OKC? Knicks? Make your case.</p></div>
   </div>
   <!-- Per-question display — shows when a card is clicked -->
   <div id="pullup-disqus-wrap" style="max-width:640px;margin:1.5rem auto 0;display:none;">
@@ -1581,6 +1596,29 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
   </div>
 </section>
 
+
+<!-- GUESTBOOK -->
+<div class="room-div reveal"><div class="rd-line"></div><div class="rd-badge"><span class="rd-num">10</span>The Guestbook</div><div class="rd-line"></div></div>
+<section id="guestbook" style="padding:5rem 3rem;background:var(--off);position:relative;">
+  <div class="reveal"><div class="kicker"><div class="kd"></div>Sign In</div><h2 class="h2">You Were <em>Here</em></h2><p class="body" style="max-width:440px;">Leave your name, where you're from, and a note. No account needed. Everyone who visits can read it.</p></div>
+
+  <div class="reveal" style="max-width:560px;margin:2rem 0;background:var(--white);border-radius:var(--radius);padding:1.8rem;border:1px solid var(--border);box-shadow:0 4px 24px rgba(26,22,18,.06);">
+    <p style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:1.2rem;">◈ Sign the Guestbook</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem;">
+      <input id="gb-name" type="text" maxlength="30" placeholder="Your name" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.65rem .9rem;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;background:var(--off);color:var(--ink);transition:border-color .2s;" onfocus="this.style.borderColor='rgba(14,110,114,.5)'" onblur="this.style.borderColor='var(--border)'"/>
+      <input id="gb-location" type="text" maxlength="30" placeholder="City, State" style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.65rem .9rem;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;background:var(--off);color:var(--ink);transition:border-color .2s;" onfocus="this.style.borderColor='rgba(14,110,114,.5)'" onblur="this.style.borderColor='var(--border)'"/>
+    </div>
+    <textarea id="gb-message" maxlength="180" placeholder="Leave a note..." rows="3" style="width:100%;font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.65rem .9rem;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;background:var(--off);color:var(--ink);resize:none;box-sizing:border-box;transition:border-color .2s;" onfocus="this.style.borderColor='rgba(14,110,114,.5)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.8rem;">
+      <p id="gb-status" style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;color:var(--muted);"></p>
+      <button onclick="signGuestbook()" class="btn btn-forest btn-sm">Sign It ◈</button>
+    </div>
+  </div>
+
+  <!-- Entries display -->
+  <div id="gb-entries" style="max-width:700px;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem;"></div>
+</section>
+
 <!-- BACK ROOM -->
 <div class="room-div"><div class="rd-line" style="background:rgba(250,248,244,.08);"></div><div class="rd-badge" style="background:var(--navy2);border-color:rgba(176,125,42,.14);"><span class="rd-num">08</span>The Back Room</div><div class="rd-line" style="background:rgba(250,248,244,.08);"></div></div>
 <section id="artists">
@@ -1598,7 +1636,8 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
 <footer>
   <div class="ft">
     <div><p class="ft-brand">The <em>Lounge</em></p><p style="font-family:'IBM Plex Mono',monospace;font-size:.44rem;letter-spacing:.18em;color:rgba(26,61,43,.7);margin-top:.3rem;">linus1.com</p><p class="ft-tag">Sound · Art · Community · San Juan Capistrano, CA</p><div class="ft-socs"><a href="https://soundcloud.com/smoovebapi" target="_blank" class="ft-s">sc</a><a href="https://open.spotify.com/artist/0jvzWeLTBXahyvkRTlzx0E" target="_blank" class="ft-s">sp</a><a href="https://www.instagram.com/linus_pimpson/" target="_blank" class="ft-s">ig</a><a href="https://www.youtube.com/@smoovebapi" target="_blank" class="ft-s">yt</a></div></div>
-    <div><p class="ft-ct">Rooms</p><ul class="ft-l"><li><a href="#home">Entrance</a></li><li><a href="#sound">The Booth</a></li><li><a href="#vault">The Vault</a></li><li><a href="#maze-section">The Maze</a></li><li><a href="#gallery">Gallery Wall</a></li><li><a href="#dispatch">The Dispatch</a></li><li><a href="#pullup">Pull Up</a></li><li><a href="#about">The Bar</a></li><li><a href="#community">The Board</a></li><li><a href="#artists">Back Room</a></li></ul></div>
+    <div><p class="ft-ct">Rooms</p><ul class="ft-l"><li><a href="#home">Entrance</a></li><li><a href="#sound">The Booth</a></li><li><a href="#vault">The Vault</a></li><li><a href="#maze-section">The Maze</a></li><li><a href="#gallery">Gallery Wall</a></li><li><a href="#dispatch">The Dispatch</a></li><li><a href="#pullup">Pull Up</a></li><li><a href="#about">The Bar</a></li><li><a href="#community">The Board</a></li>
+    <li><a href="#guestbook">Guestbook</a></li><li><a href="#artists">Back Room</a></li></ul></div>
     <div><p class="ft-ct">Contact</p><ul class="ft-l"><li><a href="mailto:hello@linus1.com">hello@linus1.com</a></li><li><a href="#">Bookings</a></li><li><a href="#">Artist Submissions</a></li><li><a href="#">Press</a></li><li><a href="#">Advertise</a></li></ul></div>
     <div><p class="ft-ct">Stay Updated</p><p style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;line-height:1.8;color:rgba(250,248,244,.25);margin-bottom:.9rem;">Monthly from the lounge.</p><div style="display:flex;border-radius:var(--radius-sm);overflow:hidden;"><input type="email" id="ftEm" placeholder="email" style="flex:1;background:rgba(250,248,244,.05);border:1px solid rgba(250,248,244,.1);border-right:none;color:var(--white);padding:.55rem .75rem;font-family:'IBM Plex Mono',monospace;font-size:.42rem;outline:none;"/><button onclick="ftSub()" style="background:var(--forest);color:var(--white);border:none;padding:.55rem .85rem;font-family:'IBM Plex Mono',monospace;font-size:.4rem;letter-spacing:.12em;box-shadow:0 3px 0 var(--forest3);transition:all .08s;">Go</button></div></div>
   </div>
@@ -1891,6 +1930,7 @@ function finish(){
   document.getElementById('mazeStatus').className='maze-status complete';
   try{ SFX.mazeWin(); }catch(e){}
   unlockVault();
+  setTimeout(()=>{ try{showShare('I beat the maze on linus1.com and unlocked an unreleased Smoove Bapi track 🎧');}catch(e){} },2500);
 }
 
 // ── EVENTS ──
@@ -2227,6 +2267,78 @@ async function saveVisitorName(name){
     }
   }catch(e){
     console.error('Supabase exception:', e);
+  }
+}
+
+/* ══ GUESTBOOK ══ */
+async function signGuestbook(){
+  const name    = document.getElementById('gb-name').value.trim();
+  const location= document.getElementById('gb-location').value.trim();
+  const message = document.getElementById('gb-message').value.trim();
+  const status  = document.getElementById('gb-status');
+
+  if(!name || !message){ status.textContent='Name and message required.'; return; }
+
+  status.textContent='Signing...';
+  try{
+    const { error } = await _sb.from('guestbook').insert([{
+      name, location, message
+    }]);
+    if(error){ status.textContent='Something went wrong. Try again.'; return; }
+    status.textContent='✓ Signed! Welcome to The Lounge.';
+    document.getElementById('gb-name').value='';
+    document.getElementById('gb-location').value='';
+    document.getElementById('gb-message').value='';
+    try{SFX.mazeWin();}catch(e){}
+    loadGuestbook();
+  }catch(e){ status.textContent='Connection error.'; }
+}
+
+async function loadGuestbook(){
+  const container = document.getElementById('gb-entries');
+  if(!container) return;
+  try{
+    const { data } = await _sb.from('guestbook').select('*').order('created_at',{ascending:false}).limit(20);
+    if(!data||!data.length){ container.innerHTML='<p style="font-family:\'IBM Plex Mono\',monospace;font-size:.45rem;color:var(--muted);">Be the first to sign.</p>'; return; }
+    container.innerHTML = data.map(e=>`
+      <div style="background:var(--white);border-radius:var(--radius-sm);padding:1.1rem 1.3rem;border:1px solid var(--border);">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem;">
+          <p style="font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;color:var(--ink);">${e.name}</p>
+          ${e.location?`<p style="font-family:'IBM Plex Mono',monospace;font-size:.38rem;color:var(--muted);">${e.location}</p>`:''}
+        </div>
+        <p style="font-family:'DM Sans',sans-serif;font-size:.82rem;color:rgba(26,22,18,.65);line-height:1.6;">"${e.message}"</p>
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:.38rem;color:var(--dim);margin-top:.5rem;">${new Date(e.created_at).toLocaleDateString('en-US',{month:'short',year:'numeric'})}</p>
+      </div>`).join('');
+  }catch(e){ console.log('Guestbook load error:', e); }
+}
+
+// Load guestbook entries on page load
+document.addEventListener('DOMContentLoaded', loadGuestbook);
+setTimeout(loadGuestbook, 2000);
+
+/* ══ SOCIAL SHARE ══ */
+let _shareMsg = '';
+function showShare(msg){
+  _shareMsg = msg;
+  document.getElementById('share-msg').textContent = msg;
+  document.getElementById('share-copy-confirm').textContent = '';
+  document.getElementById('share-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeShare(){
+  document.getElementById('share-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+function copyShareLink(){
+  navigator.clipboard.writeText('https://linus1.com').then(()=>{
+    document.getElementById('share-copy-confirm').textContent='✓ Link copied — paste it anywhere';
+  });
+}
+function shareNative(){
+  if(navigator.share){
+    navigator.share({ title:'The Lounge — linus1.com', text:_shareMsg, url:'https://linus1.com' });
+  } else {
+    copyShareLink();
   }
 }
 
@@ -2937,6 +3049,21 @@ document.querySelectorAll('.gallery-piece').forEach(piece=>{
   <button id="lightbox-close" onclick="closeLightbox()">✕</button>
   <img id="lightbox-img" src="" alt=""/>
   <p id="lightbox-caption"></p>
+</div>
+
+<!-- SHARE OVERLAY -->
+<div id="share-overlay" onclick="if(event.target===this)closeShare()">
+  <div id="share-card">
+    <button class="share-close" onclick="closeShare()">✕</button>
+    <div class="share-logo">L<em>1</em></div>
+    <p id="share-msg" class="share-msg"></p>
+    <p class="share-url">linus1.com</p>
+    <div class="share-btns">
+      <button class="share-btn" onclick="copyShareLink()">📋 Copy Link</button>
+      <button class="share-btn" onclick="shareNative()">↗ Share</button>
+    </div>
+    <p id="share-copy-confirm" style="font-family:'IBM Plex Mono',monospace;font-size:.4rem;color:rgba(176,125,42,.7);margin-top:.8rem;min-height:1rem;"></p>
+  </div>
 </div>
 
 <script id="dsq-count-scr" src="//linus1-com.disqus.com/count.js" async></script>
