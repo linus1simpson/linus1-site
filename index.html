@@ -488,7 +488,17 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
 @keyframes blink{0%,93%,100%{opacity:1;}94%,99%{opacity:0;}}
 @keyframes eqA{0%,100%{height:4px;}50%{height:var(--h,28px);}}
 @keyframes floatR{0%{opacity:1;transform:translateY(0) scale(1);}100%{opacity:0;transform:translateY(-85px) scale(1.5);}}
-@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+/* ══ ART RATE ══ */
+.ar-card{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:16px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.4);cursor:grab;user-select:none;-webkit-user-select:none;background:#0d1f3c;}
+.ar-card:active{cursor:grabbing;}
+.ar-card img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;}
+.ar-card-info{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(10,26,40,.92));padding:2rem 1.2rem 1rem;}
+.ar-card-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-style:italic;color:#f4f8f7;margin:0 0 .2rem;}
+.ar-card-tag{font-family:'IBM Plex Mono',monospace;font-size:.38rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(201,146,46,.7);}
+.ar-stamp{position:absolute;top:24px;font-family:'IBM Plex Mono',monospace;font-size:1rem;letter-spacing:.2em;text-transform:uppercase;font-weight:700;padding:.4rem .9rem;border-radius:8px;border:3px solid;opacity:0;transition:opacity .15s;pointer-events:none;}
+.ar-stamp-like{left:20px;color:#0e6e72;border-color:#0e6e72;background:rgba(14,110,114,.08);}
+.ar-stamp-nope{right:20px;color:#c4402a;border-color:#c4402a;background:rgba(196,64,42,.08);}
+0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
 @keyframes floatAmb{0%{opacity:0;transform:translateY(0);}10%{opacity:1;}90%{opacity:.4;}100%{opacity:0;transform:translateY(-100vh);}}
 
 /* ═══ RESPONSIVE ═══ */
@@ -664,6 +674,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
   <ul class="nav-rooms">
     <li><a href="#sound">The Booth</a></li>
     <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#artrate">Rate the Art</a></li>
     <li><a href="#dispatch">Dispatch</a></li>
     <li><a href="#pullup">Pull Up</a></li>
     <li><a href="#community">The Board</a></li>
@@ -1396,6 +1407,37 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
   </div>
 </section>
 </div><!-- end gallery-wrapper -->
+
+<!-- ART RATE -->
+<section id="artrate" style="padding:2rem 3rem 4rem;background:#0a2a35;">
+  <div style="max-width:480px;margin:0 auto;text-align:center;">
+
+    <div id="ar-deck-wrap" style="position:relative;height:420px;margin-bottom:1.5rem;display:none;">
+      <div id="ar-deck" style="position:relative;width:100%;height:100%;"></div>
+      <div style="position:absolute;bottom:-64px;left:50%;transform:translateX(-50%);display:flex;gap:1.8rem;align-items:center;">
+        <button onclick="rateArt(false)" style="width:58px;height:58px;border-radius:50%;border:2px solid rgba(196,64,42,.5);background:rgba(196,64,42,.1);font-size:1.4rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+        <button onclick="undoRate()" style="width:40px;height:40px;border-radius:50%;border:1px solid rgba(244,248,247,.15);background:transparent;font-size:.9rem;cursor:pointer;color:rgba(244,248,247,.4);">↩</button>
+        <button onclick="rateArt(true)" style="width:58px;height:58px;border-radius:50%;border:2px solid rgba(14,110,114,.6);background:rgba(14,110,114,.12);font-size:1.4rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">♥</button>
+      </div>
+    </div>
+
+    <p id="ar-counter" style="font-family:'IBM Plex Mono',monospace;font-size:.45rem;letter-spacing:.2em;color:rgba(244,248,247,.3);margin-top:5rem;display:none;"></p>
+
+    <div id="ar-start-wrap" style="padding-top:1rem;">
+      <button onclick="startArtRate()" class="btn btn-orange">Rate the Art ♥</button>
+    </div>
+
+    <div id="ar-results" style="display:none;text-align:left;">
+      <p style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-style:italic;color:#f4f8f7;text-align:center;margin-bottom:.4rem;">The Community Has Spoken</p>
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;letter-spacing:.2em;color:rgba(244,248,247,.3);text-align:center;margin-bottom:2rem;">Updates live as more people rate</p>
+      <div id="ar-bars" style="display:flex;flex-direction:column;gap:.9rem;"></div>
+      <div style="text-align:center;margin-top:2.5rem;">
+        <button onclick="resetArtRate()" class="btn btn-sm" style="background:rgba(244,248,247,.08);color:rgba(244,248,247,.6);border:1px solid rgba(244,248,247,.15);">Rate Again</button>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 <!-- DISPATCH -->
 <div class="room-div reveal"><div class="rd-line"></div><div class="rd-badge"><span class="rd-num">05</span>The Dispatch — Journal</div><div class="rd-line"></div></div>
@@ -2209,7 +2251,249 @@ function filterGallery(tag, btn){
   };
 })();
 
-/* ── Returning visitor name — saves to Supabase ── */
+/* ══ ART RATE ENGINE ══ */
+(function(){
+
+// Pull pieces from existing gallery — no duplicate data
+function getPieces(){
+  const seen = new Set();
+  const pieces = [];
+  document.querySelectorAll('.gallery-piece').forEach(p=>{
+    const img   = p.querySelector('.gp-img');
+    const title = p.querySelector('.gp-title');
+    const tag   = p.querySelector('.gp-tag');
+    if(img && title && !seen.has(title.textContent)){
+      seen.add(title.textContent);
+      pieces.push({ src: img.src, title: title.textContent, tag: tag ? tag.textContent : '' });
+    }
+  });
+  return pieces;
+}
+
+let pieces = [], queue = [], ratings = [], history = [];
+let currentCard = null, isDragging = false;
+let startX = 0, startY = 0, currentX = 0;
+
+function buildCard(piece, isTop){
+  const card = document.createElement('div');
+  card.className = 'ar-card';
+  card.style.zIndex = isTop ? 10 : 5;
+  card.style.transform = isTop ? 'scale(1)' : 'scale(0.95) translateY(12px)';
+  card.style.transition = isTop ? 'none' : 'transform .3s';
+
+  const img = document.createElement('img');
+  img.src = piece.src;
+  img.alt = piece.title;
+  card.appendChild(img);
+
+  const info = document.createElement('div');
+  info.className = 'ar-card-info';
+  info.innerHTML = `<p class="ar-card-title">${piece.title}</p><p class="ar-card-tag">${piece.tag}</p>`;
+  card.appendChild(info);
+
+  const stampL = document.createElement('div');
+  stampL.className = 'ar-stamp ar-stamp-like';
+  stampL.textContent = '♥ LIKE';
+  card.appendChild(stampL);
+
+  const stampN = document.createElement('div');
+  stampN.className = 'ar-stamp ar-stamp-nope';
+  stampN.textContent = 'PASS ✕';
+  card.appendChild(stampN);
+
+  if(isTop) attachDrag(card, piece);
+  return card;
+}
+
+function attachDrag(card, piece){
+  currentCard = { el: card, piece };
+
+  function onStart(ex, ey){
+    isDragging = true;
+    startX = ex; startY = ey; currentX = 0;
+    card.style.transition = 'none';
+  }
+  function onMove(ex, ey){
+    if(!isDragging) return;
+    currentX = ex - startX;
+    const rotate = currentX * 0.08;
+    card.style.transform = `translateX(${currentX}px) rotate(${rotate}deg)`;
+    // Show stamps
+    const likeStamp = card.querySelector('.ar-stamp-like');
+    const nopeStamp = card.querySelector('.ar-stamp-nope');
+    if(currentX > 30){ likeStamp.style.opacity = Math.min(1,(currentX-30)/80); nopeStamp.style.opacity=0; }
+    else if(currentX < -30){ nopeStamp.style.opacity = Math.min(1,(-currentX-30)/80); likeStamp.style.opacity=0; }
+    else { likeStamp.style.opacity=0; nopeStamp.style.opacity=0; }
+  }
+  function onEnd(){
+    if(!isDragging) return;
+    isDragging = false;
+    if(currentX > 80) swipeOut(true);
+    else if(currentX < -80) swipeOut(false);
+    else snapBack();
+  }
+
+  // Mouse
+  card.addEventListener('mousedown', e=>{ onStart(e.clientX,e.clientY); });
+  window.addEventListener('mousemove', e=>{ onMove(e.clientX,e.clientY); });
+  window.addEventListener('mouseup', ()=>{ onEnd(); });
+
+  // Touch
+  card.addEventListener('touchstart', e=>{ onStart(e.touches[0].clientX,e.touches[0].clientY); },{passive:true});
+  card.addEventListener('touchmove', e=>{ onMove(e.touches[0].clientX,e.touches[0].clientY); e.preventDefault(); },{passive:false});
+  card.addEventListener('touchend', ()=>{ onEnd(); });
+}
+
+function snapBack(){
+  if(!currentCard) return;
+  currentCard.el.style.transition='transform .4s cubic-bezier(.175,.885,.32,1.275)';
+  currentCard.el.style.transform='scale(1)';
+  currentCard.el.querySelectorAll('.ar-stamp').forEach(s=>s.style.opacity=0);
+}
+
+function swipeOut(liked){
+  if(!currentCard) return;
+  const card = currentCard.el;
+  const piece = currentCard.piece;
+  const dir = liked ? 1 : -1;
+  card.style.transition='transform .4s ease, opacity .4s';
+  card.style.transform=`translateX(${dir*120}%) rotate(${dir*20}deg)`;
+  card.style.opacity='0';
+  history.push({ piece, liked });
+  ratings.push({ title: piece.title, liked });
+  saveRating(piece.title, liked);
+  setTimeout(()=>{ card.remove(); nextCard(); }, 380);
+}
+
+function nextCard(){
+  queue.shift();
+  updateCounter();
+  const deck = document.getElementById('ar-deck');
+  deck.querySelectorAll('.ar-card').forEach(c=>c.remove());
+
+  if(queue.length===0){ showResults(); return; }
+
+  // Build top 2 cards
+  if(queue.length>=2){
+    deck.appendChild(buildCard(queue[1], false));
+  }
+  deck.appendChild(buildCard(queue[0], true));
+}
+
+function updateCounter(){
+  const el = document.getElementById('ar-counter');
+  if(!el) return;
+  const done = pieces.length - queue.length;
+  el.textContent = `${done} of ${pieces.length} rated`;
+}
+
+async function saveRating(title, liked){
+  try{
+    await _sb.from('art_ratings').insert([{ piece_name: title, liked }]);
+  }catch(e){ console.log('Rating save:', e); }
+}
+
+async function showResults(){
+  document.getElementById('ar-deck-wrap').style.display='none';
+  document.getElementById('ar-counter').style.display='none';
+  document.querySelector('#artrate .btn-orange') && (document.querySelector('#artrate .btn-orange').style.display='none');
+
+  const results = document.getElementById('ar-results');
+  const bars    = document.getElementById('ar-bars');
+  results.style.display='block';
+
+  // Load community data from Supabase
+  try{
+    const { data } = await _sb.from('art_ratings').select('piece_name, liked');
+    const counts = {};
+    pieces.forEach(p=>{ counts[p.title]={ likes:0, total:0 }; });
+    if(data) data.forEach(r=>{
+      if(!counts[r.piece_name]) counts[r.piece_name]={ likes:0, total:0 };
+      counts[r.piece_name].total++;
+      if(r.liked) counts[r.piece_name].likes++;
+    });
+
+    // Sort by like percentage
+    const sorted = Object.entries(counts)
+      .filter(([,v])=>v.total>0)
+      .sort((a,b)=>(b[1].likes/b[1].total)-(a[1].likes/a[1].total));
+
+    bars.innerHTML = sorted.map(([title,{likes,total}])=>{
+      const pct = Math.round((likes/total)*100);
+      const piece = pieces.find(p=>p.title===title);
+      return `
+        <div style="display:flex;align-items:center;gap:.9rem;">
+          ${piece?`<img src="${piece.src}" style="width:44px;height:44px;object-fit:cover;border-radius:6px;flex-shrink:0;" alt="${title}"/>`:''}
+          <div style="flex:1;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:.3rem;">
+              <p style="font-family:'Cormorant Garamond',serif;font-size:.95rem;color:#f4f8f7;margin:0;">${title}</p>
+              <p style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;color:rgba(201,146,46,.8);margin:0;">${pct}%</p>
+            </div>
+            <div style="background:rgba(244,248,247,.08);border-radius:20px;height:7px;overflow:hidden;">
+              <div style="background:linear-gradient(90deg,#0e6e72,#c9922e);height:100%;border-radius:20px;width:0%;transition:width 1s ease;" data-pct="${pct}"></div>
+            </div>
+            <p style="font-family:'IBM Plex Mono',monospace;font-size:.38rem;color:rgba(244,248,247,.25);margin:.2rem 0 0;">${total} vote${total===1?'':'s'}</p>
+          </div>
+        </div>`;
+    }).join('');
+
+    // Animate bars
+    setTimeout(()=>{
+      bars.querySelectorAll('[data-pct]').forEach(bar=>{
+        bar.style.width = bar.getAttribute('data-pct')+'%';
+      });
+    }, 100);
+  }catch(e){
+    bars.innerHTML='<p style="font-family:\'IBM Plex Mono\',monospace;font-size:.45rem;color:rgba(244,248,247,.4);">Loading results...</p>';
+  }
+}
+
+// ── PUBLIC FUNCTIONS ──
+window.startArtRate = function(){
+  pieces = getPieces();
+  queue  = [...pieces].sort(()=>Math.random()-.5); // shuffle
+  ratings=[]; history=[];
+
+  document.getElementById('ar-start-wrap').style.display='none';
+  document.getElementById('ar-results').style.display='none';
+  document.getElementById('ar-deck-wrap').style.display='block';
+  document.getElementById('ar-counter').style.display='block';
+  document.getElementById('ar-deck').innerHTML='';
+
+  updateCounter();
+  const deck = document.getElementById('ar-deck');
+  if(queue.length>=2) deck.appendChild(buildCard(queue[1], false));
+  deck.appendChild(buildCard(queue[0], true));
+};
+
+window.rateArt = function(liked){ swipeOut(liked); };
+
+window.undoRate = function(){
+  if(history.length===0) return;
+  const last = history.pop();
+  ratings.pop();
+  queue.unshift(last.piece);
+  updateCounter();
+  const deck = document.getElementById('ar-deck');
+  deck.querySelectorAll('.ar-card').forEach(c=>c.remove());
+  if(queue.length>=2) deck.appendChild(buildCard(queue[1], false));
+  deck.appendChild(buildCard(queue[0], true));
+};
+
+window.resetArtRate = function(){
+  document.getElementById('ar-results').style.display='none';
+  document.getElementById('ar-start-wrap').style.display='block';
+};
+
+// Load community results visible on section — show after 3s
+setTimeout(async ()=>{
+  if(!window._sb) return;
+  pieces = getPieces();
+}, 3000);
+
+})();
+
+
 const _n=localStorage.getItem('ln');
 if(_n){
   const _i=document.getElementById('visitor-name');
