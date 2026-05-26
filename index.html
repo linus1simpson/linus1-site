@@ -677,7 +677,6 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
     <li><a href="#artrate">Rate the Art</a></li>
     <li><a href="#dispatch">Dispatch</a></li>
     <li><a href="#pullup">Pull Up</a></li>
-    <li><a href="#community">The Board</a></li>
     <li><a href="#guestbook">Guestbook</a></li>
   </ul>
   <button class="btn btn-orange btn-sm" onclick="document.querySelector('#artists').scrollIntoView({behavior:'smooth'})">Get Early Access</button>
@@ -1541,12 +1540,28 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
     <div class="pu-card color-g" onclick="setQ(this,'Who wins the 2026 NBA Championship and why?')"><span class="pu-icon">🏀</span><p class="pu-q">Who wins the 2026 NBA Championship — and why?</p><p class="pu-hint">OKC? Knicks? Make your case.</p></div>
   </div>
   <!-- Per-question display — shows when a card is clicked -->
-  <div id="pullup-disqus-wrap" style="max-width:640px;margin:1.5rem auto 0;display:none;">
-    <div style="text-align:center;padding:1.8rem 1.5rem;background:rgba(250,248,244,.06);border-radius:10px;border:1px solid rgba(250,248,244,.1);">
-      <p style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(250,248,244,.35);margin-bottom:.8rem;">Answering this question</p>
-      <p id="activeQ" style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.3rem,3vw,2rem);font-weight:300;color:#faf8f4;line-height:1.25;font-style:italic;margin-bottom:1.5rem;"></p>
-      <p style="font-family:'IBM Plex Mono',monospace;font-size:.46rem;letter-spacing:.15em;color:rgba(250,248,244,.38);margin-bottom:1.2rem;">Drop your answer on The Board below ↓</p>
-      <a href="#community" onclick="event.preventDefault();document.getElementById('disqus_thread').scrollIntoView({behavior:'smooth',block:'start'});" class="btn btn-gold btn-sm">Drop Your Answer ↓</a>
+  <!-- Pull Up answer panel — shows when a question is selected -->
+  <div id="pullup-answer-wrap" style="max-width:640px;margin:1.5rem auto 0;display:none;">
+    <div style="background:rgba(250,248,244,.04);border-radius:12px;border:1px solid rgba(250,248,244,.12);padding:1.8rem;">
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(250,248,244,.35);margin-bottom:.6rem;">answering</p>
+      <p id="activeQ" style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.2rem,3vw,1.9rem);font-weight:300;color:#faf8f4;line-height:1.25;font-style:italic;margin-bottom:1.4rem;"></p>
+
+      <!-- Submit form -->
+      <div style="display:flex;flex-direction:column;gap:.6rem;margin-bottom:1rem;">
+        <input id="pu-name" type="text" maxlength="25" placeholder="Your name"
+          style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.6rem .9rem;border:1px solid rgba(250,248,244,.15);border-radius:8px;background:rgba(250,248,244,.06);color:#faf8f4;outline:none;"
+          onfocus="this.style.borderColor='rgba(201,146,46,.5)'" onblur="this.style.borderColor='rgba(250,248,244,.15)'"/>
+        <textarea id="pu-answer" maxlength="280" rows="3" placeholder="Drop your answer..."
+          style="font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.6rem .9rem;border:1px solid rgba(250,248,244,.15);border-radius:8px;background:rgba(250,248,244,.06);color:#faf8f4;outline:none;resize:none;width:100%;box-sizing:border-box;"
+          onfocus="this.style.borderColor='rgba(201,146,46,.5)'" onblur="this.style.borderColor='rgba(250,248,244,.15)'"></textarea>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <p id="pu-status" style="font-family:'IBM Plex Mono',monospace;font-size:.4rem;color:rgba(250,248,244,.35);"></p>
+          <button onclick="submitPullUpAnswer()" class="btn btn-gold btn-sm">Post Answer ◈</button>
+        </div>
+      </div>
+
+      <!-- Answers display -->
+      <div id="pu-answers-list" style="display:flex;flex-direction:column;gap:.7rem;max-height:320px;overflow-y:auto;"></div>
     </div>
   </div>
 </section>
@@ -1592,38 +1607,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
   </div>
 </section>
 
-<!-- THE BOARD -->
-<div class="room-div reveal"><div class="rd-line"></div><div class="rd-badge"><span class="rd-num">09</span>The Board — Community</div><div class="rd-line"></div></div>
-<section id="community">
-  <div class="com-top"><div class="reveal"><div class="kicker"><div class="kd"></div>From the Crowd</div><h2 class="h2">The Board</h2><p class="body" style="max-width:400px;margin-bottom:0;">Leave your mark. React. Say something real — everyone sees it.</p></div><div class="lbot reveal"><div class="lb-h"><div class="lb-e"></div><div class="lb-e"></div><div class="lb-m"></div></div><div class="lb-b"></div><div class="lb-legs"><div class="lb-leg"></div><div class="lb-leg"></div></div><div class="lb-say">L-Bot says: leave your mark.</div></div></div>
-  <div class="board" id="boardGrid">
-    <div class="bcard reveal"><div class="bc-u"><div class="bc-av" style="background:#f0f8f4;">🎧</div><div><p class="bc-name">wanderer_west</p><span class="bc-badge">Founding Visitor</span></div></div><p class="bc-txt">"Found this at 2am and stayed an hour. Something about this place."</p><p class="bc-time">April 2025 · San Diego, CA</p><div class="bc-reacts"><div class="rchip" onclick="chipR(this)">🔥<span>12</span></div><div class="rchip" onclick="chipR(this)">🎵<span>8</span></div></div></div>
-    <div class="bcard reveal"><div class="bc-u"><div class="bc-av" style="background:#fdf8f0;">🎨</div><div><p class="bc-name">pixel_oracle</p><span class="bc-badge">Art Lover</span></div></div><p class="bc-txt">"The gallery wall made me feel like I was somewhere I'd never been."</p><p class="bc-time">April 2025 · Los Angeles, CA</p><div class="bc-reacts"><div class="rchip" onclick="chipR(this)">✨<span>21</span></div><div class="rchip" onclick="chipR(this)">💚<span>14</span></div></div></div>
-    <div class="bcard reveal"><div class="bc-u"><div class="bc-av" style="background:#fdf0f2;">🎸</div><div><p class="bc-name">substage_sal</p><span class="bc-badge">Sound Head</span></div></div><p class="bc-txt">"That waveform piece is real. Anyone who's been behind a board knows."</p><p class="bc-time">April 2025 · Orange County, CA</p><div class="bc-reacts"><div class="rchip" onclick="chipR(this)">🎚️<span>9</span></div><div class="rchip" onclick="chipR(this)">🔊<span>17</span></div></div></div>
-  </div>
-  <div class="rbar reveal"><span class="rl">React →</span><button class="rbtn" onclick="bigR('🔥',this)">🔥 <span class="rc">48</span></button><button class="rbtn" onclick="bigR('🎵',this)">🎵 <span class="rc">37</span></button><button class="rbtn" onclick="bigR('✨',this)">✨ <span class="rc">62</span></button><button class="rbtn" onclick="bigR('💚',this)">💚 <span class="rc">29</span></button><button class="rbtn" onclick="bigR('🎨',this)">🎨 <span class="rc">41</span></button><button class="rbtn" onclick="bigR('🎸',this)">🎸 <span class="rc">55</span></button></div>
-  <!-- DISQUS — The Board general comments -->
-  <div class="reveal" style="margin-top:1.5rem;background:var(--white);border-radius:var(--radius);padding:1.5rem;border:1px solid var(--border);">
-    <p style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;">◈ The Board — General Comments</p>
-    <div id="disqus_thread"></div>
-    <script>
-      // Load Disqus once for The Board
-      // Pull Up reuses same script via DISQUS.reset()
-      window.disqus_config = function(){
-        this.page.url = 'https://linus1.com';
-        this.page.identifier = 'linus1-the-board';
-        this.page.title = 'The Board — The Lounge';
-      };
-      (function(){
-        var d=document, s=d.createElement('script');
-        s.src='https://linus1-com.disqus.com/embed.js';
-        s.setAttribute('data-timestamp',+new Date());
-        (d.head||d.body).appendChild(s);
-      })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
-</section>
+
 
 
 <!-- GUESTBOOK -->
@@ -1665,7 +1649,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
 <footer>
   <div class="ft">
     <div><p class="ft-brand">The <em>Lounge</em></p><p style="font-family:'IBM Plex Mono',monospace;font-size:.44rem;letter-spacing:.18em;color:rgba(26,61,43,.7);margin-top:.3rem;">linus1.com</p><p class="ft-tag">Sound · Art · Community · San Juan Capistrano, CA</p><div class="ft-socs"><a href="https://soundcloud.com/smoovebapi" target="_blank" class="ft-s">sc</a><a href="https://open.spotify.com/artist/0jvzWeLTBXahyvkRTlzx0E" target="_blank" class="ft-s">sp</a><a href="https://www.instagram.com/linus_pimpson/" target="_blank" class="ft-s">ig</a><a href="https://www.youtube.com/@smoovebapi" target="_blank" class="ft-s">yt</a></div></div>
-    <div><p class="ft-ct">Rooms</p><ul class="ft-l"><li><a href="#home">Entrance</a></li><li><a href="#sound">The Booth</a></li><li><a href="#vault">The Vault</a></li><li><a href="#maze-section">The Maze</a></li><li><a href="#gallery">Gallery Wall</a></li><li><a href="#dispatch">The Dispatch</a></li><li><a href="#pullup">Pull Up</a></li><li><a href="#about">The Bar</a></li><li><a href="#community">The Board</a></li>
+    <div><p class="ft-ct">Rooms</p><ul class="ft-l"><li><a href="#home">Entrance</a></li><li><a href="#sound">The Booth</a></li><li><a href="#vault">The Vault</a></li><li><a href="#maze-section">The Maze</a></li><li><a href="#gallery">Gallery Wall</a></li><li><a href="#dispatch">The Dispatch</a></li><li><a href="#pullup">Pull Up</a></li><li><a href="#about">The Bar</a></li>
     <li><a href="#guestbook">Guestbook</a></li><li><a href="#artists">Back Room</a></li></ul></div>
     <div><p class="ft-ct">Contact</p><ul class="ft-l"><li><a href="mailto:hello@linus1.com">hello@linus1.com</a></li><li><a href="#">Bookings</a></li><li><a href="#">Artist Submissions</a></li><li><a href="#">Press</a></li><li><a href="#">Advertise</a></li></ul></div>
     <div><p class="ft-ct">Stay Updated</p><p style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;line-height:1.8;color:rgba(250,248,244,.25);margin-bottom:.9rem;">Monthly from the lounge.</p><div style="display:flex;border-radius:var(--radius-sm);overflow:hidden;"><input type="email" id="ftEm" placeholder="email" style="flex:1;background:rgba(250,248,244,.05);border:1px solid rgba(250,248,244,.1);border-right:none;color:var(--white);padding:.55rem .75rem;font-family:'IBM Plex Mono',monospace;font-size:.42rem;outline:none;"/><button onclick="ftSub()" style="background:var(--forest);color:var(--white);border:none;padding:.55rem .85rem;font-family:'IBM Plex Mono',monospace;font-size:.4rem;letter-spacing:.12em;box-shadow:0 3px 0 var(--forest3);transition:all .08s;">Go</button></div></div>
@@ -3041,21 +3025,50 @@ function setQ(card,q){
   card.style.opacity='1';card.style.transform='translateY(-3px)';
   activeQ=q;
   document.getElementById('activeQ').textContent=q;
-  const wrap=document.getElementById('pullup-disqus-wrap');
+  const wrap=document.getElementById('pullup-answer-wrap');
   wrap.style.display='block';
   wrap.scrollIntoView({behavior:'smooth',block:'center'});
+  // Clear previous answers and load for this question
+  document.getElementById('pu-answers-list').innerHTML='';
+  document.getElementById('pu-status').textContent='';
+  loadPullUpAnswers(q);
 }
 
-function postPullUp(){
-  const v=document.getElementById('puInput').value.trim();
-  if(!v||!activeQ)return;
-  document.getElementById('puInput').value='';
-  try{SFX.tap();}catch(e){}
-  // Scroll to the thread so they can see the conversation
-  setTimeout(()=>document.getElementById('pullup-disqus-wrap').scrollIntoView({behavior:'smooth',block:'start'}),200);
+async function loadPullUpAnswers(q){
+  const list=document.getElementById('pu-answers-list');
+  try{
+    const {data}=await _sb.from('pullup_answers').select('*').eq('question',q).order('created_at',{ascending:false}).limit(30);
+    if(!data||!data.length){list.innerHTML='<p style="font-family:\'IBM Plex Mono\',monospace;font-size:.42rem;color:rgba(250,248,244,.3);text-align:center;padding:.8rem 0;">Be the first to answer.</p>';return;}
+    list.innerHTML=data.map(r=>`
+      <div style="border-top:1px solid rgba(250,248,244,.08);padding:.8rem 0;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:.3rem;">
+          <p style="font-family:'Cormorant Garamond',serif;font-size:.95rem;font-weight:600;color:#faf8f4;">${r.name}</p>
+          <p style="font-family:'IBM Plex Mono',monospace;font-size:.38rem;color:rgba(250,248,244,.3);">${new Date(r.created_at).toLocaleDateString('en-US',{month:'short',year:'numeric'})}</p>
+        </div>
+        <p style="font-family:'DM Sans',sans-serif;font-size:.85rem;color:rgba(250,248,244,.7);line-height:1.6;">"${r.answer}"</p>
+      </div>`).join('');
+  }catch(e){console.log('PullUp load error:',e);}
 }
 
-/* ══ REACTIONS ══ */
+async function submitPullUpAnswer(){
+  const name=document.getElementById('pu-name').value.trim();
+  const answer=document.getElementById('pu-answer').value.trim();
+  const status=document.getElementById('pu-status');
+  if(!name||!answer){status.textContent='Name and answer required.';return;}
+  if(!activeQ){return;}
+  status.textContent='Posting...';
+  try{
+    const {error}=await _sb.from('pullup_answers').insert([{question:activeQ,name,answer}]);
+    if(error){status.textContent='Something went wrong.';return;}
+    document.getElementById('pu-answer').value='';
+    status.textContent='✓ Answer posted!';
+    try{SFX.tap();}catch(e){}
+    loadPullUpAnswers(activeQ);
+  }catch(e){status.textContent='Connection error.';}
+}
+
+
+
 function chipR(el){const s=el.querySelector('span');s.textContent=parseInt(s.textContent)+1;el.style.transform='scale(1.18)';setTimeout(()=>el.style.transform='',220);}
 function bigR(em,btn){
   const s=btn.querySelector('.rc');s.textContent=parseInt(s.textContent)+1;
@@ -3297,6 +3310,6 @@ document.querySelectorAll('.gallery-piece').forEach(piece=>{
 
 
 
-<script id="dsq-count-scr" src="//linus1-com.disqus.com/count.js" async></script>
+
 </body>
 </html>
