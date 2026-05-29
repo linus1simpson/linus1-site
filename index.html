@@ -643,17 +643,48 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
 
 
 <!-- ENTRANCE -->
-<div id="entrance" style="position:fixed;inset:0;z-index:8000;background:var(--navy);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;">
+<div id="entrance" style="position:fixed;inset:0;z-index:8000;background:var(--navy);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.4rem;overflow:hidden;">
   <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(176,125,42,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(176,125,42,.04) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;"></div>
   <p style="font-family:'IBM Plex Mono',monospace;font-size:.5rem;letter-spacing:.4em;text-transform:uppercase;color:rgba(176,125,42,.55);position:relative;">linus1.com &nbsp;·&nbsp; San Juan Capistrano</p>
-  <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(4rem,10vw,8rem);font-weight:300;color:#faf8f4;text-align:center;line-height:.9;position:relative;">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,8vw,6rem);font-weight:300;color:#faf8f4;text-align:center;line-height:.9;position:relative;">
     The<br><em style="font-style:italic;color:#c9922e;">Lounge</em>
   </div>
-  <p style="font-family:'IBM Plex Mono',monospace;font-size:.46rem;letter-spacing:.25em;color:rgba(250,248,244,.2);position:relative;">Sound · Art · Community</p>
-  <button
+
+  <!-- Interactive Lbot -->
+  <div id="lbot-stage" style="position:relative;width:160px;height:170px;cursor:pointer;user-select:none;-webkit-user-select:none;" onclick="pokeLbot(event)">
+    <svg id="lbot-svg" viewBox="0 0 160 170" width="160" height="170" style="overflow:visible;transition:transform .12s;">
+      <!-- antenna -->
+      <line x1="80" y1="34" x2="80" y2="14" stroke="#c9922e" stroke-width="3"/>
+      <circle id="lbot-bulb" cx="80" cy="11" r="6" fill="#c9922e"/>
+      <!-- body -->
+      <rect x="46" y="92" width="68" height="54" rx="12" fill="#0e6e72" stroke="#c9922e" stroke-width="2"/>
+      <rect x="62" y="104" width="36" height="22" rx="4" fill="#072a30"/>
+      <text x="80" y="120" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#c9922e" font-weight="700">L1</text>
+      <!-- arms -->
+      <line id="lbot-arm-l" x1="46" y1="106" x2="28" y2="118" stroke="#0e6e72" stroke-width="6" stroke-linecap="round"/>
+      <line id="lbot-arm-r" x1="114" y1="106" x2="132" y2="118" stroke="#0e6e72" stroke-width="6" stroke-linecap="round"/>
+      <!-- head -->
+      <rect x="40" y="36" width="80" height="58" rx="16" fill="#13868a" stroke="#c9922e" stroke-width="2"/>
+      <!-- eyes -->
+      <g id="lbot-eyes">
+        <circle id="eye-l" cx="62" cy="62" r="9" fill="#faf8f4"/>
+        <circle id="eye-r" cx="98" cy="62" r="9" fill="#faf8f4"/>
+        <circle id="pupil-l" cx="62" cy="62" r="4" fill="#072a30"/>
+        <circle id="pupil-r" cx="98" cy="62" r="4" fill="#072a30"/>
+      </g>
+      <!-- mouth -->
+      <path id="lbot-mouth" d="M 66 78 Q 80 84 94 78" stroke="#072a30" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </svg>
+    <!-- speech bubble -->
+    <div id="lbot-speech" style="position:absolute;top:-14px;left:50%;transform:translateX(-50%) scale(0);transform-origin:bottom center;background:#faf8f4;color:#072a30;font-family:'IBM Plex Mono',monospace;font-size:.5rem;letter-spacing:.05em;padding:.4rem .7rem;border-radius:10px;white-space:nowrap;transition:transform .2s;font-weight:600;"></div>
+  </div>
+
+  <p id="lbot-hint" style="font-family:'IBM Plex Mono',monospace;font-size:.46rem;letter-spacing:.25em;color:rgba(250,248,244,.35);position:relative;transition:opacity .4s;">poke him →</p>
+
+  <button id="enter-btn"
     onclick="document.getElementById('entrance').style.display='none';const _nt=document.getElementById('name-tag');if(_nt)setTimeout(()=>{_nt.style.display='flex';},600);spawnAmbients();"
-    style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;background:linear-gradient(180deg,#d96515 0%,#c4580a 50%,#8a3a06 100%);color:#faf8f4;padding:1.1rem 2.8rem;border:none;cursor:pointer;border-radius:14px;position:relative;box-shadow:0 4px 0 #6a2a04,0 6px 16px rgba(0,0,0,.4);">
-    ◈ &nbsp;Enter the Space
+    style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;background:linear-gradient(180deg,#d96515 0%,#c4580a 50%,#8a3a06 100%);color:#faf8f4;padding:1.1rem 2.8rem;border:none;cursor:pointer;border-radius:14px;position:relative;box-shadow:0 4px 0 #6a2a04,0 6px 16px rgba(0,0,0,.4);transition:transform .15s;">
+    ◈ &nbsp;You Found The Lounge. Come In.
   </button>
 </div>
 
@@ -1697,6 +1728,74 @@ spawnAmbients();
 
 // entrance removed
 spawnAmbients();
+
+/* ══ INTERACTIVE LBOT — ENTRANCE HOOK ══ */
+let _lbotPokes = 0;
+const _lbotLines = ["hey!","oof","quit it!","hehe","ow!","stop!","that tickles","okok","again?!","bonk","yikes","🌟","wheee","my circuits!"];
+let _lbotAudio = null;
+function _lbotSound(){
+  try{
+    if(!_lbotAudio) _lbotAudio = new (window.AudioContext||window.webkitAudioContext)();
+    const o=_lbotAudio.createOscillator(), g=_lbotAudio.createGain();
+    o.connect(g); g.connect(_lbotAudio.destination);
+    o.type=['square','triangle','sawtooth'][Math.floor(Math.random()*3)];
+    const base=180+Math.random()*340;
+    o.frequency.setValueAtTime(base,_lbotAudio.currentTime);
+    o.frequency.exponentialRampToValueAtTime(base*2.4,_lbotAudio.currentTime+.08);
+    g.gain.setValueAtTime(.18,_lbotAudio.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,_lbotAudio.currentTime+.18);
+    o.start(); o.stop(_lbotAudio.currentTime+.18);
+  }catch(e){}
+}
+function _spawnStar(x,y){
+  const stage=document.getElementById('lbot-stage');
+  const star=document.createElement('div');
+  const chars=['✦','✧','★','💫','⭐','✨'];
+  star.textContent=chars[Math.floor(Math.random()*chars.length)];
+  const dx=(Math.random()-.5)*160, dy=-40-Math.random()*90;
+  star.style.cssText=`position:absolute;left:${x}px;top:${y}px;font-size:${14+Math.random()*14}px;pointer-events:none;transition:transform .7s ease-out,opacity .7s;z-index:5;`;
+  stage.appendChild(star);
+  requestAnimationFrame(()=>{ star.style.transform=`translate(${dx}px,${dy}px) rotate(${(Math.random()-.5)*360}deg)`; star.style.opacity='0'; });
+  setTimeout(()=>star.remove(),720);
+}
+function pokeLbot(e){
+  _lbotPokes++;
+  _lbotSound();
+  const svg=document.getElementById('lbot-svg');
+  const stage=document.getElementById('lbot-stage');
+  const rect=stage.getBoundingClientRect();
+  const px=e.clientX-rect.left, py=e.clientY-rect.top;
+  const tilt=(Math.random()-.5)*40;
+  const sx=1+(Math.random()*.25), sy=1-(Math.random()*.18);
+  svg.style.transform=`translateY(-14px) rotate(${tilt}deg) scale(${sx},${sy})`;
+  setTimeout(()=>{ svg.style.transform='translateY(0) rotate(0) scale(1,1)'; },130);
+  for(let i=0;i<3+Math.floor(Math.random()*3);i++) _spawnStar(px,py);
+  const bulb=document.getElementById('lbot-bulb');
+  const cols=['#c4402a','#c9922e','#0e6e72','#d96515','#faf8f4'];
+  bulb.setAttribute('fill',cols[Math.floor(Math.random()*cols.length)]);
+  const dx=(Math.random()-.5)*6, dy=(Math.random()-.5)*6;
+  document.getElementById('pupil-l').setAttribute('cx',62+dx);
+  document.getElementById('pupil-l').setAttribute('cy',62+dy);
+  document.getElementById('pupil-r').setAttribute('cx',98+dx);
+  document.getElementById('pupil-r').setAttribute('cy',62+dy);
+  const mouth=document.getElementById('lbot-mouth');
+  if(Math.random()>.5) mouth.setAttribute('d','M 70 76 Q 80 90 90 76 Q 80 84 70 76');
+  else mouth.setAttribute('d','M 64 76 Q 80 90 96 76');
+  setTimeout(()=>mouth.setAttribute('d','M 66 78 Q 80 84 94 78'),200);
+  const speech=document.getElementById('lbot-speech');
+  speech.textContent=_lbotLines[Math.floor(Math.random()*_lbotLines.length)];
+  speech.style.transform='translateX(-50%) scale(1)';
+  clearTimeout(window._lbotSpeechT);
+  window._lbotSpeechT=setTimeout(()=>{ speech.style.transform='translateX(-50%) scale(0)'; },900);
+  const hint=document.getElementById('lbot-hint');
+  if(_lbotPokes===3){ hint.textContent='ok ok — come on in ◈'; }
+  if(_lbotPokes>=5){
+    hint.textContent="alright that's enough lol";
+    const btn=document.getElementById('enter-btn');
+    btn.style.transform='scale(1.06)';
+    setTimeout(()=>btn.style.transform='scale(1)',400);
+  }
+}
 
 /* ══ AMBIENT PARTICLES ══ */
 function spawnAmbients(){
