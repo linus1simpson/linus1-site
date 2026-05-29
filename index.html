@@ -3035,17 +3035,49 @@ function openDispatch(id){
   const content=document.getElementById('dispatch-content');
   content.innerHTML=src.innerHTML;
   content.querySelectorAll('.dispatch-body p').forEach(p=>{p.style.marginBottom='1.4rem';});
+
+  // Add share link button at the bottom
+  const shareBar=document.createElement('div');
+  shareBar.style.cssText='margin-top:2.5rem;padding-top:1.5rem;border-top:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;';
+  shareBar.innerHTML=`
+    <p style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);">Share this dispatch</p>
+    <button id="dispatch-share-btn" onclick="copyDispatchLink('${id}')" class="btn btn-forest btn-sm">🔗 Copy Link</button>`;
+  content.appendChild(shareBar);
+
   const modal=document.getElementById('dispatch-modal');
   modal.style.display='block';
   modal.scrollTop=0;
   document.body.style.overflow='hidden';
+
+  // Update URL so it can be copied/shared directly
+  history.replaceState(null,'','#'+id);
 }
 function closeDispatch(){
   document.getElementById('dispatch-modal').style.display='none';
   document.body.style.overflow='';
+  history.replaceState(null,'',window.location.pathname);
+}
+function copyDispatchLink(id){
+  const url='https://linus1.com/#'+id;
+  navigator.clipboard.writeText(url).then(()=>{
+    const btn=document.getElementById('dispatch-share-btn');
+    if(btn){ const orig=btn.textContent; btn.textContent='✓ Link Copied!'; setTimeout(()=>btn.textContent=orig,2000); }
+  });
 }
 document.getElementById('dispatch-modal').addEventListener('click',function(e){
   if(e.target===this)closeDispatch();
+});
+
+// Auto-open dispatch if URL has a dispatch hash
+window.addEventListener('load',function(){
+  const hash=window.location.hash.replace('#','');
+  if(hash&&hash.startsWith('dispatch-')&&document.getElementById(hash)){
+    setTimeout(()=>{
+      const ent=document.getElementById('entrance');
+      if(ent)ent.style.display='none';
+      openDispatch(hash);
+    },500);
+  }
 });
 
 /* ══ PULL UP ══ */
