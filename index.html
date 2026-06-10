@@ -513,6 +513,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
   margin-top:1.5rem;
 }
 .gallery-piece{
+  cursor:zoom-in;
   position:relative;
   cursor:pointer;
   transition:transform .3s ease;
@@ -632,8 +633,19 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
   .gallery-piece:hover{transform:none;}
 }
 
+/* ══ MATCHBOX MEMORY GAME ══ */
+.mm-card{aspect-ratio:1;border-radius:8px;cursor:pointer;position:relative;transform-style:preserve-3d;transition:transform .4s;}
+.mm-card.flipped,.mm-card.matched{transform:rotateY(180deg);}
+.mm-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.mm-back{background:linear-gradient(135deg,#0e6e72,#072a30);border:2px solid rgba(201,146,46,.4);}
+.mm-back span{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:rgba(201,146,46,.7);font-weight:300;}
+.mm-front{transform:rotateY(180deg);background:#0d1f3c;border:2px solid rgba(201,146,46,.5);}
+.mm-front img{width:100%;height:100%;object-fit:cover;}
+.mm-card.matched .mm-front{border-color:#0e9aa0;box-shadow:0 0 14px rgba(14,154,160,.5);}
+@keyframes mm-pop{0%{transform:rotateY(180deg) scale(1);}50%{transform:rotateY(180deg) scale(1.08);}100%{transform:rotateY(180deg) scale(1);}}
+.mm-card.just-matched .mm-front{animation:mm-pop .4s ease;}
+
 </style>
-</head>
 <body>
 
 <div id="ambients"></div>
@@ -679,7 +691,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
     <div id="lbot-speech" style="position:absolute;top:-14px;left:50%;transform:translateX(-50%) scale(0);transform-origin:bottom center;background:#faf8f4;color:#072a30;font-family:'IBM Plex Mono',monospace;font-size:.5rem;letter-spacing:.05em;padding:.4rem .7rem;border-radius:10px;white-space:nowrap;transition:transform .2s;font-weight:600;"></div>
   </div>
 
-  <p id="lbot-hint" style="font-family:'IBM Plex Mono',monospace;font-size:.46rem;letter-spacing:.25em;color:rgba(250,248,244,.35);position:relative;transition:opacity .4s;">poke Lbot →</p>
+  <p id="lbot-hint" style="font-family:'IBM Plex Mono',monospace;font-size:.46rem;letter-spacing:.25em;color:rgba(250,248,244,.35);position:relative;transition:opacity .4s;">poke him →</p>
 
   <button id="enter-btn"
     onclick="document.getElementById('entrance').style.display='none';const _nt=document.getElementById('name-tag');if(_nt)setTimeout(()=>{_nt.style.display='flex';},600);spawnAmbients();"
@@ -1051,11 +1063,57 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
   </div>
 </section>
 
+<!-- MEMORY MATCH -->
+<div class="room-div"><div class="rd-line" style="background:rgba(250,248,244,.08);"></div><div class="rd-badge" style="background:var(--navy2);border-color:rgba(176,125,42,.14);"><span class="rd-num">08</span>The Matchbox</div><div class="rd-line" style="background:rgba(250,248,244,.08);"></div></div>
+<section id="matchbox" style="padding:5rem 3rem;background:#0a1a28;position:relative;overflow:hidden;">
+  <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(176,125,42,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(176,125,42,.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;"></div>
+  <div style="max-width:560px;margin:0 auto;text-align:center;position:relative;">
+    <p style="font-family:'IBM Plex Mono',monospace;font-size:.48rem;letter-spacing:.35em;text-transform:uppercase;color:rgba(14,110,114,.8);margin-bottom:.8rem;">08 · The Matchbox</p>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:300;color:#faf8f4;margin-bottom:.6rem;">Match the <em style="color:#c9922e;">Art</em></h2>
+    <p style="font-family:'DM Sans',sans-serif;font-size:.88rem;color:rgba(244,248,247,.45);margin-bottom:2rem;">Flip the cards. Find all 8 pairs. Unlock the vault.</p>
+
+    <!-- Stats -->
+    <div id="mm-stats" style="display:none;justify-content:center;gap:2rem;margin-bottom:1.5rem;">
+      <div><p style="font-family:'IBM Plex Mono',monospace;font-size:.4rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,248,247,.3);">Moves</p><p id="mm-moves" style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#c9922e;">0</p></div>
+      <div><p style="font-family:'IBM Plex Mono',monospace;font-size:.4rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,248,247,.3);">Pairs</p><p id="mm-pairs" style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#0e9aa0;">0 / 8</p></div>
+      <div><p style="font-family:'IBM Plex Mono',monospace;font-size:.4rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,248,247,.3);">Time</p><p id="mm-time" style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#faf8f4;">0:00</p></div>
+    </div>
+
+    <!-- Board -->
+    <div id="mm-board" style="display:none;grid-template-columns:repeat(4,1fr);gap:.6rem;max-width:460px;margin:0 auto 1.5rem;"></div>
+
+    <!-- Start -->
+    <div id="mm-start-wrap">
+      <button onclick="startMatchbox()" class="btn btn-orange">Play The Matchbox ◈</button>
+    </div>
+
+    <button id="mm-restart" onclick="startMatchbox()" class="btn btn-sm" style="display:none;background:rgba(244,248,247,.08);color:rgba(244,248,247,.6);border:1px solid rgba(244,248,247,.15);">Shuffle &amp; Restart</button>
+
+    <!-- VAULT 4 -->
+    <div id="vault4-wrapper" style="display:none;overflow:hidden;opacity:0;transform:translateY(-12px);transition:opacity .8s ease,transform .8s ease;max-width:600px;margin:2.5rem auto 0;">
+      <div style="background:rgba(201,146,46,.08);border:1px solid rgba(201,146,46,.3);border-radius:12px;padding:1.8rem;text-align:left;">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(201,146,46,.8);margin-bottom:1rem;">◈ Vault Unlocked</p>
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.2rem;">
+          <div>
+            <p style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-style:italic;color:rgba(244,248,247,.9);">Slide</p>
+            <p style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;letter-spacing:.12em;color:rgba(244,248,247,.3);margin-top:.3rem;">Written &amp; produced by Linus Simpson &nbsp;·&nbsp; Unreleased</p>
+          </div>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:.38rem;letter-spacing:.15em;text-transform:uppercase;padding:.22rem .6rem;border-radius:4px;background:rgba(201,146,46,.2);border:1px solid rgba(201,146,46,.4);color:rgba(201,146,46,.9);">Vault</span>
+        </div>
+        <audio controls style="width:100%;border-radius:8px;accent-color:#c9922e;margin-top:.5rem;">
+          <source src="slide.mp3" type="audio/mpeg">
+        </audio>
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:.38rem;letter-spacing:.08em;color:rgba(244,248,247,.2);margin-top:.7rem;">⟶ All yours. Memory like that deserves a reward.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="gallery">
   <div class="g-top reveal">
     <div><div class="kicker"><div class="kd"></div>On the Wall</div><h2 class="h2">Works &amp; <span class="emg">Frequencies</span></h2></div>
     <span class="g-count">01 — 08 / ongoing</span>
-    <div class="gallery-piece reveal" data-tag="Landscape">
+    <div class="gallery-piece reveal" data-tag="Landscape" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1067,7 +1125,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       </div>
       <p class="gp-meta">12 &nbsp;·&nbsp; Landscape · Marker · 2022</p>
     </div>
-    <div class="gallery-piece reveal" data-tag="Abstract">
+    <div class="gallery-piece reveal" data-tag="Abstract" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1079,7 +1137,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       </div>
       <p class="gp-meta">13 &nbsp;·&nbsp; Abstract · Pen · 2024</p>
     </div>
-    <div class="gallery-piece reveal" data-tag="Portrait">
+    <div class="gallery-piece reveal" data-tag="Portrait" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1091,7 +1149,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       </div>
       <p class="gp-meta">14 &nbsp;·&nbsp; Portrait · Ink · 2024</p>
     </div>
-    <div class="gallery-piece reveal" data-tag="Illustration">
+    <div class="gallery-piece reveal" data-tag="Illustration" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1103,7 +1161,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       </div>
       <p class="gp-meta">15 &nbsp;·&nbsp; Illustration · Ink · 2024</p>
     </div>
-    <div class="gallery-piece reveal" data-tag="Abstract">
+    <div class="gallery-piece reveal" data-tag="Abstract" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1115,7 +1173,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       </div>
       <p class="gp-meta">16 &nbsp;·&nbsp; Abstract · Red Ink · 2020</p>
     </div>
-    <div class="gallery-piece reveal" data-tag="Abstract">
+    <div class="gallery-piece reveal" data-tag="Abstract" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1127,7 +1185,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       </div>
       <p class="gp-meta">17 &nbsp;·&nbsp; Mixed Media · Marker · 2026</p>
     </div>
-    <div class="gallery-piece reveal" data-tag="Abstract">
+    <div class="gallery-piece reveal" data-tag="Abstract" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1148,7 +1206,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
   <button class="g-filter" onclick="filterGallery('Landscape',this)">Landscape</button>
 </div>
 <div class="wall" id="galleryWall">
-    <div class="gallery-piece reveal" data-tag="Abstract">
+    <div class="gallery-piece reveal" data-tag="Abstract" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1163,7 +1221,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       </div>
       <p class="gp-meta">01 &nbsp;·&nbsp; Abstract · Marker · 2024</p>
     </div>
-    <div class="gallery-piece reveal" data-tag="Abstract">
+    <div class="gallery-piece reveal" data-tag="Abstract" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1178,7 +1236,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       </div>
       <p class="gp-meta">02 &nbsp;·&nbsp; Abstract · Marker · 2020</p>
     </div>
-    <div class="gallery-piece reveal" data-tag="Abstract">
+    <div class="gallery-piece reveal" data-tag="Abstract" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1193,7 +1251,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       </div>
       <p class="gp-meta">03 &nbsp;·&nbsp; Colored Pencil · 2025</p>
     </div>
-    <div class="gallery-piece reveal" data-tag="Portrait">
+    <div class="gallery-piece reveal" data-tag="Portrait" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1208,7 +1266,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       </div>
       <p class="gp-meta">04 &nbsp;·&nbsp; Portrait · Red Ink · 2024</p>
     </div>
-    <div class="gallery-piece reveal" data-tag="Portrait">
+    <div class="gallery-piece reveal" data-tag="Portrait" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1223,7 +1281,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       </div>
       <p class="gp-meta">05 &nbsp;·&nbsp; Self Portrait · Mixed Media · 2020</p>
     </div>
-    <div class="gallery-piece reveal" data-tag="Illustration">
+    <div class="gallery-piece reveal" data-tag="Illustration" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1238,7 +1296,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       </div>
       <p class="gp-meta">06 &nbsp;·&nbsp; Illustration · Pen · 2024</p>
     </div>
-    <div class="gallery-piece reveal" data-tag="Illustration">
+    <div class="gallery-piece reveal" data-tag="Illustration" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1253,7 +1311,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       </div>
       <p class="gp-meta">07 &nbsp;·&nbsp; Birds · Marker · 2024</p>
     </div>
-    <div class="gallery-piece reveal" data-tag="Landscape">
+    <div class="gallery-piece reveal" data-tag="Landscape" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1268,7 +1326,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       </div>
       <p class="gp-meta">08 &nbsp;·&nbsp; Landscape · Marker · 2020</p>
     </div>
-    <div class="gallery-piece reveal" data-tag="Abstract">
+    <div class="gallery-piece reveal" data-tag="Abstract" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1283,7 +1341,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       </div>
       <p class="gp-meta">09 &nbsp;·&nbsp; Abstract · Red Ink · 2020</p>
     </div>
-    <div class="gallery-piece reveal" data-tag="Portrait">
+    <div class="gallery-piece reveal" data-tag="Portrait" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1298,7 +1356,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       </div>
       <p class="gp-meta">10 &nbsp;·&nbsp; Portrait · Marker · 2024</p>
     </div>
-    <div class="gallery-piece reveal" data-tag="Illustration">
+    <div class="gallery-piece reveal" data-tag="Illustration" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1313,7 +1371,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       </div>
       <p class="gp-meta">11 &nbsp;·&nbsp; Illustration · Marker · 2026</p>
     </div>
-    <div class="gallery-piece reveal" data-tag="Landscape">
+    <div class="gallery-piece reveal" data-tag="Landscape" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1328,7 +1386,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       </div>
       <p class="gp-meta">12 &nbsp;·&nbsp; Landscape · Marker · 2022</p>
     </div>
-    <div class="gallery-piece reveal" data-tag="Abstract">
+    <div class="gallery-piece reveal" data-tag="Abstract" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1343,7 +1401,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       </div>
       <p class="gp-meta">13 &nbsp;·&nbsp; Abstract · Pen · 2024</p>
     </div>
-    <div class="gallery-piece reveal" data-tag="Portrait">
+    <div class="gallery-piece reveal" data-tag="Portrait" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1358,7 +1416,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       </div>
       <p class="gp-meta">14 &nbsp;·&nbsp; Portrait · Ink · 2024</p>
     </div>
-    <div class="gallery-piece reveal" data-tag="Illustration">
+    <div class="gallery-piece reveal" data-tag="Illustration" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1373,7 +1431,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       </div>
       <p class="gp-meta">15 &nbsp;·&nbsp; Illustration · Ink · 2024</p>
     </div>
-    <div class="gallery-piece reveal" data-tag="Abstract">
+    <div class="gallery-piece reveal" data-tag="Abstract" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1388,7 +1446,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       </div>
       <p class="gp-meta">16 &nbsp;·&nbsp; Abstract · Red Ink · 2020</p>
     </div>
-    <div class="gallery-piece reveal" data-tag="Abstract">
+    <div class="gallery-piece reveal" data-tag="Abstract" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1403,7 +1461,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       </div>
       <p class="gp-meta">17 &nbsp;·&nbsp; Mixed Media · Marker · 2026</p>
     </div>
-    <div class="gallery-piece reveal" data-tag="Abstract">
+    <div class="gallery-piece reveal" data-tag="Abstract" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1419,7 +1477,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       <p class="gp-meta">18 &nbsp;·&nbsp; Abstract · Marker · 2024</p>
     </div>
   
-    <div class="gallery-piece reveal" data-tag="Illustration">
+    <div class="gallery-piece reveal" data-tag="Illustration" onclick="lbFromPiece(this)">
       <div class="gp-frame">
         <div class="gp-tape gp-tape-tl"></div>
         <div class="gp-tape gp-tape-tr"></div>
@@ -1711,7 +1769,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
 <footer>
   <div class="ft">
     <div><p class="ft-brand">The <em>Lounge</em></p><p style="font-family:'IBM Plex Mono',monospace;font-size:.44rem;letter-spacing:.18em;color:rgba(26,61,43,.7);margin-top:.3rem;">linus1.com</p><p class="ft-tag">Sound · Art · Community · San Juan Capistrano, CA</p><div class="ft-socs"><a href="https://soundcloud.com/smoovebapi" target="_blank" class="ft-s">sc</a><a href="https://open.spotify.com/artist/0jvzWeLTBXahyvkRTlzx0E" target="_blank" class="ft-s">sp</a><a href="https://www.instagram.com/linus_pimpson/" target="_blank" class="ft-s">ig</a><a href="https://www.youtube.com/@smoovebapi" target="_blank" class="ft-s">yt</a></div></div>
-    <div><p class="ft-ct">Rooms</p><ul class="ft-l"><li><a href="#home">Entrance</a></li><li><a href="#sound">The Booth</a></li><li><a href="#vault">The Vault</a></li><li><a href="#maze-section">The Maze</a></li><li><a href="#gallery">Gallery Wall</a></li><li><a href="#dispatch">The Dispatch</a></li><li><a href="#pullup">Pull Up</a></li><li><a href="#about">The Bar</a></li>
+    <div><p class="ft-ct">Rooms</p><ul class="ft-l"><li><a href="#home">Entrance</a></li><li><a href="#sound">The Booth</a></li><li><a href="#vault">The Vault</a></li><li><a href="#maze-section">The Maze</a></li><li><a href="#matchbox">The Matchbox</a></li><li><a href="#gallery">Gallery Wall</a></li><li><a href="#dispatch">The Dispatch</a></li><li><a href="#pullup">Pull Up</a></li><li><a href="#about">The Bar</a></li>
     <li><a href="#guestbook">Guestbook</a></li><li><a href="#artists">Back Room</a></li></ul></div>
     <div><p class="ft-ct">Contact</p><ul class="ft-l"><li><a href="mailto:hello@linus1.com">hello@linus1.com</a></li><li><a href="#">Bookings</a></li><li><a href="#">Artist Submissions</a></li><li><a href="#">Press</a></li><li><a href="#">Advertise</a></li></ul></div>
     <div><p class="ft-ct">Stay Updated</p><p style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;line-height:1.8;color:rgba(250,248,244,.25);margin-bottom:.9rem;">Monthly from the lounge.</p><div style="display:flex;border-radius:var(--radius-sm);overflow:hidden;"><input type="email" id="ftEm" placeholder="email" style="flex:1;background:rgba(250,248,244,.05);border:1px solid rgba(250,248,244,.1);border-right:none;color:var(--white);padding:.55rem .75rem;font-family:'IBM Plex Mono',monospace;font-size:.42rem;outline:none;"/><button onclick="ftSub()" style="background:var(--forest);color:var(--white);border:none;padding:.55rem .85rem;font-family:'IBM Plex Mono',monospace;font-size:.4rem;letter-spacing:.12em;box-shadow:0 3px 0 var(--forest3);transition:all .08s;">Go</button></div></div>
@@ -1729,7 +1787,6 @@ spawnAmbients();
 // entrance removed
 spawnAmbients();
 
-/* ══ INTERACTIVE LBOT — ENTRANCE HOOK ══ */
 let _lbotPokes = 0;
 const _lbotLines = ["hey!","oof","quit it!","hehe","ow!","stop!","that tickles","okok","again?!","bonk","yikes","🌟","wheee","my circuits!"];
 let _lbotAudio = null;
@@ -1795,6 +1852,111 @@ function pokeLbot(e){
     btn.style.transform='scale(1.06)';
     setTimeout(()=>btn.style.transform='scale(1)',400);
   }
+}
+
+/* ══ MATCHBOX MEMORY GAME ══ */
+let _mmFlipped=[], _mmMatched=0, _mmMoves=0, _mmLock=false, _mmTimer=null, _mmSeconds=0, _mmStarted=false;
+
+function _mmGetArt(){
+  const seen=new Set(), art=[];
+  document.querySelectorAll('.gallery-piece').forEach(p=>{
+    const img=p.querySelector('.gp-img'), title=p.querySelector('.gp-title');
+    if(img&&title&&!seen.has(title.textContent)){ seen.add(title.textContent); art.push({src:img.src,title:title.textContent}); }
+  });
+  return art;
+}
+
+function _mmSound(type){
+  try{
+    if(!_lbotAudio) _lbotAudio=new (window.AudioContext||window.webkitAudioContext)();
+    const o=_lbotAudio.createOscillator(), g=_lbotAudio.createGain();
+    o.connect(g); g.connect(_lbotAudio.destination);
+    if(type==='flip'){ o.type='sine'; o.frequency.setValueAtTime(420,_lbotAudio.currentTime); o.frequency.exponentialRampToValueAtTime(620,_lbotAudio.currentTime+.06); g.gain.setValueAtTime(.1,_lbotAudio.currentTime); }
+    else if(type==='match'){ o.type='triangle'; o.frequency.setValueAtTime(540,_lbotAudio.currentTime); o.frequency.exponentialRampToValueAtTime(880,_lbotAudio.currentTime+.12); g.gain.setValueAtTime(.16,_lbotAudio.currentTime); }
+    else { o.type='sawtooth'; o.frequency.setValueAtTime(200,_lbotAudio.currentTime); o.frequency.exponentialRampToValueAtTime(120,_lbotAudio.currentTime+.15); g.gain.setValueAtTime(.08,_lbotAudio.currentTime); }
+    g.gain.exponentialRampToValueAtTime(.001,_lbotAudio.currentTime+.2);
+    o.start(); o.stop(_lbotAudio.currentTime+.2);
+  }catch(e){}
+}
+
+function startMatchbox(){
+  const allArt=_mmGetArt();
+  const picks=[...allArt].sort(()=>Math.random()-.5).slice(0,8);
+  let deck=[];
+  picks.forEach((p,i)=>{ deck.push({...p,pid:i}); deck.push({...p,pid:i}); });
+  deck=deck.sort(()=>Math.random()-.5);
+
+  _mmFlipped=[]; _mmMatched=0; _mmMoves=0; _mmLock=false; _mmSeconds=0; _mmStarted=false;
+  clearInterval(_mmTimer);
+
+  document.getElementById('mm-start-wrap').style.display='none';
+  document.getElementById('mm-stats').style.display='flex';
+  document.getElementById('mm-restart').style.display='inline-flex';
+  document.getElementById('mm-moves').textContent='0';
+  document.getElementById('mm-pairs').textContent='0 / 8';
+  document.getElementById('mm-time').textContent='0:00';
+
+  const board=document.getElementById('mm-board');
+  board.style.display='grid';
+  board.innerHTML=deck.map((c,idx)=>`
+    <div class="mm-card" data-idx="${idx}" data-pid="${c.pid}" onclick="flipCard(${idx})">
+      <div class="mm-face mm-back"><span>L1</span></div>
+      <div class="mm-face mm-front"><img src="${c.src}" alt="${c.title}"/></div>
+    </div>`).join('');
+}
+
+function _mmStartTimer(){
+  if(_mmStarted)return;
+  _mmStarted=true;
+  _mmTimer=setInterval(()=>{
+    _mmSeconds++;
+    const m=Math.floor(_mmSeconds/60), s=_mmSeconds%60;
+    document.getElementById('mm-time').textContent=`${m}:${s<10?'0':''}${s}`;
+  },1000);
+}
+
+function flipCard(idx){
+  if(_mmLock)return;
+  const card=document.querySelector(`.mm-card[data-idx="${idx}"]`);
+  if(!card||card.classList.contains('flipped')||card.classList.contains('matched'))return;
+  _mmStartTimer();
+  card.classList.add('flipped');
+  _mmSound('flip');
+  _mmFlipped.push(card);
+
+  if(_mmFlipped.length===2){
+    _mmMoves++;
+    document.getElementById('mm-moves').textContent=_mmMoves;
+    _mmLock=true;
+    const [a,b]=_mmFlipped;
+    if(a.dataset.pid===b.dataset.pid){
+      setTimeout(()=>{
+        a.classList.add('matched','just-matched'); b.classList.add('matched','just-matched');
+        a.classList.remove('flipped'); b.classList.remove('flipped');
+        _mmSound('match');
+        _mmMatched++;
+        document.getElementById('mm-pairs').textContent=`${_mmMatched} / 8`;
+        _mmFlipped=[]; _mmLock=false;
+        if(_mmMatched===8) _mmWin();
+      },500);
+    } else {
+      setTimeout(()=>{
+        a.classList.remove('flipped'); b.classList.remove('flipped');
+        _mmSound('miss');
+        _mmFlipped=[]; _mmLock=false;
+      },900);
+    }
+  }
+}
+
+function _mmWin(){
+  clearInterval(_mmTimer);
+  setTimeout(()=>{
+    const v=document.getElementById('vault4-wrapper');
+    v.style.display='block';
+    requestAnimationFrame(()=>{ v.style.opacity='1'; v.style.transform='translateY(0)'; });
+    v.scrollIntoView({behavior:'smooth',block:'center'});
+  },600);
 }
 
 /* ══ AMBIENT PARTICLES ══ */
@@ -2918,69 +3080,63 @@ if(vaultFrame){
    History · Current Events · Culture · Music · General Knowledge */
 const questionBank=[
   /* Music & Artists */
-  {q:"What does BPM stand for in music?",opts:["A. Bass Per Minute","B. Beats Per Measure","C. Beats Per Minute","D. Base Production Mode"],ans:"C"},
-  {q:"What California city is known as the birthplace of West Coast hip-hop?",opts:["A. San Francisco","B. Oakland","C. Compton","D. San Diego"],ans:"C"},
-  {q:"What is a 'sample' in hip-hop production?",opts:["A. A free trial of an album","B. A snippet of one song used in a new song","C. A live guitar solo","D. A music video clip"],ans:"B"},
-  {q:"What does a vinyl record need to play music?",opts:["A. Bluetooth","B. A needle and a turntable","C. WiFi","D. A USB drive"],ans:"B"},
-  {q:"What does SoundCloud allow artists to do?",opts:["A. Only listen to major label music","B. Upload and share their own music directly","C. Book live shows","D. Print vinyl records"],ans:"B"},
-  {q:"What is a 'music producer' responsible for?",opts:["A. Selling concert tickets","B. Shaping the sound and arrangement of a recording","C. Managing the artist's schedule","D. Designing album artwork"],ans:"B"},
-  {q:"Which genre blends R&B, soul, and urban influences into modern pop?",opts:["A. Heavy metal","B. Country","C. Neo-soul / Alternative R&B","D. Classic rock"],ans:"C"},
-  {q:"What does 'dropping an album' mean?",opts:["A. Accidentally breaking a record","B. Releasing new music to the public","C. Canceling a tour","D. Signing with a label"],ans:"B"},
-  {q:"What is 'merch' short for?",opts:["A. Mercury","B. Merchant","C. Merchandise","D. Marketing"],ans:"C"},
-  {q:"What does 'independent artist' mean?",opts:["A. An artist who doesn't perform live","B. An artist who releases music without a major label","C. An artist who only makes instrumental music","D. An artist from another country"],ans:"B"},
-  {q:"What does 'dropping a single' mean?",opts:["A. Losing a music award","B. Releasing one song to the public","C. Breaking a vinyl record","D. Leaving a music group"],ans:"B"},
-  {q:"What is a 'collab' in music?",opts:["A. A collaboration between two or more artists","B. A type of music contract","C. A remix album","D. A solo acoustic set"],ans:"A"},
-  {q:"What does 'streaming' mean in the music industry?",opts:["A. Playing music live on stage","B. Listening to music online without downloading it","C. Selling physical CDs","D. Licensing music to films"],ans:"B"},
-  {q:"Which of these is a music streaming platform?",opts:["A. Dropbox","B. Spotify","C. Google Docs","D. Zoom"],ans:"B"},
-  {q:"What instrument does a DJ primarily use to mix music?",opts:["A. Guitar","B. Piano","C. Turntables","D. Saxophone"],ans:"C"},
-  {q:"What does 'A&R' stand for in the music industry?",opts:["A. Artists and Revenue","B. Audio and Recording","C. Artists and Repertoire","D. Album and Release"],ans:"C"},
-  {q:"What is a music 'feature'?",opts:["A. The main hook of a song","B. A guest artist appearing on someone else's track","C. The album artwork","D. A bonus track at the end"],ans:"B"},
-  {q:"What does 'going platinum' mean for a song or album?",opts:["A. Winning a Grammy","B. Selling or streaming over 1 million copies","C. Signing to a major label","D. Performing at a sold out show"],ans:"B"},
+  {q:"A track clocking 174 BPM almost always lives in which genre?",opts:["A. Trap", "B. Lo-fi chill", "C. Bossa nova", "D. Drum and bass"],ans:"D"},
+  {q:"Phil Spector is famous for which dense studio technique?",opts:["A. Side-chaining", "B. Direct input", "C. Wall of Sound", "D. Close miking"],ans:"C"},
+  {q:"Sample another artist's record without clearing it, and you risk a:",opts:["A. Sync deal", "B. Gold plaque", "C. Lawsuit", "D. Co-sign"],ans:"C"},
+  {q:"A vinyl record's needle starts at the:",opts:["A. B-side first", "B. Center label", "C. Outer edge", "D. Middle groove"],ans:"C"},
+  {q:"What does panning a sound actually change?",opts:["A. Its loudness", "B. Its tempo", "C. Its pitch", "D. Its left-right position"],ans:"D"},
+  {q:"SZA, Frank Ocean, and Daniel Caesar mostly live under which umbrella?",opts:["A. Drill", "B. Hardcore", "C. Bluegrass", "D. Alt R&B"],ans:"D"},
+  {q:"Mastering is the stage where a song gets its final:",opts:["A. Title", "B. Demo", "C. Polish", "D. Lyrics"],ans:"C"},
+  {q:"In the industry, 'A&R' stands for Artists and:",opts:["A. Reach", "B. Repertoire", "C. Radio", "D. Revenue"],ans:"B"},
+  {q:"The 'hook' of a song is the part that's:",opts:["A. Longest", "B. Hardest to play", "C. Quietest", "D. Catchiest"],ans:"D"},
+  {q:"A US single goes platinum at roughly how many units?",opts:["A. 1 million", "B. 500k", "C. 5 million", "D. 100k"],ans:"A"},
+  {q:"A 'feature' (ft.) on a track means there's a:",opts:["A. Live version", "B. Hidden track", "C. Guest artist", "D. Bonus beat"],ans:"C"},
+  {q:"Which knob widens the stereo image of a mix?",opts:["A. Reverb", "B. Gate", "C. Gain", "D. Panning"],ans:"D"},
+  {q:"Lo-fi music is loved for its intentional:",opts:["A. Warmth and hiss", "B. Loudness", "C. Auto-tune", "D. Silence"],ans:"A"},
+  {q:"Who turned the deep three-pointer into a weapon and reshaped basketball culture?",opts:["A. Steph Curry", "B. LeBron", "C. Shaq", "D. Kawhi"],ans:"A"},
+  {q:"A producer who 'flips' a sample is doing what to it?",opts:["A. Reworking it", "B. Muting it", "C. Deleting it", "D. Selling it"],ans:"A"},
   /* SoCal & Culture */
-  {q:"What ocean borders California on the west?",opts:["A. Atlantic","B. Arctic","C. Indian","D. Pacific"],ans:"D"},
-  {q:"The city of San Juan Capistrano is located in which county?",opts:["A. Los Angeles County","B. San Diego County","C. Orange County","D. Riverside County"],ans:"C"},
-  {q:"What is the name of the famous music festival held annually in Indio, California?",opts:["A. Lollapalooza","B. Coachella","C. Bonnaroo","D. SXSW"],ans:"B"},
-  {q:"Which of these cities is in Southern California?",opts:["A. San Jose","B. Sacramento","C. Fresno","D. Dana Point"],ans:"D"},
-  {q:"What is the capital of California?",opts:["A. Los Angeles","B. San Francisco","C. Sacramento","D. San Diego"],ans:"C"},
-  {q:"What Spanish mission is located in San Juan Capistrano?",opts:["A. Mission San Diego","B. Mission Santa Barbara","C. Mission San Juan Capistrano","D. Mission San Luis Obispo"],ans:"C"},
-  {q:"Which of these is a Spanish word for friend?",opts:["A. Hermano","B. Primo","C. Amigo","D. Abuela"],ans:"C"},
-  {q:"What does bilingual mean?",opts:["A. Having two jobs","B. Speaking two languages","C. Playing two instruments","D. Living in two cities"],ans:"B"},
-  {q:"What city in California is known for its surf culture and beaches?",opts:["A. Bakersfield","B. Fresno","C. Huntington Beach","D. Modesto"],ans:"C"},
-  {q:"What freeway connects Los Angeles to San Diego?",opts:["A. I-80","B. I-5","C. I-10","D. I-405"],ans:"B"},
+  {q:"San Juan Capistrano is famous each spring for the return of the:",opts:["A. Monarchs", "B. Swallows", "C. Whales", "D. Pelicans"],ans:"B"},
+  {q:"Dana Point, Laguna, and San Juan Capistrano all sit in which county?",opts:["A. Riverside", "B. Orange", "C. San Diego", "D. Los Angeles"],ans:"B"},
+  {q:"Coachella takes place each year in which desert town?",opts:["A. Barstow", "B. Indio", "C. Needles", "D. Blythe"],ans:"B"},
+  {q:"The scenic coastal route through SoCal is better known as:",opts:["A. The PCH", "B. Route 66", "C. The 5", "D. The 405"],ans:"A"},
+  {q:"Driving LA to San Diego, you'd mostly take which interstate?",opts:["A. I-8", "B. I-10", "C. I-15", "D. I-5"],ans:"D"},
+  {q:"California's old missions were founded in the 1700s by the:",opts:["A. Dutch", "B. British", "C. Spanish", "D. Russians"],ans:"C"},
+  {q:"The 'California burrito' is famously stuffed with carne asada and:",opts:["A. Black beans", "B. Lettuce", "C. Rice", "D. French fries"],ans:"D"},
+  {q:"SoCal beaches face which body of water?",opts:["A. Gulf", "B. Atlantic", "C. Caribbean", "D. Pacific"],ans:"D"},
+  {q:"What is the capital of California?",opts:["A. LA", "B. Fresno", "C. Sacramento", "D. San Diego"],ans:"C"},
+  {q:"Someone bilingual in EN/ES speaks English and:",opts:["A. Spanish", "B. Italian", "C. French", "D. Portuguese"],ans:"A"},
   /* Art & Creativity */
-  {q:"What does 'abstract art' mean?",opts:["A. Art that looks exactly like real life","B. Art that uses shapes and colors rather than realistic images","C. Art made only with watercolors","D. Art from ancient civilizations"],ans:"B"},
-  {q:"Which of these is a drawing tool?",opts:["A. A lathe","B. A Sharpie marker","C. A socket wrench","D. A soldering iron"],ans:"B"},
-  {q:"What is a 'zine'?",opts:["A. A type of electric guitar","B. A self-published small magazine or booklet","C. A music genre","D. A video editing app"],ans:"B"},
-  {q:"What does 'mixed media' mean in art?",opts:["A. Art made only with paint","B. Art that combines different materials and techniques","C. Art made for TV commercials","D. Digital art only"],ans:"B"},
-  {q:"What artist is known for drip painting on large canvases on the floor?",opts:["A. Pablo Picasso","B. Andy Warhol","C. Jackson Pollock","D. Salvador Dali"],ans:"C"},
-  {q:"What is a 'commission' in the art world?",opts:["A. A percentage taken by a streaming platform","B. When someone pays an artist to create a specific piece","C. A fine for using copyrighted images","D. An art school degree"],ans:"B"},
-  {q:"What does Jean-Michel Basquiat's work primarily reflect?",opts:["A. Abstract geometry","B. Street culture, race, and urban experience","C. Landscape painting","D. Classical mythology"],ans:"B"},
-  /* Tech & Social Media */
-  {q:"What does AI stand for?",opts:["A. Automated Interface","B. Artificial Intelligence","C. Advanced Internet","D. Applied Innovation"],ans:"B"},
-  {q:"What does 'going viral' mean online?",opts:["A. Getting a computer virus","B. A post spreading rapidly to millions of people","C. Live streaming an event","D. Posting every day"],ans:"B"},
-  {q:"What app became the most downloaded app in the world around 2020-2022?",opts:["A. Instagram","B. Snapchat","C. TikTok","D. Twitter"],ans:"C"},
-  {q:"What year was Instagram launched?",opts:["A. 2008","B. 2010","C. 2012","D. 2006"],ans:"B"},
-  {q:"What does 'content creator' mean in today's world?",opts:["A. A journalist at a newspaper","B. Someone who makes original videos, music, or posts online","C. A movie director","D. A video game designer"],ans:"B"},
-  {q:"Which platform is primarily used for short-form video content?",opts:["A. LinkedIn","B. Pinterest","C. TikTok","D. Reddit"],ans:"C"},
-  {q:"What does 'algorithm' mean in the context of social media?",opts:["A. A type of computer virus","B. The system that decides what content you see","C. A new programming language","D. A digital art filter"],ans:"B"},
-  {q:"What does NFT stand for?",opts:["A. New Financial Technology","B. Non-Fungible Token","C. Network File Transfer","D. Next Future Trend"],ans:"B"},
-  {q:"What is a 'podcast'?",opts:["A. A live radio show","B. An on-demand audio show you can listen to anytime","C. A music video series","D. A type of social media post"],ans:"B"},
-  {q:"What does 'bandwidth' refer to in internet terms?",opts:["A. The size of your screen","B. How much data can be transferred at one time","C. The number of websites you visit","D. Your wifi password strength"],ans:"B"},
+  {q:"Abstract art cares more about feeling and form than:",opts:["A. Framing", "B. Realism", "C. Color", "D. Size"],ans:"B"},
+  {q:"Jackson Pollock is known for which wild technique?",opts:["A. Etching", "B. Sculpting", "C. Drip painting", "D. Carving"],ans:"C"},
+  {q:"Basquiat's art grew out of which scene?",opts:["A. Renaissance", "B. Baroque", "C. Pottery", "D. Street art"],ans:"D"},
+  {q:"'Mixed media' means an artist combines different:",opts:["A. Frames", "B. Galleries", "C. Materials", "D. Buyers"],ans:"C"},
+  {q:"A 'zine' is a small self-published:",opts:["A. Mural", "B. Podcast", "C. Sculpture", "D. Booklet"],ans:"D"},
+  {q:"When art is 'commissioned,' someone is paying you to:",opts:["A. Make it", "B. Teach it", "C. Sell it", "D. Frame it"],ans:"A"},
+  {q:"Andy Warhol is the face of which movement?",opts:["A. Pop Art", "B. Dada", "C. Realism", "D. Cubism"],ans:"A"},
+  /* Music, Food & Screen */
+  {q:"In-N-Out's not-so-secret menu style with extra sauce and grilled onions is called:",opts:["A. Protein Style", "B. Animal Style", "C. Flying Dutchman", "D. Double-Double"],ans:"B"},
+  {q:"Which late rapper's album 'good kid, m.A.A.d city' is set in Compton?",opts:["A. Nipsey Hussle", "B. Kendrick Lamar", "C. Juice WRLD", "D. Mac Miller"],ans:"B"},
+  {q:"In 'Pulp Fiction,' what do they call a Quarter Pounder in Paris?",opts:["A. Le Big Mac", "B. Royale with Cheese", "C. Le Whopper", "D. Cheese Royale"],ans:"B"},
+  {q:"A taco spot's 'al pastor' meat is traditionally cooked on a:",opts:["A. Vertical spit", "B. Open flame", "C. Smoker", "D. Flat top"],ans:"A"},
+  {q:"Which streaming hit features a kid named Eleven and a place called the Upside Down?",opts:["A. The OA", "B. Dark", "C. Wednesday", "D. Stranger Things"],ans:"D"},
+  {q:"'Boba' tea is best known for the chewy pearls made from:",opts:["A. Gelatin", "B. Tapioca", "C. Rice flour", "D. Agar"],ans:"B"},
+  {q:"In 'Breaking Bad,' what was Walter White's street name?",opts:["A. Heisenberg", "B. Mr. White", "C. Blue", "D. The Cook"],ans:"A"},
+  {q:"Which SoCal-born chain put the 'Crunchwrap' on the map?",opts:["A. El Pollo Loco", "B. Del Taco", "C. Taco Bell", "D. Rubio's"],ans:"C"},
+  {q:"Daft Punk performed for years hiding their faces behind:",opts:["A. Hoods", "B. Helmets", "C. Masks", "D. Paint"],ans:"B"},
+  {q:"The animated film 'Spider-Verse' follows which young hero?",opts:["A. Miles Morales", "B. Peter Parker", "C. Ben Reilly", "D. Gwen Stacy"],ans:"A"},
   /* Pop Culture & History */
-  {q:"Who was the first President of the United States?",opts:["A. Thomas Jefferson","B. Abraham Lincoln","C. George Washington","D. Benjamin Franklin"],ans:"C"},
-  {q:"In what year did World War II end?",opts:["A. 1942","B. 1945","C. 1948","D. 1950"],ans:"B"},
-  {q:"Martin Luther King Jr. gave his I Have a Dream speech in which city?",opts:["A. Atlanta","B. Chicago","C. Washington D.C.","D. Birmingham"],ans:"C"},
-  {q:"The Berlin Wall fell in which year?",opts:["A. 1979","B. 1985","C. 1989","D. 1991"],ans:"C"},
-  {q:"Which streaming platform created the show Stranger Things?",opts:["A. Hulu","B. HBO Max","C. Disney+","D. Netflix"],ans:"D"},
-  {q:"What city hosted the 2024 Summer Olympics?",opts:["A. Tokyo","B. Los Angeles","C. Paris","D. London"],ans:"C"},
-  {q:"What does RSVP stand for?",opts:["A. Reserve Seats Via Phone","B. Répondez s'il vous plaît — please reply","C. Request Special Venue Pass","D. Really Simple Verified Plan"],ans:"B"},
-  {q:"Which decade did hip-hop originate in?",opts:["A. 1960s","B. 1970s","C. 1980s","D. 1990s"],ans:"B"},
-  {q:"What sport is LeBron James famous for?",opts:["A. Football","B. Baseball","C. Soccer","D. Basketball"],ans:"D"},
-  {q:"What does the word 'renaissance' mean?",opts:["A. Revolution","B. Rebirth","C. Resistance","D. Reflection"],ans:"B"},
-  {q:"What is the Grammy Award given for?",opts:["A. Best film of the year","B. Outstanding achievements in the music industry","C. Best TV performance","D. Most social media followers"],ans:"B"},
-  {q:"Who is known as the Queen of Pop?",opts:["A. Rihanna","B. Beyoncé","C. Madonna","D. Mariah Carey"],ans:"C"},
-  {q:"What does it mean to be an entrepreneur?",opts:["A. Someone who works at a large corporation","B. Someone who starts and runs their own business or venture","C. Someone who invests in the stock market only","D. Someone who works in government"],ans:"B"},
-  {q:"What is a 'brand' in the context of business?",opts:["A. A logo only","B. The overall identity, values, and image of a person or company","C. A type of trademark registration","D. A social media handle"],ans:"B"}
+  {q:"Hip-hop was born in which decade?",opts:["A. 1980s", "B. 1990s", "C. 1970s", "D. 1960s"],ans:"C"},
+  {q:"Which city hosted the 2024 Summer Olympics?",opts:["A. Tokyo", "B. London", "C. Rome", "D. Paris"],ans:"D"},
+  {q:"The Berlin Wall came down in:",opts:["A. 1993", "B. 1985", "C. 1989", "D. 1979"],ans:"C"},
+  {q:"MLK gave 'I Have a Dream' in which city?",opts:["A. Atlanta", "B. Washington DC", "C. Selma", "D. Memphis"],ans:"B"},
+  {q:"Which platform made 'Stranger Things'?",opts:["A. Max", "B. Peacock", "C. Netflix", "D. Hulu"],ans:"C"},
+  {q:"The word 'renaissance' literally means:",opts:["A. Rebirth", "B. Revolt", "C. Reform", "D. Retreat"],ans:"A"},
+  {q:"Which city is the cradle of West Coast hip-hop?",opts:["A. Sacramento", "B. Compton", "C. Oakland", "D. Fresno"],ans:"B"},
+  {q:"Madonna is crowned the Queen of:",opts:["A. Jazz", "B. Country", "C. Soul", "D. Pop"],ans:"D"},
+  {q:"An entrepreneur is someone who builds a venture and takes on the:",opts:["A. Risk", "B. Pension", "C. Salary", "D. Vacation"],ans:"A"},
+  {q:"In branding, your 'identity' is more than a logo — it's the overall:",opts:["A. Price", "B. Invoice", "C. Vibe", "D. Address"],ans:"C"},
+  {q:"RSVP comes from French and politely asks you to:",opts:["A. Reply", "B. Pay up", "C. Bring food", "D. Arrive late"],ans:"A"}
 ];
 
 // Pick 5 random questions from the bank — new set every load
@@ -3440,6 +3596,12 @@ document.addEventListener('click',e=>{
 });
 
 /* ══ LIGHTBOX ══ */
+function lbFromPiece(piece){
+  var img=piece.querySelector('.gp-img');
+  var titleEl=piece.querySelector('.gp-title');
+  if(!img)return;
+  openLightbox(img, titleEl?titleEl.textContent:'');
+}
 function openLightbox(img, title){
   document.getElementById('lightbox-img').src=img.src;
   document.getElementById('lightbox-caption').textContent=title;
@@ -3452,14 +3614,14 @@ function closeLightbox(){
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();});
 
-// Wire all gallery pieces to open lightbox on click
-document.querySelectorAll('.gallery-piece').forEach(piece=>{
+// Wire gallery pieces to open lightbox — event delegation so it always works
+document.addEventListener('click',function(e){
+  const piece=e.target.closest('.gallery-piece');
+  if(!piece)return;
   const img=piece.querySelector('.gp-img');
   const titleEl=piece.querySelector('.gp-title');
   if(!img)return;
-  piece.addEventListener('click',()=>{
-    openLightbox(img, titleEl?titleEl.textContent:'');
-  });
+  openLightbox(img, titleEl?titleEl.textContent:'');
 });
 
 </script>
