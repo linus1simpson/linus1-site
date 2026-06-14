@@ -157,11 +157,35 @@ section{padding:5.5rem 3rem;}
 .reveal.in{opacity:1;transform:translateY(0);}
 
 /* ═══ HERO ═══ */
-#home{min-height:100vh;padding:7rem 3rem 5rem;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;position:relative;overflow:hidden;background:var(--white);}
-.hero-rules{position:absolute;inset:0;background-image:repeating-linear-gradient(transparent,transparent 79px,var(--parch) 79px,var(--parch) 80px);opacity:.28;pointer-events:none;}
+#home{min-height:100vh;padding:6rem 3rem 5rem;display:flex;flex-direction:column;align-items:center;gap:3rem;position:relative;overflow:hidden;background:var(--white);}
+/* ══ BRAND BANNER — arcade meets modern ══ */
+.brandbar{position:relative;z-index:3;padding:3.2rem 3rem 2.4rem;text-align:center;border-bottom:1px solid rgba(176,125,42,.14);overflow:hidden;}
+.brandbar-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(14,110,114,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(14,110,114,.05) 1px,transparent 1px);background-size:34px 34px;pointer-events:none;mask-image:radial-gradient(ellipse 80% 100% at 50% 0%,#000,transparent 75%);-webkit-mask-image:radial-gradient(ellipse 80% 100% at 50% 0%,#000,transparent 75%);}
+.brandbar-tag{position:relative;font-family:'IBM Plex Mono',monospace;font-size:.46rem;letter-spacing:.42em;text-transform:uppercase;color:var(--forest);margin-bottom:1rem;animation:fadeUp .7s ease both;}
+.brandbar-name{position:relative;font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(3.4rem,12vw,8rem);line-height:.82;letter-spacing:-.03em;color:var(--navy);animation:fadeUp .7s .06s ease both;}
+.brandbar-name b{font-weight:600;}
+.brandbar-name .b1{color:var(--gold);font-style:italic;font-weight:600;}
+.brandbar-sub{position:relative;font-family:'DM Sans',sans-serif;font-size:.95rem;line-height:1.6;color:var(--muted);max-width:440px;margin:1.2rem auto 0;font-weight:400;animation:fadeUp .7s .12s ease both;}
+.brandbar-sub b{color:var(--ink);font-weight:600;}
+.howto{position:relative;display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;margin-top:2rem;animation:fadeUp .7s .18s ease both;}
+.howto-step{display:flex;align-items:center;gap:.7rem;background:var(--white);border:1px solid var(--border);border-radius:14px;padding:.85rem 1.2rem;min-width:188px;text-align:left;transition:transform .18s,box-shadow .18s,border-color .18s;cursor:default;}
+.howto-step:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(13,27,42,.1);border-color:rgba(14,110,114,.4);}
+.howto-ic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0;}
+.howto-ic.i1{background:rgba(196,64,42,.12);}
+.howto-ic.i2{background:rgba(14,110,114,.12);}
+.howto-ic.i3{background:rgba(201,146,46,.14);}
+.howto-step p{margin:0;}
+.howto-t{font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;color:var(--ink);line-height:1.2;}
+.howto-d{font-family:'IBM Plex Mono',monospace;font-size:.4rem;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;margin-top:.2rem;}
+@media(max-width:600px){
+  .brandbar{padding:2.4rem 1.4rem 2rem;}
+  .howto{gap:.7rem;}
+  .howto-step{min-width:0;width:100%;max-width:300px;}
+}
+
 .hero-glow{position:absolute;inset:0;background:radial-gradient(ellipse 55% 55% at 75% 45%,rgba(13,27,42,.04) 0%,transparent 70%);pointer-events:none;}
 .hero-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:.5rem;letter-spacing:.4em;text-transform:uppercase;color:var(--forest);margin-bottom:1.8rem;display:flex;align-items:center;gap:.7rem;animation:fadeUp .9s ease both;}
-.hero-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(3.5rem,5.5vw,6rem);font-weight:300;line-height:.93;letter-spacing:-.02em;animation:fadeUp .9s .1s ease both;}
+.hero-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(5.5rem,13vw,11rem);font-weight:600;line-height:.88;letter-spacing:-.04em;text-align:center;animation:fadeUp .9s .1s ease both;}
 .hero-h1 em{font-style:italic;color:var(--crimson);}
 .hero-h1 .hg{color:var(--forest);}
 .hero-h1 .hn{color:var(--navy);}
@@ -171,6 +195,13 @@ section{padding:5.5rem 3rem;}
 
 /* ═══ VINYL ═══ */
 .vinyl-col{display:flex;flex-direction:column;align-items:center;gap:1.4rem;animation:fadeUp 1s .4s ease both;}
+/* Hero track picker */
+.htrk{display:flex;align-items:center;gap:.7rem;padding:.5rem .75rem;border-radius:8px;cursor:pointer;border:1px solid transparent;transition:all .16s;}
+.htrk:hover{background:rgba(14,110,114,.06);border-color:rgba(14,110,114,.2);}
+.htrk.active{background:rgba(196,64,42,.08);border-color:rgba(196,64,42,.3);}
+.htrk-n{font-family:'IBM Plex Mono',monospace;font-size:.42rem;color:var(--muted);width:18px;flex-shrink:0;}
+.htrk-t{font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:500;color:var(--ink);}
+.htrk.active .htrk-t{color:var(--crimson);}
 .turntable{width:300px;height:300px;position:relative;}
 .tt-cab{position:absolute;inset:-22px;background:var(--navy);border-radius:var(--radius);box-shadow:0 0 0 1px rgba(176,125,42,.18),0 24px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(176,125,42,.08);}
 .tt-screw{position:absolute;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#f0d080,var(--brass));box-shadow:inset 0 1px 2px rgba(0,0,0,.4);}
@@ -504,7 +535,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
 @keyframes floatAmb{0%{opacity:0;transform:translateY(0);}10%{opacity:1;}90%{opacity:.4;}100%{opacity:0;transform:translateY(-100vh);}}
 
 /* ═══ RESPONSIVE ═══ */
-@media(max-width:1024px){#home{grid-template-columns:1fr;padding:7rem 2rem 4rem;}#about{grid-template-columns:1fr;padding:5rem 2rem;}.booth-grid{grid-template-columns:1fr;}.ft{grid-template-columns:1fr 1fr;}}
+@media(max-width:1024px){#home{padding:6rem 2rem 4rem;}#about{grid-template-columns:1fr;padding:5rem 2rem;}.booth-grid{grid-template-columns:1fr;}.ft{grid-template-columns:1fr 1fr;}.hero-player{flex-direction:column;gap:1.6rem;}.hero-tracks{width:300px;}}
 @media(max-width:768px){nav{padding:0 1.2rem;}.nav-rooms{display:none;}section{padding:4rem 1.5rem;}.room-div{padding:2.5rem 1.5rem 0;}.wall{grid-template-columns:1fr 1fr;}.f1,.f2,.f3,.f4,.f5,.f6,.f7,.dg,.pu-cards{grid-template-columns:1fr;}.turntable{width:260px;height:260px;}.vinyl-strip{width:260px;}.ft{grid-template-columns:1fr;}.com-top{flex-direction:column;align-items:flex-start;}}
 
 /* ═══ REAL GALLERY ═══ */
@@ -730,31 +761,48 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
 <!-- HERO -->
 <section id="home">
   <div class="hero-rules"></div><div class="hero-glow"></div>
-  <div style="position:relative;z-index:2;">
-    <p class="hero-eyebrow"><span class="kd"></span>Now Open · The Lounge</p>
-    <h1 class="hero-h1">Sound<br>&amp;&nbsp;<em>Vision</em><br><span class="hg">Linus</span>&nbsp;<span class="hn">Simpson</span></h1>
-    <div class="brass-rule"></div>
-    <p class="hero-desc">Linus1.com is opportunity. A way to express ideas, showcase works, and build something real — in music, art, and community. Come in. Stay a while.</p>
-    <div class="hero-actions">
-      <a href="#gallery" class="btn btn-forest">◈ &nbsp;Gallery</a>
+
+  <!-- Centered brand block -->
+  <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <p class="hero-eyebrow" style="justify-content:center;"><span class="kd"></span>Now Open · The Lounge</p>
+    <h1 class="hero-h1"><b style="font-weight:600;">LINUS</b><em style="font-style:italic;color:var(--gold);font-weight:600;">1</em></h1>
+    <div class="brass-rule" style="margin:1.2rem auto;"></div>
+    <p class="hero-desc" style="font-family:'DM Sans',sans-serif;font-size:1.1rem;color:var(--ink);font-weight:500;max-width:420px;line-height:1.5;">Play games to unlock unreleased tracks. Explore the art. Dig through the music.</p>
+    <div class="hero-actions" style="justify-content:center;">
       <a href="#sound"   class="btn btn-crimson">♩ &nbsp;Music</a>
-      <a href="#pullup"  class="btn btn-gold">☕ Pull Up</a>
-      <a href="#about"   class="btn btn-outline">About</a>
+      <a href="#maze-section" class="btn btn-forest">🎮 &nbsp;Play</a>
+      <a href="#gallery" class="btn btn-gold">🎨 Art</a>
     </div>
   </div>
-  <div class="vinyl-col">
-    <div class="turntable">
-      <div class="tt-cab"><div class="tt-screw ts-tl"></div><div class="tt-screw ts-tr"></div><div class="tt-screw ts-bl"></div><div class="tt-screw ts-br"></div></div>
-      <div class="tt-platter" id="platter">
-        <div class="vinyl" id="vinylDisc"><div class="vgrooves"></div><div class="vsheen"></div><div class="vlabel"><p class="vl-t">Smoove Bapi</p><p class="vl-s">Side A · 2025</p></div><div class="vspindle"></div></div>
-        <button class="tt-play" id="vinylBtn"><div class="play-r" id="playRing">▶</div></button>
+
+  <!-- Turntable + track picker side by side -->
+  <div class="hero-player" style="position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:2.5rem;flex-wrap:wrap;">
+    <div class="vinyl-col">
+      <div class="turntable">
+        <div class="tt-cab"><div class="tt-screw ts-tl"></div><div class="tt-screw ts-tr"></div><div class="tt-screw ts-bl"></div><div class="tt-screw ts-br"></div></div>
+        <div class="tt-platter" id="platter">
+          <div class="vinyl" id="vinylDisc"><div class="vgrooves"></div><div class="vsheen"></div><div class="vlabel"><p class="vl-t">Smoove Bapi</p><p class="vl-s">Side A · 2025</p></div><div class="vspindle"></div></div>
+          <button class="tt-play" id="vinylBtn"><div class="play-r" id="playRing">▶</div></button>
+        </div>
+        <div class="tt-arm" id="tonearm"><div class="arm-piv"></div><div class="arm-sh"></div><div class="arm-hd"></div></div>
       </div>
-      <div class="tt-arm" id="tonearm"><div class="arm-piv"></div><div class="arm-sh"></div><div class="arm-hd"></div></div>
+      <div class="vinyl-strip"><div class="vs-info"><p class="vs-title" id="vsTitle">Let's jus Dance</p><p class="vs-sub">Smoove Bapi · 2024</p></div><div class="vs-eq" id="vsEq"><div class="vs-bar" style="--h:15px;animation-duration:.38s;height:4px;"></div><div class="vs-bar" style="--h:22px;animation-duration:.44s;animation-delay:.05s;height:4px;"></div><div class="vs-bar" style="--h:13px;animation-duration:.5s;animation-delay:.1s;height:4px;"></div><div class="vs-bar" style="--h:19px;animation-duration:.36s;animation-delay:.03s;height:4px;"></div><div class="vs-bar" style="--h:17px;animation-duration:.42s;animation-delay:.08s;height:4px;"></div></div></div>
     </div>
-    <div class="vinyl-strip"><div class="vs-info"><p class="vs-title" id="vsTitle">Let's jus Dance</p><p class="vs-sub">Smoove Bapi · 2024</p></div><div class="vs-eq" id="vsEq"><div class="vs-bar" style="--h:15px;animation-duration:.38s;height:4px;"></div><div class="vs-bar" style="--h:22px;animation-duration:.44s;animation-delay:.05s;height:4px;"></div><div class="vs-bar" style="--h:13px;animation-duration:.5s;animation-delay:.1s;height:4px;"></div><div class="vs-bar" style="--h:19px;animation-duration:.36s;animation-delay:.03s;height:4px;"></div><div class="vs-bar" style="--h:17px;animation-duration:.42s;animation-delay:.08s;height:4px;"></div></div></div>
-    <div style="display:flex;align-items:flex-start;gap:.6rem;margin-top:.7rem;padding:.65rem .9rem;background:rgba(13,27,42,.5);border:1px solid rgba(176,125,42,.12);border-radius:6px;width:300px;">
-      <span style="font-size:.9rem;flex-shrink:0;margin-top:.05rem;">💿</span>
-      <p style="font-family:'IBM Plex Mono',monospace;font-size:.37rem;letter-spacing:.07em;line-height:1.7;color:rgba(250,248,244,.38);">Click the record to play. Pick any track below to switch songs.</p>
+
+    <!-- Track picker -->
+    <div class="hero-tracks" style="width:280px;max-width:100%;">
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;letter-spacing:.25em;text-transform:uppercase;color:var(--forest);margin-bottom:.9rem;">◈ Pick a Track</p>
+      <div style="display:flex;flex-direction:column;gap:.3rem;max-height:280px;overflow-y:auto;">
+        <div class="htrk active" onclick="heroPick(this,'Let\'s jus Dance','Smoove Bapi · 2024')"><span class="htrk-n">01</span><span class="htrk-t">Let's jus Dance</span></div>
+        <div class="htrk" onclick="heroPick(this,'Woah','prod. ALEC BOi · 2026')"><span class="htrk-n">02</span><span class="htrk-t">Woah</span></div>
+        <div class="htrk" onclick="heroPick(this,'Right Now','Smoove Bapi · 2025')"><span class="htrk-n">03</span><span class="htrk-t">Right Now</span></div>
+        <div class="htrk" onclick="heroPick(this,'Gemini','Smoove Bapi · 2025')"><span class="htrk-n">04</span><span class="htrk-t">Gemini</span></div>
+        <div class="htrk" onclick="heroPick(this,'Find Luv','Smoove Bapi · 2025')"><span class="htrk-n">05</span><span class="htrk-t">Find Luv</span></div>
+        <div class="htrk" onclick="heroPick(this,'Serenity','Smoove Bapi · 2024')"><span class="htrk-n">06</span><span class="htrk-t">Serenity</span></div>
+        <div class="htrk" onclick="heroPick(this,'Notice','Smoove Bapi · 2024')"><span class="htrk-n">07</span><span class="htrk-t">Notice</span></div>
+        <div class="htrk" onclick="heroPick(this,'Mornin','Smoove Bapi · 2024')"><span class="htrk-n">08</span><span class="htrk-t">Mornin</span></div>
+      </div>
+      <a href="#sound" style="display:inline-block;margin-top:.9rem;font-family:'IBM Plex Mono',monospace;font-size:.42rem;letter-spacing:.12em;color:var(--gold);text-decoration:none;">See all 30 tracks in The Booth →</a>
     </div>
   </div>
 </section>
@@ -3026,6 +3074,23 @@ function slideTrack(dir){
 })();
 
 /* ══ TRACKS — full rebind on every load to prevent stacking bug ══ */
+function heroPick(el,title,sub){
+  document.querySelectorAll('.htrk').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('vsTitle').textContent=title;
+  const subEl=el.closest('.hero-player').querySelector('.vs-sub');
+  if(subEl) subEl.textContent=sub;
+  // If the SoundCloud player is ready, load and play this track
+  const url=(typeof scTracks!=='undefined')?scTracks[title]:null;
+  if(url&&typeof scReady!=='undefined'&&scReady){
+    if(typeof bindWidgetEvents==='function')bindWidgetEvents();
+    if(typeof widget!=='undefined'){
+      widget.load(url,{auto_play:true,show_comments:false,visual:false});
+      if(typeof setVisualPlay==='function')setVisualPlay(true);
+    }
+  }
+}
+
 function pickTrack(el,title,dur){
   document.querySelectorAll('.trk').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
