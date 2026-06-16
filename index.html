@@ -1707,7 +1707,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
     <div class="pu-card color-c" onclick="setQ(this,'What\'s a culture or tradition from your background you want to keep alive?')"><span class="pu-icon">🌍</span><p class="pu-q">What's a culture or tradition you want to keep alive?</p><p class="pu-hint">Food, music, language, anything.</p></div>
     <div class="pu-card color-d" onclick="setQ(this,'Do you think people are more scared to try or more scared to fail?')"><span class="pu-icon">🔥</span><p class="pu-q">More scared to try or more scared to fail?</p><p class="pu-hint">Which one actually stops most people.</p></div>
     <div class="pu-card color-n" onclick="setQ(this,'What\'s something everyone pretends to like that you actually don\'t?')"><span class="pu-icon">🙃</span><p class="pu-q">Something everyone pretends to like — that you don't.</p><p class="pu-hint">No judgment. Say it.</p></div>
-    <div class="pu-card color-g" onclick="setQ(this,'Who wins the 2026 NBA Championship and why?')"><span class="pu-icon">🏀</span><p class="pu-q">Who wins the 2026 NBA Championship — and why?</p><p class="pu-hint">OKC? Knicks? Make your case.</p></div>
+    <div class="pu-card color-g" onclick="setQ(this,'Who is the most exciting player to watch in the NBA right now and why?')"><span class="pu-icon">🏀</span><p class="pu-q">Most exciting player to watch in the NBA right now?</p><p class="pu-hint">Make your case. One name.</p></div>
   </div>
   <!-- Per-question display — shows when a card is clicked -->
   <!-- Pull Up answer panel — shows when a question is selected -->
@@ -2036,7 +2036,9 @@ const W = 600, H = 360;
 const DPR = window.devicePixelRatio || 1;
 
 function resize(){
-  const cssW = Math.min(W, window.innerWidth - 32);
+  // Use almost full screen width on mobile so the path is bigger and easier to trace
+  const avail = window.innerWidth - 24;
+  const cssW = Math.min(W, avail);
   const cssH = Math.round(cssW * H / W);
   canvas.style.width  = cssW + 'px';
   canvas.style.height = cssH + 'px';
@@ -2048,43 +2050,29 @@ function resize(){
 resize();
 window.addEventListener('resize', resize, {passive:true});
 
-// ── GRACE ── px from path center before wall hit
-const GRACE = 22;
+// ── GRACE ── px from path center before wall hit (wider = more forgiving)
+const GRACE = 34;
 
-// ── 6 MAZE LAYOUTS ──
+// ── MAZE LAYOUTS (simpler, fewer turns — easier on mobile) ──
 // All stay well within W×H bounds with padding
 const LAYOUTS = [
-  [{x:20,y:180},{x:80,y:180},{x:80,y:60},{x:180,y:60},{x:180,y:150},
-   {x:290,y:150},{x:290,y:40},{x:400,y:40},{x:400,y:130},
-   {x:490,y:130},{x:490,y:265},{x:370,y:265},{x:370,y:320},
-   {x:220,y:320},{x:220,y:230},{x:110,y:230},{x:110,y:320},
-   {x:580,y:320},{x:580,y:180}],
+  [{x:20,y:180},{x:130,y:180},{x:130,y:80},{x:300,y:80},
+   {x:300,y:280},{x:460,y:280},{x:460,y:120},{x:580,y:120},{x:580,y:180}],
 
-  [{x:20,y:180},{x:70,y:180},{x:70,y:290},{x:160,y:290},{x:160,y:70},
-   {x:250,y:70},{x:250,y:255},{x:340,y:255},{x:340,y:50},
-   {x:430,y:50},{x:430,y:215},{x:510,y:215},{x:510,y:85},
-   {x:580,y:85},{x:580,y:180}],
+  [{x:20,y:180},{x:100,y:180},{x:100,y:300},{x:260,y:300},
+   {x:260,y:90},{x:430,y:90},{x:430,y:260},{x:580,y:260},{x:580,y:180}],
 
-  [{x:20,y:180},{x:100,y:180},{x:100,y:50},{x:300,y:50},
-   {x:300,y:310},{x:100,y:310},{x:100,y:240},{x:210,y:240},
-   {x:210,y:145},{x:420,y:145},{x:420,y:310},{x:510,y:310},
-   {x:510,y:70},{x:580,y:70},{x:580,y:180}],
+  [{x:20,y:180},{x:140,y:180},{x:140,y:60},{x:340,y:60},
+   {x:340,y:300},{x:500,y:300},{x:500,y:140},{x:580,y:140},{x:580,y:180}],
 
-  [{x:20,y:180},{x:60,y:180},{x:60,y:50},{x:120,y:50},{x:120,y:310},
-   {x:185,y:310},{x:185,y:105},{x:250,y:105},{x:250,y:310},
-   {x:315,y:310},{x:315,y:50},{x:380,y:50},{x:380,y:250},
-   {x:445,y:250},{x:445,y:90},{x:510,y:90},{x:510,y:290},
-   {x:580,y:290},{x:580,y:180}],
+  [{x:20,y:180},{x:90,y:180},{x:90,y:280},{x:240,y:280},
+   {x:240,y:80},{x:400,y:80},{x:400,y:280},{x:580,y:280},{x:580,y:180}],
 
-  [{x:20,y:180},{x:90,y:180},{x:90,y:310},{x:510,y:310},
-   {x:510,y:70},{x:175,y:70},{x:175,y:235},{x:425,y:235},
-   {x:425,y:125},{x:265,y:125},{x:265,y:180},{x:340,y:180},
-   {x:580,y:180}],
+  [{x:20,y:180},{x:120,y:180},{x:120,y:90},{x:280,y:90},
+   {x:280,y:270},{x:450,y:270},{x:450,y:90},{x:580,y:90},{x:580,y:180}],
 
-  [{x:20,y:180},{x:70,y:180},{x:70,y:70},{x:230,y:70},
-   {x:230,y:180},{x:140,y:180},{x:140,y:290},{x:390,y:290},
-   {x:390,y:90},{x:320,y:90},{x:320,y:215},{x:500,y:215},
-   {x:500,y:50},{x:580,y:50},{x:580,y:180}]
+  [{x:20,y:180},{x:110,y:180},{x:110,y:300},{x:300,y:300},
+   {x:300,y:70},{x:470,y:70},{x:470,y:230},{x:580,y:230},{x:580,y:180}]
 ];
 
 let waypoints = LAYOUTS[Math.floor(Math.random()*LAYOUTS.length)];
