@@ -1606,7 +1606,25 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
   <div class="reveal"><div class="kicker"><div class="kd"></div>From the Desk</div><h2 class="h2">Dispatches from <em>The Lounge</em></h2><p class="body" style="max-width:480px;">Real thoughts. No filter. Written when something needed to get out.</p></div>
   <div class="dg">
 
-    <!-- DISPATCH 5 — NEWEST -->
+    <!-- DISPATCH 6 — NEWEST -->
+    <div class="dc reveal">
+      <p class="dc-date">July 2026</p>
+      <span class="dc-tag tg">Food · Hometown</span>
+      <h3 class="dc-title">The San Juan Taco Crawl</h3>
+      <p class="dc-excerpt">My family and I walked our whole town ordering one taco from every Mexican restaurant in it. Here's who won, who's criminally underrated, and where I'd take you if you visited.</p>
+      <a class="dc-read" onclick="openDispatch('dispatch-6')">Read more →</a>
+    </div>
+
+    <!-- DISPATCH 6 — NEWEST -->
+    <div class="dc reveal">
+      <p class="dc-date">July 2026</p>
+      <span class="dc-tag tg">Food · Home</span>
+      <h3 class="dc-title">The Taco Crawl</h3>
+      <p class="dc-excerpt">My family and I rated the tacos at every Mexican spot in San Juan Capistrano. Three standouts, one perfect fish taco, and the green salsa I could drink. A local's guide to my city.</p>
+      <a class="dc-read" onclick="openDispatch('dispatch-6')">Read more →</a>
+    </div>
+
+    <!-- DISPATCH 5 -->
     <div class="dc reveal">
       <p class="dc-date">July 2026</p>
       <span class="dc-tag tn">Travel</span>
@@ -1705,6 +1723,29 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
     <p>I'm a Laker fan. I have no business rooting for San Antonio. But here we are.</p>
     <p>The thread between all of this — the mental health piece, the basketball piece, building this site — is the same thing. Keep fighting. Keep showing up. Don't wait until you feel ready because that feeling doesn't come first. The readiness comes from doing it anyway.</p>
     <p style="font-weight:500;color:var(--ink);">Get after it.</p>
+  </div>
+</div>
+
+<div id="dispatch-6" style="display:none;">
+  <p style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;letter-spacing:.18em;text-transform:uppercase;color:var(--forest);margin-bottom:1.2rem;">July 2026 &nbsp;·&nbsp; Food · Home</p>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:300;line-height:1.1;margin-bottom:2rem;letter-spacing:-.01em;">The Taco Crawl</h2>
+  <div style="font-size:.92rem;line-height:2;color:#141f1d;font-weight:400;" class="dispatch-body">
+    <p>I love my city. San Juan Capistrano is small, but the food coming out of this town is serious &mdash; BBQ, pizza, Japanese, we've got it all. But today I want to talk about Mexican food.</p>
+    <p>My family and I decided to rate the tacos from every Mexican restaurant in San Juan. We walked from place to place, ordered one taco at each, and worked our way through town. We were not disappointed. Honestly, you kind of can't go wrong at any of them. But a few stood out enough that these are the ones I'd take you to if you came to visit.</p>
+
+    <p style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:600;color:var(--ink);margin-top:2.2rem;margin-bottom:.2rem;">El Coyotito &mdash; 9/10</p>
+    <p>One of my personal favorites. They bring homemade, traditional flavors right to the front &mdash; handmade tortillas, fresh ingredients, meat that turns a simple taco into something you remember. It's not complicated. It's just done right, and the seasoning is perfect. Simple and delicious is harder than it sounds.</p>
+
+    <p style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:600;color:var(--ink);margin-top:2.2rem;margin-bottom:.2rem;">El Molino &mdash; the burrito spot</p>
+    <p>Their tacos might not top the list, but this is my favorite place in town to get a burrito, full stop. Morning? Breakfast burrito with chorizo y papas &mdash; my favorite thing on Earth to eat, and I've been getting it my whole life. They put beans in it, which I don't think is that common, but now I <em>expect</em> beans in any breakfast burrito I eat. They scramble the chorizo with the eggs, potatoes on top, cilantro and onion, sour cream, cheese, and that green salsa &mdash; I could drink that green salsa. It all flows together perfectly. Lunch or dinner, I'm getting a classic al pastor burrito with an agua fresca. Banana, watermelon, or melon. Satisfying every single time.</p>
+
+    <p style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:600;color:var(--ink);margin-top:2.2rem;margin-bottom:.2rem;">El Zarandeado Mexican Seafood &mdash; 10/10</p>
+    <p>Best taco in San Juan. The fish taco here is unreal &mdash; fresh, perfect, no notes. The shrimp is great, the margaritas are great. And it's <em>underrated</em>. They don't have the biggest sign out front, so people walk right past it. The people there are kind, the cooks take real pride in their work, and it shows in the food. Go.</p>
+
+    <p style="margin-top:2.2rem;"><strong style="font-weight:600;color:var(--ink);">Honorable mentions:</strong> Las Costas, Ricardo's Place, Cancun, El Campe&oacute;n. All worth your time.</p>
+    <p>But those first three? Those are the ones I'm taking you to.</p>
+    <p>San Juan is growing every year, and I really believe we're becoming the culinary capital of Orange County. Come eat.</p>
+    <p style="font-weight:500;color:var(--ink);">&mdash; L</p>
   </div>
 </div>
 
@@ -3438,6 +3479,7 @@ function renderScantron(){
 renderScantron();
 // Dispatch reading order — newest to oldest. Add new dispatches at the TOP.
 const DISPATCH_ORDER=[
+  {id:'dispatch-6', title:'The Taco Crawl'},
   {id:'dispatch-5', title:'Small in the Best Way'},
   {id:'dispatch-4', title:'The Offseason Never Sleeps'},
   {id:'dispatch-3', title:'Where This Came From'},
