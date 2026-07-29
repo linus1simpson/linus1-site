@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
 
 <!-- Primary Meta -->
@@ -838,7 +841,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
 </div>
 <section id="the5" style="padding:5.5rem 3rem;background:var(--navy);color:var(--white);position:relative;overflow:hidden;">
   <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 50% at 50% 40%,rgba(201,146,46,.1) 0%,transparent 65%);pointer-events:none;"></div>
-  <div class="reveal" style="max-width:560px;margin:0 auto;position:relative;">
+  <div style="max-width:720px;margin:0 auto;position:relative;">
 
     <!-- LOCKED STATE: the word game -->
     <div id="the5-locked">
@@ -846,31 +849,19 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
       <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,5vw,3.8rem);font-weight:300;line-height:1.02;text-align:center;margin-bottom:.5rem;color:var(--white);">
         The <em style="font-style:italic;color:rgba(201,146,46,.95);">Five</em>
       </h2>
-      <p style="font-family:'IBM Plex Mono',monospace;font-size:.46rem;letter-spacing:.14em;text-align:center;color:rgba(250,248,244,.4);margin-bottom:1.6rem;line-height:1.9;">Guess the hidden 5-letter word to unlock<br>my new song early. You get 6 tries.</p>
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:.46rem;letter-spacing:.14em;text-align:center;color:rgba(250,248,244,.5);margin-bottom:1.6rem;line-height:1.9;">Get Lbot to the vault to unlock my new song.<br><b style="color:rgba(201,146,46,.9);">TAP or PRESS SPACE to hop.</b></p>
 
-      <!-- How to play legend -->
-      <div style="display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.8rem;font-family:'IBM Plex Mono',monospace;font-size:.4rem;letter-spacing:.06em;color:rgba(250,248,244,.5);">
-        <span style="display:flex;align-items:center;gap:.35rem;"><span style="width:12px;height:12px;border-radius:3px;background:#0e6e72;display:inline-block;"></span>right spot</span>
-        <span style="display:flex;align-items:center;gap:.35rem;"><span style="width:12px;height:12px;border-radius:3px;background:rgba(201,146,46,.9);display:inline-block;"></span>wrong spot</span>
-        <span style="display:flex;align-items:center;gap:.35rem;"><span style="width:12px;height:12px;border-radius:3px;background:rgba(250,248,244,.12);display:inline-block;"></span>not in word</span>
-      </div>
-
-      <!-- Stacked guess grid -->
-      <div id="w5-grid" style="display:flex;flex-direction:column;gap:.5rem;align-items:center;margin-bottom:1.4rem;"></div>
-
-      <div id="w5-msg" style="font-family:'IBM Plex Mono',monospace;font-size:.46rem;letter-spacing:.1em;text-align:center;color:rgba(201,146,46,.95);min-height:1.1rem;margin-bottom:1.2rem;">↓ Type your guess below</div>
-
-      <!-- Input -->
-      <div style="display:flex;flex-direction:column;align-items:center;gap:.9rem;margin-bottom:1.8rem;">
-        <input id="w5-input" type="text" maxlength="5" readonly inputmode="none" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="TYPE HERE" style="width:240px;text-align:center;text-transform:uppercase;font-family:'IBM Plex Mono',monospace;font-size:1rem;letter-spacing:.28em;padding:.75rem 1rem;background:rgba(250,248,244,.06);border:2px solid rgba(201,146,46,.5);border-radius:8px;color:var(--white);outline:none;caret-color:transparent;transition:border-color .2s,box-shadow .2s;box-shadow:0 0 0 rgba(201,146,46,0);"/>
-        <div style="display:flex;align-items:center;gap:1.1rem;">
-          <button onclick="w5Guess()" class="btn btn-gold btn-sm" style="cursor:pointer;">Enter Guess →</button>
-          <button onclick="w5Hint()" style="background:none;border:none;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:.4rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(250,248,244,.35);text-decoration:underline;">Hint</button>
+      <div style="max-width:640px;margin:0 auto;position:relative;">
+        <canvas id="r5-canvas" style="display:block;width:100%;border-radius:14px;border:3px solid #1a1a1a;box-shadow:6px 6px 0 rgba(0,0,0,.35);cursor:pointer;touch-action:none;background:#fff8ef;"></canvas>
+        <!-- Start overlay -->
+        <div id="r5-start" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,42,53,.62);border-radius:14px;cursor:pointer;">
+          <div id="r5-startbot" style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;letter-spacing:.15em;color:rgba(255,255,255,.55);text-transform:uppercase;margin-bottom:.5rem;">↑ tap Lbot… go on</div>
+          <canvas id="r5-botcanvas" width="140" height="150" style="cursor:pointer;touch-action:none;"></canvas>
+          <button id="r5-startbtn" style="margin-top:1rem;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:#0a2a35;background:#ffd23f;border:none;padding:.7rem 1.6rem;border-radius:8px;box-shadow:3px 3px 0 rgba(0,0,0,.3);">▶ Start the run</button>
         </div>
       </div>
 
-      <!-- On-screen keyboard -->
-      <div id="w5-keyboard" style="display:flex;flex-direction:column;gap:.35rem;align-items:center;"></div>
+      <div id="r5-msg" style="font-family:'IBM Plex Mono',monospace;font-size:.46rem;letter-spacing:.1em;text-align:center;color:rgba(201,146,46,.95);min-height:1.1rem;margin-top:1.1rem;"></div>
     </div>
 
     <!-- UNLOCKED STATE: the song -->
@@ -887,7 +878,8 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
         </audio>
         <p style="font-family:'IBM Plex Mono',monospace;font-size:.4rem;letter-spacing:.08em;color:rgba(250,248,244,.3);margin-top:1rem;text-align:center;line-height:1.8;">⟶ Not on streaming yet. Play it as much as you want.<br>Out everywhere in a few weeks.</p>
       </div>
-      <p style="text-align:center;margin-top:1.5rem;font-family:'IBM Plex Mono',monospace;font-size:.4rem;letter-spacing:.1em;color:rgba(250,248,244,.25);">Tell a friend to come crack the word too.</p>
+      <p style="text-align:center;margin-top:1.5rem;font-family:'IBM Plex Mono',monospace;font-size:.4rem;letter-spacing:.1em;color:rgba(250,248,244,.25);">Tell a friend to come play it too.</p>
+      <p style="text-align:center;margin-top:.8rem;"><button onclick="the5ReplayGame()" style="background:none;border:none;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:.4rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(201,146,46,.7);text-decoration:underline;">↺ Play the game again</button></p>
     </div>
 
   </div>
@@ -2494,215 +2486,1093 @@ requestAnimationFrame(tick);
 })(); // end maze IIFE
 
 // ══════════════════════════════════════════════
-//  THE FIVE — stacked-row word unlock + keyboard
+//  THE FIVE — Lbot crayon runner v2 (dragon, goblins, stairs)
 // ══════════════════════════════════════════════
-const W5_WORDS=['DRIVE','THING','SPEED','SPACE','PLANE','RIGHT','PLACE','OCEAN'];
-let w5Answer=W5_WORDS[Math.floor(Math.random()*W5_WORDS.length)];
-let w5Row=0;
-const W5_MAX=6;
-const W5_KEYS=['QWERTYUIOP','ASDFGHJKL','ZXCVBNM'];
-let w5KeyState={}; // letter -> 0 none / 1 amber / 2 teal
+(function(){
+  const RW=760, RH=340, GROUND=RH-54, GOAL=3200;
+  const GRAV=0.8, JUMP=-13.6, SPEED=4.2;
+  let canvas,ctx,DPR=1,raf=null;
+  let running=false,started=false,won=false,respawning=false;
+  let scroll=0, frame=0;
+  let bot={x:130,y:GROUND,vy:0,onGround:true,jumps:0};
+  let jumpBuffer=0;            // best-practice: buffered jump input
+  const MAX_JUMPS=2;          // double jump
+  let obstacles=[], confetti=[], coins=[], particles=[];
+  let score=0, coinsGot=0, coinsTotal=0, finaleActive=false;
+  let ending=null;   // cinematic ending state object
 
-function w5Init(){
-  try{ if(localStorage.getItem('the5_unlocked')==='yes'){ w5Reveal(true); return; } }catch(e){}
-  w5Row=0; w5KeyState={};
-  w5BuildGrid();
-  w5BuildKeyboard();
-  w5HighlightActive();
-  // Desktop physical-keyboard support (input is readonly to block mobile OS keyboard)
-  if(!window._w5KeyBound){
-    window._w5KeyBound=true;
+  // ---------- audio (simple WebAudio blips) ----------
+  let actx=null;
+  function beep(freq,dur,type,vol){
+    try{
+      if(!actx) actx=new (window.AudioContext||window.webkitAudioContext)();
+      const o=actx.createOscillator(), g=actx.createGain();
+      o.type=type||'square'; o.frequency.value=freq;
+      g.gain.value=vol||0.06;
+      o.connect(g); g.connect(actx.destination);
+      o.start();
+      g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime+(dur||0.1));
+      o.stop(actx.currentTime+(dur||0.1));
+    }catch(e){}
+  }
+  function buzz(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
+  const sfxJump =()=>{ beep(440,.1,'square',.05); beep(660,.08,'square',.04); buzz(15); };
+  const sfxJump2=()=>{ beep(680,.1,'square',.05); beep(920,.08,'square',.04); buzz(20); };
+  const sfxCrash=()=>{ beep(110,.28,'sawtooth',.08); beep(70,.3,'sawtooth',.06); buzz([40,30,60]); };
+  const sfxWin  =()=>{ [523,659,784,1047,1319].forEach((f,i)=>setTimeout(()=>beep(f,.2,'triangle',.07),i*120)); buzz([30,40,30,40,80]); };
+  const sfxCoin =()=>{ beep(1040,.07,'triangle',.05); beep(1560,.05,'triangle',.03); buzz(8); };
+
+  // ── 8-bit frantic castle theme (loops while playing) ──
+  let themeTimer=null, themeStep=0;
+  // minor-key arpeggio riff — tense, Castlevania/Pokémon-gym flavor
+  const THEME=[
+    220,262,330,262, 220,262,330,392, 349,330,262,220, 247,294,247,196,
+    220,262,330,262, 330,392,440,392, 349,262,349,440, 415,392,330,247
+  ];
+  function startTheme(){
+    stopTheme(); themeStep=0;
+    themeTimer=setInterval(()=>{
+      if(!actx) return;
+      const f=THEME[themeStep%THEME.length];
+      beep(f,0.13,'square',0.035);                 // lead
+      if(themeStep%4===0) beep(f/2,0.16,'triangle',0.03); // bass pulse
+      themeStep++;
+    }, 150);
+  }
+  function stopTheme(){ if(themeTimer){ clearInterval(themeTimer); themeTimer=null; } }
+
+  // ── ominous chase music: a dark driving loop while you run ──
+  let musicTimer=null, musicStep=0;
+  const BASS=[110,110,123,98];          // dark minor-ish bassline (A A B G)
+  const ARP =[220,262,330,262];         // tense arpeggio over it
+  function startMusic(){
+    stopMusic();
+    musicStep=0;
+    musicTimer=setInterval(()=>{
+      if(!actx||!running){ return; }
+      const b=BASS[musicStep%BASS.length];
+      const a=ARP[musicStep%ARP.length];
+      beep(b,.16,'triangle',.05);                 // bass pulse
+      if(musicStep%2===0) beep(a,.10,'sawtooth',.02); // tense arp
+      // heartbeat thump on the 4
+      if(musicStep%4===3) beep(60,.14,'sine',.06);
+      musicStep++;
+    }, 200);   // ~fast, frantic tempo
+  }
+  function stopMusic(){ if(musicTimer){ clearInterval(musicTimer); musicTimer=null; } }
+
+  // ---------- world ----------
+  // obstacle types: 'goblin' (single jump), 'tall' (single, taller), 'stairs' (wide → double jump)
+  function buildObstacles(){
+    // Shorter, punchier — closer action but still humanly timeable.
+    // The two goblins at 2360/2560 are a CLOSE COMBO: jump, land, jump again fast.
+    obstacles=[
+      {type:'goblin', wx:620,  w:34, h:34},
+      {type:'block',  wx:1080, w:110, h:58},
+      {type:'goblin', wx:1560, w:34, h:38},
+      {type:'block',  wx:2000, w:110, h:66},
+      // quick one-two combo — the skill moment
+      {type:'goblin', wx:2380, w:32, h:36},
+      {type:'goblin', wx:2560, w:32, h:38},
+    ];
+  }
+
+  function buildCoins(){
+    coins=[];
+    // Place gentle arcs of stars in the OPEN GAPS between obstacles,
+    // at a height Lbot passes through on a normal jump — all collectible.
+    // gaps (from buildObstacles): before 620, ~700-1080, ~1190-1560, ~1600-2000, ~2110-2480, after 2514
+    const arcs=[
+      {start:300, n:3},   // opening straight
+      {start:820, n:3},   // between goblin & block
+      {start:1290,n:3},   // between block & goblin
+      {start:1700,n:3},   // between goblin & block
+      {start:2150,n:3},   // before the combo
+      {start:2380,n:2},   // over the combo goblins (skill reward)
+    ];
+    arcs.forEach(a=>{
+      for(let k=0;k<a.n;k++){
+        const arc=Math.sin(((k+0.5)/a.n)*Math.PI);      // smooth arc
+        coins.push({wx:a.start+k*40, y:GROUND-34-arc*40, got:false});
+      }
+    });
+    coinsTotal=coins.length;
+  }
+
+  function reset(){
+    scroll=0; won=false; confetti=[]; particles=[]; score=0; coinsGot=0; finaleActive=false; ending=null;
+    bot.y=GROUND; bot.vy=0; bot.onGround=true; bot.jumps=0;
+    jumpBuffer=0;
+    buildObstacles(); buildCoins();
+  }
+
+  function sizeCanvas(){
+    if(!canvas)return;
+    const cssW=Math.min(RW,(canvas.parentElement.clientWidth||RW));
+    const cssH=Math.round(cssW*RH/RW);
+    DPR=window.devicePixelRatio||1;
+    canvas.style.height=cssH+'px';
+    canvas.width=RW*DPR; canvas.height=RH*DPR;
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+
+  function doJump(){
+    if(!started){ startGame(); return; }
+    if(!running) return;
+    if(bot.onGround || bot.jumps<MAX_JUMPS){
+      if(bot.onGround){ bot.jumps=0; }
+      bot.vy=JUMP; bot.onGround=false; bot.jumps++;
+      (bot.jumps===1?sfxJump:sfxJump2)();
+    } else {
+      jumpBuffer=8; // buffer the tap; fires the instant we land
+    }
+  }
+
+  function startGame(){
+    if(actx && actx.state==='suspended'){ actx.resume(); }
+    started=true; running=true; won=false;
+    const ov=document.getElementById('r5-start'); if(ov) ov.style.display='none';
+    const msg=document.getElementById('r5-msg'); if(msg) msg.textContent='';
+    reset();
+    startTheme();
+    if(raf)cancelAnimationFrame(raf);
+    loop();
+  }
+
+  function loop(){ if(!running)return; update(); draw(); raf=requestAnimationFrame(loop); }
+
+  function update(){
+    frame++; scroll+=SPEED; score++;
+    // FINALE: last stretch before the vault — the dragon swoops in behind, chasing (always tense)
+    finaleActive = scroll > GOAL-700;
+    // apply gravity/motion
+    bot.vy+=GRAV; bot.y+=bot.vy;
+    const wasAir=!bot.onGround;
+    bot.onGround=false; // will be set true by platform or ground below
+
+    // ── platform + obstacle collision (runs BEFORE ground snap) ──
+    const botL=bot.x-13, botR=bot.x+13, botBottom=bot.y+18, botPrevBottom=(bot.y-bot.vy)+18;
+    let onPlatform=false;
+    if(scroll<GOAL){
+      for(const o of obstacles){
+        const sx=o.wx-scroll, ox2=sx+o.w;
+        if(!(botR>sx+4 && botL<ox2-4)) continue;   // no horizontal overlap
+        if(o.type==='block'){
+          const topY=GROUND+20-o.h;
+          if(bot.vy>=0 && botPrevBottom<=topY+8 && botBottom>=topY-2){
+            bot.y=topY-18; bot.vy=0; onPlatform=true; bot.onGround=true; bot.jumps=0;
+          } else if(botBottom>topY+14){ crash(); return; }
+        } else { // goblin
+          const topY=GROUND+20-o.h;
+          if(botBottom>topY+6){ crash(); return; }
+        }
+      }
+    }
+
+    // ground snap (only if not standing on a platform)
+    if(!onPlatform && bot.y>=GROUND){ bot.y=GROUND; bot.vy=0; bot.onGround=true; bot.jumps=0; }
+
+    // landing feedback + buffered jump
+    if(bot.onGround && wasAir){ landPuff(); if(jumpBuffer>0){ jumpBuffer=0; doJump(); } }
+    if(jumpBuffer>0) jumpBuffer--;
+
+    // running dust
+    if(bot.onGround && frame%6===0){ particles.push({x:bot.x-14,y:bot.y+18,vx:-1-Math.random(),vy:-Math.random(),life:16,c:'rgba(180,180,160,.6)',r:2+Math.random()*2}); }
+    for(let i=particles.length-1;i>=0;i--){ const p=particles[i]; p.x+=p.vx; p.y+=p.vy; p.vy+=0.05; p.life--; if(p.life<=0)particles.splice(i,1); }
+
+    // coin pickup
+    for(const c of coins){
+      if(c.got)continue;
+      const sx=c.wx-scroll;
+      if(Math.abs(sx-bot.x)<20 && Math.abs(c.y-bot.y)<26){
+        c.got=true; coinsGot++; score+=50; sfxCoin();
+        for(let k=0;k<6;k++) particles.push({x:sx,y:c.y,vx:Math.random()*4-2,vy:Math.random()*-3-1,life:18,c:'#ffd23f',r:2+Math.random()*2});
+      }
+    }
+
+    if(scroll>=GOAL){ running=false; doWin(); return; }
+  }
+
+  function landPuff(){
+    for(let k=0;k<5;k++) particles.push({x:bot.x+(Math.random()*20-10),y:bot.y+18,vx:Math.random()*3-1.5,vy:-Math.random()*2,life:14,c:'rgba(180,180,160,.7)',r:2+Math.random()*2});
+  }
+
+  function crash(){
+    if(respawning)return;
+    respawning=true; running=false; sfxCrash();
+    const msg=document.getElementById('r5-msg'); if(msg) msg.textContent='Oof! Try again — you got this.';
+    setTimeout(()=>{ respawning=false; if(msg)msg.textContent=''; running=true; reset(); loop(); },700);
+  }
+
+  function doWin(){
+    won=true; running=false; stopTheme();
+    const heroEnding = (coinsGot>=13);
+    // set up cinematic ending state
+    ending={
+      phase:'escape',      // escape → (hero: charge → blast → falling) → open
+      t:0,
+      hero:heroEnding,
+      dragonX: bot.x-70,   // dragon right behind
+      dragonY: bot.y-46,
+      dragonVX:0, dragonVY:0, dragonRot:0,
+      blast:null,          // {x,y,r,stars:[...]}
+      msg:''
+    };
+    const msg=document.getElementById('r5-msg');
+    if(msg) msg.textContent = heroEnding ? '⭐ You got every star…' : '';
+    cinematic();
+  }
+
+  // ── CINEMATIC ENDING ──
+  function cinematic(){
+    if(!ending) return;
+    ending.t++;
+    const e=ending;
+
+    // Lbot slides to center-ish and the "camera" holds (scroll eases to a stop)
+    // vault sits just ahead on the right
+    const vaultX = RW-150;
+
+    if(e.phase==='escape'){
+      // dragon lunges toward Lbot then just misses as Lbot darts forward — tense near-miss
+      e.dragonX += (bot.x-60 - e.dragonX)*0.12;
+      e.dragonY += (bot.y-30 - e.dragonY)*0.12;
+      if(e.t>46){
+        if(e.hero){ e.phase='charge'; e.t=0; e.msg='The stars gather…'; }
+        else { e.phase='open'; e.t=0; }   // normal: skip to vault
+      }
+    }
+    else if(e.phase==='charge'){
+      // dragon swoops BACK in from the right for another pass; Lbot turns to face it
+      e.dragonX += (RW-90 - e.dragonX)*0.08;
+      e.dragonY += (110 - e.dragonY)*0.08;
+      // charging orb grows in front of Lbot, pulling collected stars into it
+      if(!e.blast){ e.blast={x:bot.x+22,y:bot.y-6,r:2,stars:[]};
+        for(let i=0;i<coinsGot;i++){ e.blast.stars.push({a:Math.random()*6.28, d:60+Math.random()*40, s:Math.random()*4+3}); }
+      }
+      e.blast.r = Math.min(26, e.blast.r+0.9);
+      e.blast.stars.forEach(s=>{ s.d*=0.90; });   // stars spiral inward
+      if(e.t%6===0) beep(300+e.t*8,.08,'triangle',.04);
+      if(e.t>44){
+        e.phase='blast'; e.t=0; sfxWin(); buzz([20,30,60]);
+        // LOCK the dragon in place as the target so the beam actually hits it
+        e.targetX=e.dragonX; e.targetY=e.dragonY;
+      }
+    }
+    else if(e.phase==='blast'){
+      const ox=bot.x+22, oy=bot.y-6;         // beam origin (in front of Lbot)
+      // dragon hovers in place at the locked target (menacing, about to be hit)
+      if(e.targetX!=null){ e.dragonX=e.targetX; e.dragonY=e.targetY+Math.sin(frame*0.3)*4; }
+      // FIRE: charged blast erupts into a stream of stars AIMED at the dragon
+      if(!e.beam){
+        e.beam={parts:[]};
+        const dxT=e.targetX-ox, dyT=e.targetY-oy;
+        const dist=Math.max(1,Math.hypot(dxT,dyT));
+        const ux=dxT/dist, uy=dyT/dist;       // unit vector straight at the dragon
+        for(let i=0;i<44;i++){
+          const speed=9+Math.random()*4;
+          // tight spread so they converge on the dragon, not scatter
+          const spread=(Math.random()-0.5)*0.9;
+          const px=ux*Math.cos(spread)-uy*Math.sin(spread);
+          const py=ux*Math.sin(spread)+uy*Math.cos(spread);
+          e.beam.parts.push({x:ox,y:oy, vx:px*speed, vy:py*speed, s:Math.random()*6+3, rot:Math.random()*6, dead:false});
+        }
+      }
+      e.beam.parts.forEach(p=>{ if(!p.dead){ p.x+=p.vx; p.y+=p.vy; p.rot+=0.3; } });
+      // hit when the leading stars reach the LOCKED dragon position
+      const reached = e.beam.parts.some(p=> Math.hypot(p.x-e.targetX, p.y-e.targetY) < 34 );
+      if(e.t>6 && reached){
+        // snap dragon to where it was hit, then knock it down
+        e.dragonX=e.targetX; e.dragonY=e.targetY;
+        e.dragonVX=4; e.dragonVY=-3; e.phase='falling'; e.t=0; e.msg='DRAGON DOWN! ⭐';
+        buzz([40,40,90]); beep(160,.4,'sawtooth',.08);
+        // impact burst at the dragon
+        for(let k=0;k<20;k++) particles.push({x:e.targetX,y:e.targetY,vx:Math.random()*8-4,vy:Math.random()*8-4,life:22,c:'#ffe14d',r:Math.random()*4+2});
+      }
+    }
+    else if(e.phase==='falling'){
+      // freeze any remaining beam stars, dragon tumbles to the ground defeated
+      e.dragonVY+=0.5; e.dragonX+=e.dragonVX; e.dragonY+=e.dragonVY; e.dragonRot+=0.25;
+      if(e.dragonY>GROUND-10){ e.dragonY=GROUND-10; e.dragonVX*=0.6;
+        if(e.t>40){ e.phase='open'; e.t=0; } }
+    }
+    else if(e.phase==='open'){
+      // vault opens, confetti, then reveal the song
+      if(e.t===1){
+        const cols=['#e84a5f','#ff8c42','#ffd23f','#2ec4b6','#4a90d9','#9b5de5'];
+        for(let i=0;i<110;i++){ confetti.push({x:RW/2+(Math.random()*220-110), y:RH/2,
+          vx:(Math.random()*9-4.5), vy:(Math.random()*-10-2), c:cols[i%cols.length], r:Math.random()*5+3, rot:Math.random()*6}); }
+        sfxWin();
+        const msg=document.getElementById('r5-msg'); if(msg) msg.textContent='🔓 Vault open! Unlocking…';
+      }
+      confetti.forEach(p=>{ p.x+=p.vx; p.vy+=0.35; p.y+=p.vy; p.rot+=0.2; });
+      if(e.t>64){ ending=null; the5Reveal(false); return; }
+    }
+
+    drawEnding();
+    requestAnimationFrame(cinematic);
+  }
+
+  function drawEnding(){
+    const e=ending; if(!e)return;
+    // draw the world frozen at the finish
+    draw();
+    // status banner
+    if(e.msg){
+      ctx.save();
+      ctx.font='bold 22px monospace'; ctx.textAlign='center';
+      ctx.fillStyle = e.phase==='falling' ? '#2ec4b6' : '#ffd23f';
+      ctx.globalAlpha=0.7+Math.abs(Math.sin(frame*0.2))*0.3;
+      ctx.fillText(e.msg, RW/2, 44); ctx.restore(); ctx.textAlign='left';
+    }
+    // charging orb
+    if(e.phase==='charge' && e.blast){
+      ctx.save();
+      const gx=bot.x+22, gy=bot.y-6;
+      const g=ctx.createRadialGradient(gx,gy,2,gx,gy,e.blast.r+8);
+      g.addColorStop(0,'#fff'); g.addColorStop(.4,'#ffe14d'); g.addColorStop(1,'rgba(255,140,66,0)');
+      ctx.fillStyle=g; ctx.beginPath(); ctx.arc(gx,gy,e.blast.r+8,0,7); ctx.fill();
+      // stars spiraling in
+      e.blast.stars.forEach(s=>{ s.a+=0.15; drawStar(gx+Math.cos(s.a)*s.d, gy+Math.sin(s.a)*s.d, s.s); });
+      ctx.restore();
+    }
+    // the expanding star blast beam
+    if((e.phase==='blast'||e.phase==='falling') && e.beam){
+      ctx.save();
+      e.beam.parts.forEach(p=>{
+        drawStar(p.x,p.y,p.s);
+        // glowing streak
+        ctx.strokeStyle='rgba(255,225,77,.4)'; ctx.lineWidth=2;
+        ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(p.x-p.vx*2,p.y-p.vy*2); ctx.stroke();
+      });
+      ctx.restore();
+    }
+    // the ending dragon (drawn at ending coords, overriding normal)
+    drawEndDragon(e.dragonX, e.dragonY, e.dragonRot, e.phase==='falling');
+  }
+
+  // ---------- drawing ----------
+  function draw(){
+    ctx.clearRect(0,0,RW,RH);
+
+    // ── sky changes by biome as you travel ──
+    const prog = Math.min(1, scroll/GOAL);
+    drawSky(prog);
+
+    // far parallax: mountains / volcano
+    drawBackdrop(prog);
+
+    drawRainbow();
+    drawDragon();
+
+    // mid parallax: rolling hills / clouds already handled; ground next
+    // ground
+    ctx.strokeStyle='#1a7a3a'; ctx.lineWidth=8; ctx.lineCap='round';
+    ctx.beginPath();
+    for(let x=0;x<=RW;x+=20){ const yy=GROUND+22+Math.sin((x+scroll)*0.05)*2; if(x===0)ctx.moveTo(x,yy);else ctx.lineTo(x,yy);} ctx.stroke();
+    // ground fill tinted by biome
+    ctx.fillStyle = prog<0.5 ? '#d8f0dd' : (prog<0.8 ? '#e8d3b0' : '#3a2a2a');
+    ctx.fillRect(0,GROUND+24,RW,RH-(GROUND+24));
+
+    // obstacles
+    obstacles.forEach((o,i)=>{
+      const sx=o.wx-scroll; if(sx<-60||sx>RW+60)return;
+      if(o.type==='block') drawBlock(sx,o);
+      else drawGoblin(sx,o);
+    });
+
+    drawVault();
+
+    // collectible stars
+    coins.forEach(c=>{
+      if(c.got)return; const sx=c.wx-scroll; if(sx<-20||sx>RW+20)return;
+      const bob=Math.sin(frame*0.1+c.wx)*3;
+      drawStar(sx, c.y+bob, 9);
+    });
+
+    // particles (dust + coin sparkle)
+    particles.forEach(p=>{ ctx.globalAlpha=Math.max(0,p.life/18); ctx.fillStyle=p.c; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,7); ctx.fill(); });
+    ctx.globalAlpha=1;
+
+    drawBot(bot.x,bot.y);
+
+    // progress bar
+    const pct=Math.min(1,scroll/GOAL);
+    ctx.fillStyle='rgba(26,26,26,.14)'; rr(20,16,RW-40,9,5,true,false);
+    ctx.fillStyle='#e84a5f'; rr(20,16,(RW-40)*pct,9,5,true,false);
+    // little bot icon on progress
+    ctx.fillStyle='#4a90d9'; ctx.beginPath(); ctx.arc(20+(RW-40)*pct,20.5,7,0,7); ctx.fill();
+    ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=2; ctx.stroke();
+
+    // confetti
+    confetti.forEach(p=>{
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+      ctx.fillStyle=p.c; ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6); ctx.restore();
+    });
+
+    // HUD: coins + distance
+    ctx.textAlign='left';
+    ctx.fillStyle='#1a1a1a'; ctx.font='bold 13px monospace';
+    drawStar(30, 40, 7);
+    ctx.fillText('× '+coinsGot, 42, 45);
+    ctx.textAlign='right';
+    ctx.fillText(Math.floor(score/10)+'m', RW-24, 45);
+    ctx.textAlign='left';
+
+    // FINALE alert — adrenaline spike during the chase (ending sequence handles the rest)
+    if(finaleActive && !won && !ending){
+      const pulse=0.6+Math.abs(Math.sin(frame*0.2))*0.4;
+      ctx.save(); ctx.globalAlpha=pulse;
+      ctx.font='bold 22px monospace'; ctx.textAlign='center';
+      ctx.fillStyle='#e84a5f'; ctx.fillText('RUN! 🐉', RW/2, 40);
+      ctx.restore(); ctx.textAlign='left';
+      ctx.save(); ctx.globalAlpha=0.12+Math.abs(Math.sin(frame*0.2))*0.1;
+      const g=ctx.createRadialGradient(RW/2,RH/2,RH*0.3,RW/2,RH/2,RH*0.8);
+      g.addColorStop(0,'rgba(232,74,47,0)'); g.addColorStop(1,'rgba(232,74,47,1)');
+      ctx.fillStyle=g; ctx.fillRect(0,0,RW,RH); ctx.restore();
+    }
+  }
+
+  function drawStar(cx,cy,r){
+    ctx.save(); ctx.translate(cx,cy);
+    ctx.fillStyle='#ffd23f'; ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=2;
+    ctx.beginPath();
+    for(let i=0;i<5;i++){
+      const a=(i*4*Math.PI/5)-Math.PI/2;
+      const x=Math.cos(a)*r, y=Math.sin(a)*r;
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+      const a2=a+2*Math.PI/5, ir=r*0.45;
+      ctx.lineTo(Math.cos(a2)*ir,Math.sin(a2)*ir);
+    }
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawSky(prog){
+    // three biomes: grassland (blue) → volcanic dusk (orange) → cave (dark)
+    let top,bot;
+    if(prog<0.5){ top='#bfe8ff'; bot='#fff8ef'; }
+    else if(prog<0.8){ top='#ff9e6d'; bot='#ffd9a0'; }
+    else { top='#2a1e33'; bot='#5a3a4a'; }
+    const grd=ctx.createLinearGradient(0,0,0,GROUND+24);
+    grd.addColorStop(0,top); grd.addColorStop(1,bot);
+    ctx.fillStyle=grd; ctx.fillRect(0,0,RW,GROUND+24);
+    // notebook paper lines (faint, keeps the doodle feel)
+    ctx.strokeStyle='rgba(120,160,200,.10)'; ctx.lineWidth=1;
+    for(let y=34;y<GROUND;y+=34){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(RW,y); ctx.stroke(); }
+    // sun / moon
+    ctx.fillStyle = prog<0.8 ? 'rgba(255,220,120,.9)' : 'rgba(230,230,255,.85)';
+    ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(80,60,18,0,7); ctx.fill(); ctx.stroke();
+  }
+
+  function drawBackdrop(prog){
+    // far parallax layer (slow scroll)
+    const off=(scroll*0.25)% (RW+200);
+    if(prog<0.5){
+      // rolling green hills
+      ctx.fillStyle='#a8d8a0'; ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=2;
+      for(let i=-1;i<4;i++){ const hx=i*260-off; hillArc(hx,GROUND+24,130,70,'#a8d8a0'); }
+    } else if(prog<0.8){
+      // VOLCANO biome
+      const vx=RW*0.62 - (scroll*0.2)%(RW*2);
+      drawVolcano(vx>-200?vx:vx+RW*2);
+      drawVolcano(vx-RW> -200 ? vx-RW*1 : vx);
+    } else {
+      // cave — stalactites hanging
+      ctx.fillStyle='#3a2a44'; ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=2;
+      for(let i=-1;i<7;i++){ const cx=i*120-off*0.6; ctx.beginPath(); ctx.moveTo(cx,0); ctx.lineTo(cx+22,0); ctx.lineTo(cx+11,40+(i%3)*18); ctx.closePath(); ctx.fill(); ctx.stroke(); }
+    }
+    function hillArc(x,base,w,h){ ctx.beginPath(); ctx.moveTo(x,base); ctx.quadraticCurveTo(x+w/2,base-h,x+w,base); ctx.closePath(); ctx.fill(); ctx.stroke(); }
+  }
+
+  function drawVolcano(vx){
+    const base=GROUND+24, h=120, w=170;
+    // mountain
+    ctx.fillStyle='#6b4a3a'; ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(vx,base); ctx.lineTo(vx+w*0.5,base-h); ctx.lineTo(vx+w,base); ctx.closePath(); ctx.fill(); ctx.stroke();
+    // crater glow
+    ctx.fillStyle='#ff5a2c'; ctx.beginPath(); ctx.moveTo(vx+w*0.38,base-h+6); ctx.lineTo(vx+w*0.62,base-h+6); ctx.lineTo(vx+w*0.5,base-h-4); ctx.closePath(); ctx.fill();
+    // lava spurts (animated)
+    const fl=['#ffd23f','#ff8c42','#e84a5f'];
+    for(let i=0;i<4;i++){
+      const t=(frame*0.1+i)%6;
+      const px=vx+w*0.5+(i-1.5)*8;
+      const py=base-h-4 - Math.abs(Math.sin(t))*(24+i*4);
+      ctx.fillStyle=fl[i%3]; ctx.beginPath(); ctx.arc(px,py,3+ (i%2),0,7); ctx.fill();
+    }
+    // smoke
+    ctx.fillStyle='rgba(80,70,70,.3)';
+    for(let i=0;i<3;i++){ ctx.beginPath(); ctx.arc(vx+w*0.5+Math.sin(frame*0.03+i)*6, base-h-30-i*16, 10+i*3,0,7); ctx.fill(); }
+  }
+
+  function drawRainbow(){
+    const cols=['#e84a5f','#ff8c42','#ffd23f','#2ec4b6','#4a90d9','#9b5de5'];
+    const cx=RW*0.72 - scroll*0.15, cy=RH+30;
+    for(let i=0;i<cols.length;i++){
+      ctx.strokeStyle=cols[i]; ctx.lineWidth=7;
+      ctx.beginPath(); ctx.arc(cx,cy,150-i*8,Math.PI,Math.PI*2); ctx.stroke();
+    }
+  }
+
+  function drawDragon(){
+    if(ending) return;   // cinematic ending draws its own dragon
+    let dx, dy;
+    if(finaleActive){
+      // CHASE: dragon swoops down close behind Lbot, breathing fire at him
+      const chaseProg = Math.min(1, (scroll-(GOAL-700))/700);
+      dx = bot.x - 90 - (1-chaseProg)*200;
+      dy = bot.y - 40 + Math.sin(frame*0.15)*10;
+    } else {
+      dx=((RW+220) - ((scroll*0.5+frame*1.3)% (RW+440)));
+      dy=58+Math.sin(frame*0.05)*9;
+    }
+    const wf=Math.sin(frame*0.22)*14;   // wing flap
+    drawDragonBody(dx,dy,0,wf,false);
+  }
+
+  // dragon used by the cinematic ending (explicit position + tumble + defeated look)
+  function drawEndDragon(dx,dy,rot,defeated){
+    const wf=defeated? 2 : Math.sin(frame*0.3)*16;   // frantic flap normally
+    if(defeated){
+      ctx.save(); ctx.translate(dx,dy); ctx.rotate(rot); ctx.translate(-dx,-dy);
+      ctx.fillStyle='#ffd23f'; for(let i=0;i<3;i++){ const a=frame*0.2+i*2.1; drawStar(dx+Math.cos(a)*22, dy-26+Math.sin(a)*8, 5); }
+      drawDragonBody(dx,dy,0,wf,true);
+      ctx.restore();
+    } else {
+      drawDragonBody(dx,dy,0,wf,false);
+    }
+  }
+
+  function drawDragonBody(dx,dy,rot,wf,dazed){
+    ctx.save(); ctx.translate(dx,dy);
+    ctx.lineJoin='round';
+
+    // ---- back wing (behind body) ----
+    drawWing(-4,-4,wf,'#3e7a1f','#2c5a15');
+    // ---- tail with spade tip ----
+    ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=3; ctx.fillStyle='#5aa02c';
+    ctx.beginPath(); ctx.moveTo(-26,2); ctx.quadraticCurveTo(-46,0,-54,10); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-54,10); ctx.lineTo(-62,4); ctx.lineTo(-60,14); ctx.lineTo(-52,16); ctx.closePath(); ctx.fill(); ctx.stroke();
+
+    // ---- body (scaled) ----
+    ctx.fillStyle='#5aa02c'; ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.ellipse(0,0,28,15,0,0,7); ctx.fill(); ctx.stroke();
+    // belly
+    ctx.fillStyle='#c9e88f'; ctx.beginPath(); ctx.ellipse(0,6,20,7,0,0,Math.PI); ctx.fill();
+    // scale texture
+    ctx.strokeStyle='rgba(26,26,26,.28)'; ctx.lineWidth=1.4;
+    for(let r=0;r<3;r++){ for(let c=0;c<4;c++){ const px=-18+c*10+(r%2?5:0), py=-8+r*7;
+      ctx.beginPath(); ctx.arc(px,py,4,0.15*Math.PI,0.85*Math.PI); ctx.stroke(); } }
+    // back spikes
+    ctx.fillStyle='#3e7a1f'; ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=2;
+    for(let i=-2;i<=2;i++){ ctx.beginPath(); ctx.moveTo(i*8-3,-13); ctx.lineTo(i*8,-22); ctx.lineTo(i*8+3,-13); ctx.closePath(); ctx.fill(); ctx.stroke(); }
+
+    // ---- neck + head ----
+    ctx.fillStyle='#5aa02c'; ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.ellipse(24,-8,14,11,0,0,7); ctx.fill(); ctx.stroke();
+    // ears
+    ctx.fillStyle='#3e7a1f';
+    ctx.beginPath(); ctx.moveTo(20,-17); ctx.lineTo(17,-27); ctx.lineTo(26,-19); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(30,-17); ctx.lineTo(33,-28); ctx.lineTo(35,-16); ctx.closePath(); ctx.fill(); ctx.stroke();
+    // horns
+    ctx.strokeStyle='#f4e3c0'; ctx.lineWidth=3; ctx.fillStyle='#f4e3c0';
+    ctx.beginPath(); ctx.moveTo(24,-18); ctx.lineTo(22,-30); ctx.stroke();
+    // snout
+    ctx.fillStyle='#5aa02c'; ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.ellipse(37,-4,9,6,0,0,7); ctx.fill(); ctx.stroke();
+    // nostril holes
+    ctx.fillStyle='#1a1a1a';
+    ctx.beginPath(); ctx.arc(43,-6,1.4,0,7); ctx.fill();
+    ctx.beginPath(); ctx.arc(43,-1,1.4,0,7); ctx.fill();
+    // mean angled brow + eye
+    ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(20,-14); ctx.lineTo(31,-10); ctx.stroke(); // angry brow
+    ctx.fillStyle='#ffd23f'; ctx.beginPath(); ctx.ellipse(27,-7,4.5,5,0,0,7); ctx.fill(); ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=1.5; ctx.stroke();
+    ctx.fillStyle='#1a1a1a'; ctx.beginPath(); ctx.ellipse(28,-7,1.4,4,0,0,7); ctx.fill(); // slit pupil
+    // fanged mouth
+    ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(30,2); ctx.lineTo(45,2); ctx.stroke();
+    ctx.fillStyle='#fff'; ctx.beginPath(); ctx.moveTo(33,2); ctx.lineTo(35,7); ctx.lineTo(37,2); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(40,2); ctx.lineTo(42,6); ctx.lineTo(44,2); ctx.closePath(); ctx.fill();
+
+    // ---- front wing (over body) ----
+    drawWing(2,-2,wf*1.1,'#7bc043','#5aa02c');
+
+    // ---- fire breath (realistic layered flames) ----
+    if(Math.floor(frame/12)%3!==0){   // bursts with pauses
+      const flick=Math.sin(frame*0.8)*3;
+      // outer glow
+      ctx.fillStyle='rgba(232,74,47,.35)';
+      flame(46,0, 46, 22, flick);
+      // mid orange
+      ctx.fillStyle='#ff8c42';
+      flame(46,0, 38, 16, flick);
+      // inner yellow-white core
+      ctx.fillStyle='#ffe14d';
+      flame(46,0, 26, 10, flick*0.6);
+      ctx.fillStyle='#fff6c9';
+      flame(46,0, 15, 6, flick*0.4);
+      // sparks
+      for(let i=0;i<3;i++){ ctx.fillStyle=['#ffe14d','#ff8c42'][i%2];
+        ctx.beginPath(); ctx.arc(60+Math.random()*24, -2+Math.random()*8-4, 1.5, 0,7); ctx.fill(); }
+    }
+    ctx.restore();
+
+    function flame(ox,oy,len,wide,flick){
+      // teardrop/wavy flame using bezier curves
+      ctx.beginPath();
+      ctx.moveTo(ox,oy-wide/2);
+      ctx.quadraticCurveTo(ox+len*0.4, oy-wide/2-flick, ox+len*0.7, oy-wide*0.2);
+      ctx.quadraticCurveTo(ox+len, oy-flick*0.5, ox+len+4, oy);           // tip
+      ctx.quadraticCurveTo(ox+len, oy+flick*0.5, ox+len*0.7, oy+wide*0.2);
+      ctx.quadraticCurveTo(ox+len*0.4, oy+wide/2+flick, ox, oy+wide/2);
+      ctx.quadraticCurveTo(ox+len*0.2, oy, ox, oy-wide/2);
+      ctx.closePath(); ctx.fill();
+    }
+
+    function drawWing(ox,oy,flap,fill,vein){
+      ctx.save(); ctx.translate(ox,oy);
+      ctx.fillStyle=fill; ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=2.5;
+      const F=flap*1.6;   // bigger flap
+      ctx.beginPath();
+      ctx.moveTo(0,-2);
+      ctx.lineTo(-16,-32-F);
+      ctx.lineTo(-9,-17-F*0.5);
+      ctx.lineTo(-2,-29-F);
+      ctx.lineTo(3,-16-F*0.5);
+      ctx.lineTo(10,-27-F);
+      ctx.lineTo(9,-4);
+      ctx.closePath(); ctx.fill(); ctx.stroke();
+      // membrane veins
+      ctx.strokeStyle=vein; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.moveTo(0,-2); ctx.lineTo(-14,-30-F); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0,-2); ctx.lineTo(-1,-27-F); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0,-2); ctx.lineTo(9,-25-F); ctx.stroke();
+      ctx.restore();
+    }
+  }
+
+  function drawGoblin(sx,o){
+    const top=GROUND+20-o.h, cx=sx+o.w/2;
+    const prog=Math.min(1,scroll/GOAL);
+    // biome monster: grassland goblin → volcano fire imp → cave ice fiend
+    let skin,skin2,eye,horn;
+    if(prog<0.4){ skin='#5a9e3a'; skin2='#3e7a1f'; eye='#ffd23f'; horn='#f4e3c0'; }        // green goblin
+    else if(prog<0.72){ skin='#e0492c'; skin2='#a02818'; eye='#ffe14d'; horn='#3a1a10'; }  // fire imp
+    else { skin='#6ab0d9'; skin2='#3a7ab0'; eye='#ff4d6d'; horn='#dff0ff'; }               // ice fiend
+    const gy=Math.sin(frame*0.2+sx)*1.5; // menacing bob
+
+    ctx.save(); ctx.translate(0,gy);
+    // shadow
+    ctx.fillStyle='rgba(0,0,0,.16)'; ctx.beginPath(); ctx.ellipse(cx,GROUND+22-gy,o.w*0.7,4,0,0,7); ctx.fill();
+
+    // clawed feet
+    ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=2.5; ctx.lineCap='round';
+    [-1,1].forEach(s=>{ const fx=cx+s*o.w*0.28;
+      ctx.beginPath(); ctx.moveTo(fx,top+o.h); ctx.lineTo(fx-3,top+o.h+6); ctx.moveTo(fx,top+o.h); ctx.lineTo(fx,top+o.h+7); ctx.moveTo(fx,top+o.h); ctx.lineTo(fx+3,top+o.h+6); ctx.stroke(); });
+
+    // body
+    ctx.fillStyle=skin; ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=3;
+    rr(sx,top,o.w,o.h+2,7,true,true);
+    // belly shading
+    ctx.fillStyle=skin2; ctx.beginPath(); ctx.ellipse(cx,top+o.h*0.62,o.w*0.32,o.h*0.28,0,0,7); ctx.fill();
+
+    // pointy ears
+    ctx.fillStyle=skin; ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(sx+3,top+5); ctx.lineTo(sx-6,top-4); ctx.lineTo(sx+9,top+2); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(sx+o.w-3,top+5); ctx.lineTo(sx+o.w+6,top-4); ctx.lineTo(sx+o.w-9,top+2); ctx.closePath(); ctx.fill(); ctx.stroke();
+
+    // horns
+    ctx.fillStyle=horn; ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.moveTo(cx-7,top+2); ctx.lineTo(cx-10,top-9); ctx.lineTo(cx-3,top+1); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx+7,top+2); ctx.lineTo(cx+10,top-9); ctx.lineTo(cx+3,top+1); ctx.closePath(); ctx.fill(); ctx.stroke();
+
+    // heavy angry brows
+    ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(sx+5,top+8); ctx.lineTo(cx-2,top+13); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(sx+o.w-5,top+8); ctx.lineTo(cx+2,top+13); ctx.stroke();
+    // glowing eyes
+    ctx.fillStyle=eye; ctx.beginPath(); ctx.arc(cx-o.w*0.16,top+16,3.6,0,7); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx+o.w*0.16,top+16,3.6,0,7); ctx.fill();
+    ctx.fillStyle='#1a1a1a';
+    ctx.beginPath(); ctx.ellipse(cx-o.w*0.16,top+16,1.3,2.4,0,0,7); ctx.fill(); // slit pupils
+    ctx.beginPath(); ctx.ellipse(cx+o.w*0.16,top+16,1.3,2.4,0,0,7); ctx.fill();
+    // eye glow
+    ctx.save(); ctx.globalAlpha=0.4; ctx.fillStyle=eye;
+    ctx.beginPath(); ctx.arc(cx-o.w*0.16,top+16,6,0,7); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx+o.w*0.16,top+16,6,0,7); ctx.fill(); ctx.restore();
+
+    // snarling mouth with sharp fangs
+    const my=top+o.h-7, mw=o.w-14, mx=sx+7;
+    ctx.fillStyle='#2a0a0a'; rr(mx,my-2,mw,7,2,true,false);
+    ctx.fillStyle='#fff';
+    const teeth=4;
+    for(let k=0;k<teeth;k++){ const txp=mx+ (mw/teeth)*k +1;
+      // top fang pointing down
+      ctx.beginPath(); ctx.moveTo(txp,my-2); ctx.lineTo(txp+(mw/teeth)/2,my+3); ctx.lineTo(txp+(mw/teeth)-2,my-2); ctx.closePath(); ctx.fill();
+      // bottom fang pointing up
+      ctx.beginPath(); ctx.moveTo(txp,my+5); ctx.lineTo(txp+(mw/teeth)/2,my); ctx.lineTo(txp+(mw/teeth)-2,my+5); ctx.closePath(); ctx.fill();
+    }
+    // biome flair: fire imp has little flames, ice fiend has frosty spikes
+    if(prog>=0.4 && prog<0.72){
+      const fl=['#ffd23f','#ff8c42'];
+      for(let i=0;i<2;i++){ ctx.fillStyle=fl[i]; ctx.beginPath();
+        ctx.moveTo(cx-6+i*12,top-6); ctx.lineTo(cx-3+i*12,top-16-Math.random()*4); ctx.lineTo(cx+i*12,top-6); ctx.closePath(); ctx.fill(); }
+    } else if(prog>=0.72){
+      ctx.strokeStyle='#dff0ff'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(cx,top-4); ctx.lineTo(cx,top-12); ctx.moveTo(cx-4,top-8); ctx.lineTo(cx+4,top-8); ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function drawBlock(sx,o){
+    const topY=GROUND+20-o.h;
+    // shadow
+    ctx.fillStyle='rgba(0,0,0,.14)'; ctx.beginPath(); ctx.ellipse(sx+o.w/2,GROUND+24,o.w*0.55,6,0,0,7); ctx.fill();
+    // a small step in front (visual cue you climb up)
+    const stepW=28, stepH=o.h*0.5, stepTop=GROUND+20-stepH;
+    ctx.fillStyle='#2ec4b6'; ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=3;
+    rr(sx-stepW+2, stepTop, stepW, stepH+4, 4, true, true);
+    // main platform (land on top)
+    ctx.fillStyle='#4a90d9';
+    rr(sx, topY, o.w, o.h+4, 6, true, true);
+    // grassy/glowing top surface so it reads as "stand here"
+    ctx.fillStyle = 'rgba(255,255,255,.35)';
+    rr(sx+3, topY+3, o.w-6, 6, 3, true, false);
+    // brick lines for detail
+    ctx.strokeStyle='rgba(26,26,26,.25)'; ctx.lineWidth=1.5;
+    for(let by=topY+16; by<topY+o.h; by+=16){ ctx.beginPath(); ctx.moveTo(sx+4,by); ctx.lineTo(sx+o.w-4,by); ctx.stroke(); }
+    // "hop up!" hint
+    ctx.fillStyle='rgba(26,26,26,.55)'; ctx.font='bold 11px monospace'; ctx.textAlign='center';
+    ctx.fillText('▲ hop up', sx+o.w/2, topY-8);
+    ctx.textAlign='left';
+  }
+
+  function drawVault(){
+    const sx=GOAL-scroll+40; if(sx>RW+220)return;
+    const vw=100, vh=120, vy=GROUND+24-vh;
+    // shadow
+    ctx.fillStyle='rgba(0,0,0,.15)'; ctx.beginPath(); ctx.ellipse(sx+vw/2,GROUND+24,vw*0.55,6,0,0,7); ctx.fill();
+    // little legs
+    ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=5; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(sx+18,vy+vh); ctx.lineTo(sx+18,vy+vh+10); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(sx+vw-18,vy+vh); ctx.lineTo(sx+vw-18,vy+vh+10); ctx.stroke();
+    // body
+    ctx.fillStyle='#c9922e'; ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=4;
+    rr(sx,vy,vw,vh,10,true,true);
+    // inner panel
+    ctx.strokeStyle='rgba(26,26,26,.5)'; ctx.lineWidth=2; rr(sx+10,vy+10,vw-20,vh-20,7,false,true);
+    // bolts
+    ctx.fillStyle='#1a1a1a';
+    [[sx+16,vy+16],[sx+vw-16,vy+16],[sx+16,vy+vh-16],[sx+vw-16,vy+vh-16]].forEach(b=>{ctx.beginPath();ctx.arc(b[0],b[1],3,0,7);ctx.fill();});
+    // dial
+    ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.arc(sx+vw/2,vy+vh/2,20,0,7); ctx.stroke();
+    ctx.beginPath(); ctx.arc(sx+vw/2,vy+vh/2,20,0,7); ctx.stroke();
+    const da=frame*0.05;
+    ctx.beginPath(); ctx.moveTo(sx+vw/2,vy+vh/2); ctx.lineTo(sx+vw/2+Math.cos(da)*15,vy+vh/2+Math.sin(da)*15); ctx.stroke();
+    // handle
+    ctx.beginPath(); ctx.arc(sx+vw-14,vy+vh/2,7,0,7); ctx.stroke();
+    // label
+    ctx.fillStyle='#1a1a1a'; ctx.font='bold 15px monospace'; ctx.textAlign='center';
+    ctx.fillText('THE 5', sx+vw/2, vy-10);
+  }
+
+  // ── START SCREEN: beat-up Lbot easter egg ──
+  let botDamage=0, bcCanvas=null, bctx=null, bcHit=0, _botWired=false, _botLooping=false;
+  function initStartBot(){
+    bcCanvas=document.getElementById('r5-botcanvas'); if(!bcCanvas)return;
+    bctx=bcCanvas.getContext('2d');
+    botDamage=0; bcHit=0;
+    const lbl0=document.getElementById('r5-startbot'); if(lbl0) lbl0.textContent='↑ tap Lbot… go on';
+    if(!_botWired){
+      _botWired=true;
+      const hit=(e)=>{ if(e){e.preventDefault(); e.stopPropagation();}
+        botDamage=Math.min(7,botDamage+1); bcHit=8;
+        try{ beep(200+Math.random()*120,.09,'square',.05); buzz(20); }catch(_){}
+        const lbl=document.getElementById('r5-startbot');
+        if(lbl && botDamage>=7) lbl.textContent='ok he\u2019s had enough 😵';
+        else if(lbl && botDamage>=3) lbl.textContent='keep going…';
+      };
+      ['pointerdown','touchstart','mousedown'].forEach(ev=> bcCanvas.addEventListener(ev, hit, {passive:false}) );
+    }
+    if(!_botLooping){ _botLooping=true;
+      (function botLoop(){ if(started){ _botLooping=false; return; } drawStartBot(); requestAnimationFrame(botLoop); })();
+    }
+  }
+
+  function drawStartBot(){
+    if(!bctx)return;
+    const c=bctx, W=140, H=150, cx=70, cy=78;
+    c.clearRect(0,0,W,H);
+    c.save(); c.translate(cx,cy);
+    // recoil wobble when hit
+    if(bcHit>0){ c.rotate(Math.sin(bcHit*1.5)*0.06*bcHit/8); bcHit--; }
+    const d=botDamage;
+
+    // shadow
+    c.fillStyle='rgba(0,0,0,.18)'; c.beginPath(); c.ellipse(0,52,30,6,0,0,7); c.fill();
+
+    // ---- loose parts that popped out (appear as damage grows) ----
+    if(d>=4){ // spring popped from shoulder
+      c.strokeStyle='#888'; c.lineWidth=2;
+      c.beginPath(); for(let i=0;i<8;i++){ const yy=-30-i*3; c.lineTo(28+(i%2?4:-4), yy); } c.stroke();
+    }
+    if(d>=5){ // gear popped out, spinning above
+      c.save(); c.translate(-30,-40); c.rotate(frame*0.1);
+      c.fillStyle='#b0b0b0'; c.strokeStyle='#1a1a1a'; c.lineWidth=1.5;
+      c.beginPath(); for(let i=0;i<8;i++){ const a=i/8*6.28; const r=i%2?9:6; c.lineTo(Math.cos(a)*r,Math.sin(a)*r);} c.closePath(); c.fill(); c.stroke();
+      c.beginPath(); c.arc(0,0,3,0,7); c.strokeStyle='#1a1a1a'; c.stroke(); c.restore();
+    }
+
+    // ---- body (dents appear) ----
+    c.fillStyle= d>=6?'#3a6a99':'#4a90d9'; c.strokeStyle='#1a1a1a'; c.lineWidth=3;
+    rr2(c,-24,-24,48,54,11,true,true);
+    if(d>=2){ // dent on body
+      c.fillStyle='rgba(0,0,0,.18)'; c.beginPath(); c.ellipse(-8,6,7,10,0.3,0,7); c.fill();
+    }
+    if(d>=6){ // crack lines
+      c.strokeStyle='rgba(26,26,26,.55)'; c.lineWidth=1.5;
+      c.beginPath(); c.moveTo(6,-10); c.lineTo(12,2); c.lineTo(6,10); c.stroke();
+    }
+    // chest light (flickers out when very damaged)
+    c.fillStyle = d>=6 ? '#555' : (Math.floor(frame/8)%2?'#e84a5f':'#ff8c42');
+    c.beginPath(); c.arc(0,-2,4,0,7); c.fill(); c.strokeStyle='#1a1a1a'; c.lineWidth=1.5; c.stroke();
+
+    // ---- head ----
+    c.fillStyle= d>=6?'#4a8fd0':'#5aa9f0'; c.strokeStyle='#1a1a1a'; c.lineWidth=3;
+    rr2(c,-20,-58,40,34,9,true,true);
+    if(d>=3){ // dent on head
+      c.fillStyle='rgba(0,0,0,.16)'; c.beginPath(); c.ellipse(12,-46,6,8,0,0,7); c.fill();
+    }
+    // antenna (bent when damaged)
+    c.strokeStyle='#1a1a1a'; c.lineWidth=3;
+    c.beginPath(); c.moveTo(0,-58);
+    if(d>=4){ c.lineTo(6,-66); c.lineTo(2,-72); } else { c.lineTo(0,-70); }
+    c.stroke();
+    c.fillStyle= d>=4?'#888':'#e84a5f'; c.beginPath(); c.arc(d>=4?2:0,d>=4?-73:-72,4,0,7); c.fill(); c.strokeStyle='#1a1a1a'; c.lineWidth=1.5; c.stroke();
+
+    // ---- eyes ----
+    // left eye — black eye after damage
+    if(d>=1){ c.fillStyle='rgba(90,40,90,.55)'; c.beginPath(); c.arc(-8,-42,8,0,7); c.fill(); } // bruise
+    c.fillStyle='#fff'; c.strokeStyle='#1a1a1a'; c.lineWidth=2;
+    c.beginPath(); c.arc(-8,-42, d>=1?4:5, 0,7); c.fill(); c.stroke();
+    c.beginPath(); c.arc(8,-42,5,0,7); c.fill(); c.stroke();
+    c.fillStyle='#1a1a1a';
+    if(d>=1){ // left eye becomes an X (knocked out)
+      c.lineWidth=2; c.strokeStyle='#1a1a1a';
+      c.beginPath(); c.moveTo(-11,-45); c.lineTo(-5,-39); c.moveTo(-5,-45); c.lineTo(-11,-39); c.stroke();
+    } else { c.beginPath(); c.arc(-8,-42,2,0,7); c.fill(); }
+    c.beginPath(); c.arc(8,-42,2,0,7); c.fill();
+
+    // ---- mouth (smiling → frown, missing tooth) ----
+    c.strokeStyle='#1a1a1a'; c.lineWidth=2;
+    if(d===0){ // happy smile
+      c.beginPath(); c.arc(0,-32,6,0.1*Math.PI,0.9*Math.PI); c.stroke();
+    } else if(d<4){ // straight worried
+      c.beginPath(); c.moveTo(-6,-30); c.lineTo(6,-30); c.stroke();
+      // missing tooth (little gap block)
+      c.fillStyle='#fff'; c.fillRect(-5,-31,3,3); c.fillRect(2,-31,3,3);
+    } else { // frown + tongue out (dazed)
+      c.beginPath(); c.arc(0,-26,6,1.1*Math.PI,1.9*Math.PI); c.stroke();
+      c.fillStyle='#e84a5f'; c.beginPath(); c.arc(2,-28,2.5,0,7); c.fill();
+    }
+
+    // dizzy stars circling when nearly broken
+    if(d>=5){ c.fillStyle='#ffd23f';
+      for(let i=0;i<3;i++){ const a=frame*0.15+i*2.1; drawStarAt(c, Math.cos(a)*22, -60+Math.sin(a)*6, 4); }
+    }
+    // impact spark on hit
+    if(bcHit>4){ c.strokeStyle='#ffd23f'; c.lineWidth=2;
+      for(let i=0;i<5;i++){ const a=i/5*6.28; c.beginPath(); c.moveTo(Math.cos(a)*14,-42+Math.sin(a)*14); c.lineTo(Math.cos(a)*22,-42+Math.sin(a)*22); c.stroke(); }
+    }
+    c.restore();
+  }
+  function rr2(c,x,y,w,h,r,f,s){ c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r); c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); if(f)c.fill(); if(s)c.stroke(); }
+  function drawStarAt(c,x,y,r){ c.save(); c.translate(x,y); c.beginPath(); for(let i=0;i<5;i++){ const a=(i*4*Math.PI/5)-Math.PI/2; c.lineTo(Math.cos(a)*r,Math.sin(a)*r); const a2=a+2*Math.PI/5; c.lineTo(Math.cos(a2)*r*0.45,Math.sin(a2)*r*0.45);} c.closePath(); c.fill(); c.restore(); }
+
+  function drawBot(x,y){
+    ctx.save(); ctx.translate(x,y);
+    const air=!bot.onGround;
+    const t=frame*0.5;                 // faster, frantic cycle
+    // slight forward lean + panic bob
+    const lean=air?0.08:0.14;
+    const bob=air?0:Math.abs(Math.sin(t))*1.5;
+    ctx.rotate(lean);
+    ctx.translate(0,-bob);
+
+    // shadow (shrinks in air)
+    ctx.fillStyle='rgba(0,0,0,.14)';
+    const shR=air?9:17; ctx.beginPath(); ctx.ellipse(-2,25+bob,shR,4,0,0,7); ctx.fill();
+
+    // motion lines behind him (speed)
+    ctx.strokeStyle='rgba(74,144,217,.35)'; ctx.lineWidth=2; ctx.lineCap='round';
+    for(let i=0;i<3;i++){ const ly=-8+i*10; ctx.beginPath(); ctx.moveTo(-20-i*5,ly); ctx.lineTo(-32-i*6,ly); ctx.stroke(); }
+
+    // ---- legs: fast frantic pump ----
+    const legA=air?0.7:Math.sin(t)*1.25;
+    const legB=air?-0.7:Math.sin(t+Math.PI)*1.25;
+    limb(-2,15,legA);
+    limb(3,15,legB);
+
+    // ---- back arm pumping ----
+    const armA=air?-0.9:Math.sin(t+Math.PI)*1.3;
+    armLimb(-2,-8,armA,true);
+
+    // ---- body ----
+    ctx.fillStyle='#4a90d9'; ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=3;
+    rr(-14,-18,28,34,9,true,true);
+    // body panel line + rivets (detail)
+    ctx.strokeStyle='rgba(26,26,26,.3)'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.moveTo(-14,-2); ctx.lineTo(14,-2); ctx.stroke();
+    ctx.fillStyle='rgba(26,26,26,.4)';
+    ctx.beginPath(); ctx.arc(-9,3,1.4,0,7); ctx.fill();
+    ctx.beginPath(); ctx.arc(9,3,1.4,0,7); ctx.fill();
+    // chest light (blinks fast = panic)
+    ctx.fillStyle = (Math.floor(frame/6)%2? '#e84a5f':'#ff8c42');
+    ctx.beginPath(); ctx.arc(0,-6,3,0,7); ctx.fill();
+    ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=1.5; ctx.stroke();
+
+    // ---- head (tilted, scared) ----
+    ctx.save(); ctx.translate(0,-26); ctx.rotate(0.06);
+    ctx.fillStyle='#5aa9f0'; ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=3; rr(-12,-10,24,20,7,true,true);
+    // antenna (wobbles fast)
+    const aw=Math.sin(frame*0.6)*3;
+    ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(0,-10); ctx.lineTo(aw,-18); ctx.stroke();
+    ctx.fillStyle='#e84a5f'; ctx.beginPath(); ctx.arc(aw,-20,4,0,7); ctx.fill(); ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=2; ctx.stroke();
+    // wide scared eyes (big whites, tiny darting pupils)
+    ctx.fillStyle='#fff'; ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(-5,-1,5.5,0,7); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.arc(6,-1,5.5,0,7); ctx.fill(); ctx.stroke();
+    const dart=Math.sin(frame*0.4)*1.5;
+    ctx.fillStyle='#1a1a1a';
+    ctx.beginPath(); ctx.arc(-4+dart,0,2,0,7); ctx.fill();
+    ctx.beginPath(); ctx.arc(7+dart,0,2,0,7); ctx.fill();
+    // worried brows
+    ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(-9,-7); ctx.lineTo(-2,-5); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(9,-7); ctx.lineTo(2,-5); ctx.stroke();
+    // open worried mouth (little 'o')
+    ctx.fillStyle='#1a1a1a'; ctx.beginPath(); ctx.ellipse(1,7,2.5,3,0,0,7); ctx.fill();
+    ctx.restore();
+
+    // ---- front arm pumping (over body) ----
+    const armB=air?0.9:Math.sin(t)*1.3;
+    armLimb(2,-8,armB,false);
+
+    // ---- sweat droplets flying off ----
+    if(frame%10<5){
+      ctx.fillStyle='#7ec8ff'; ctx.strokeStyle='#4a90d9'; ctx.lineWidth=1;
+      // from head
+      sweat(-14,-30,-1); sweat(15,-28,1);
+    }
+
+    ctx.restore();
+
+    function limb(ox,oy,ang){
+      ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=4.5; ctx.lineCap='round';
+      const kx=ox+Math.sin(ang)*9, ky=oy+9;
+      const fx=kx+Math.sin(ang*0.5)*8, fy=ky+10;
+      ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(kx,ky); ctx.lineTo(fx,fy); ctx.stroke();
+      // little foot
+      ctx.lineWidth=5; ctx.beginPath(); ctx.moveTo(fx,fy); ctx.lineTo(fx+4,fy); ctx.stroke();
+    }
+    function armLimb(ox,oy,ang,back){
+      ctx.strokeStyle= back? '#3a76b8':'#1a1a1a'; ctx.lineWidth=4; ctx.lineCap='round';
+      const ex=ox+Math.sin(ang)*8, ey=oy+7;
+      const hx=ex+Math.sin(ang*1.3)*7, hy=ey+7;
+      ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(ex,ey); ctx.lineTo(hx,hy); ctx.stroke();
+      // fist
+      ctx.fillStyle= back? '#3a76b8':'#4a90d9'; ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.arc(hx,hy,3,0,7); ctx.fill(); ctx.stroke();
+    }
+    function sweat(sx,sy,dir){
+      const p=(frame%10)/5;
+      const dx=sx+dir*6*p, dy=sy-8*p - 2;
+      ctx.beginPath();
+      ctx.moveTo(dx,dy-3); ctx.quadraticCurveTo(dx+2,dy,dx,dy+3); ctx.quadraticCurveTo(dx-2,dy,dx,dy-3);
+      ctx.fill(); ctx.stroke();
+    }
+  }
+
+  function rr(x,y,w,h,r,fill,stroke){
+    ctx.beginPath(); ctx.moveTo(x+r,y);
+    ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
+    if(fill)ctx.fill(); if(stroke)ctx.stroke();
+  }
+
+  window.the5Reveal=function(instant){
+    try{ localStorage.setItem('the5_unlocked','yes'); }catch(e){}    running=false; if(raf)cancelAnimationFrame(raf);
+    const locked=document.getElementById('the5-locked');
+    const unlocked=document.getElementById('the5-unlocked');
+    if(!locked||!unlocked)return;
+    locked.style.display='none'; unlocked.style.display='block';
+    if(!instant){ unlocked.scrollIntoView({behavior:'smooth',block:'center'}); }
+  };
+
+  window.the5ReplayGame=function(){
+    try{ localStorage.removeItem('the5_unlocked'); }catch(e){}
+    stopTheme();
+    const locked=document.getElementById('the5-locked');
+    const unlocked=document.getElementById('the5-unlocked');
+    if(unlocked) unlocked.style.display='none';
+    if(locked) locked.style.display='block';
+    started=false; running=false; won=false; respawning=false;
+    if(raf){ cancelAnimationFrame(raf); raf=null; }
+    const ov=document.getElementById('r5-start'); if(ov) ov.style.display='flex';
+    canvas=document.getElementById('r5-canvas');
+    if(canvas){
+      ctx=canvas.getContext('2d');
+      try{ sizeCanvas(); }catch(e){}
+      try{ reset(); }catch(e){ buildObstacles(); buildCoins(); }
+      try{ draw(); }catch(e){}
+      wireRunner();
+      _botLooping=false; initStartBot();   // reset the tappable bot fresh
+      (function idle(){ if(started)return; frame++; try{draw();}catch(e){} requestAnimationFrame(idle); })();
+    }
+    if(locked) locked.scrollIntoView({behavior:'smooth',block:'center'});
+  };
+
+  let _r5Wired=false;
+  function wireRunner(){
+    if(_r5Wired)return; _r5Wired=true;
+    window.addEventListener('resize',()=>{ sizeCanvas(); draw(); },{passive:true});
+    // In-game: tapping the main canvas jumps (and starts if somehow not started)
+    function press(e){ if(e){ e.preventDefault(); } if(!started){ startGame(); } else { doJump(); } }
+    ['pointerdown','touchstart','mousedown'].forEach(ev=>{ canvas.addEventListener(ev, press, {passive:false}); });
+    // Start ONLY via the Start button (so tapping the bot just damages it, doesn't start)
+    const btn=document.getElementById('r5-startbtn');
+    if(btn){ ['pointerdown','touchstart','mousedown'].forEach(ev=>{
+      btn.addEventListener(ev, function(e){ e.preventDefault(); e.stopPropagation(); startGame(); }, {passive:false});
+    }); }
+    initStartBot();
     document.addEventListener('keydown',e=>{
       const locked=document.getElementById('the5-locked');
-      if(!locked || locked.style.display==='none')return; // only when game visible & unsolved
-      if(e.key==='Enter'){ e.preventDefault(); w5Guess(); }
-      else if(e.key==='Backspace'){ e.preventDefault(); w5Backspace(); }
-      else if(/^[a-zA-Z]$/.test(e.key)){ w5TypeLetter(e.key.toUpperCase()); }
+      if(!locked||locked.style.display==='none')return;
+      if(e.code==='Space'||e.key===' '||e.key==='ArrowUp'){ e.preventDefault(); if(!started)startGame(); else doJump(); }
     });
   }
-}
 
-function w5BuildGrid(){
-  const grid=document.getElementById('w5-grid');
-  if(!grid)return;
-  grid.innerHTML='';
-  for(let r=0;r<W5_MAX;r++){
-    const row=document.createElement('div');
-    row.id='w5-row-'+r;
-    row.style.cssText='display:flex;gap:.45rem;padding:.25rem;border-radius:10px;transition:background .2s;';
-    for(let c=0;c<5;c++){
-      const cell=document.createElement('div');
-      cell.id='w5-c-'+r+'-'+c;
-      cell.style.cssText='width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(250,248,244,.14);border-radius:8px;font-family:"IBM Plex Mono",monospace;font-size:1.2rem;font-weight:600;color:#fff;text-transform:uppercase;transition:transform .2s,background .3s,border-color .3s;';
-      row.appendChild(cell);
-    }
-    grid.appendChild(row);
+  function initRunner(){
+    canvas=document.getElementById('r5-canvas'); if(!canvas)return;
+    ctx=canvas.getContext('2d');
+    if(location.hash==='#replay'){ try{ localStorage.removeItem('the5_unlocked'); }catch(e){} }
+    // Always set up the tappable start-screen bot, even if the song is already unlocked
+    try{ initStartBot(); }catch(e){}
+    try{ if(localStorage.getItem('the5_unlocked')==='yes'){ the5Reveal(true); return; } }catch(e){}
+    sizeCanvas(); buildObstacles(); draw();
+    setTimeout(()=>{ sizeCanvas(); draw(); }, 60);
+    setTimeout(()=>{ sizeCanvas(); draw(); }, 300);
+    (function idle(){ if(started)return; frame++; draw(); requestAnimationFrame(idle); })();
+    wireRunner();
   }
-}
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initRunner); }
+  else{ initRunner(); }
+})();
 
-// live-mirror what they type into the active row
-function w5Mirror(){
-  const inp=document.getElementById('w5-input');
-  const g=(inp.value||'').toUpperCase();
-  for(let c=0;c<5;c++){
-    const cell=document.getElementById('w5-c-'+w5Row+'-'+c);
-    if(cell && !cell.dataset.locked){ cell.textContent=g[c]||''; }
-  }
-}
 
-function w5HighlightActive(){
-  for(let r=0;r<W5_MAX;r++){
-    const row=document.getElementById('w5-row-'+r);
-    if(!row)continue;
-    row.style.background = (r===w5Row) ? 'rgba(201,146,46,.08)' : 'transparent';
-  }
-}
-
-function w5BuildKeyboard(){
-  const kb=document.getElementById('w5-keyboard');
-  if(!kb)return;
-  kb.innerHTML='';
-  W5_KEYS.forEach(rowStr=>{
-    const row=document.createElement('div');
-    row.style.cssText='display:flex;gap:.28rem;justify-content:center;';
-    rowStr.split('').forEach(letter=>{
-      const key=document.createElement('div');
-      key.id='w5-key-'+letter;
-      key.textContent=letter;
-      key.style.cssText='min-width:24px;height:32px;padding:0 .3rem;display:flex;align-items:center;justify-content:center;background:rgba(250,248,244,.1);border-radius:5px;font-family:"IBM Plex Mono",monospace;font-size:.7rem;color:rgba(250,248,244,.85);cursor:pointer;transition:background .3s,color .3s,opacity .3s;user-select:none;';
-      key.onclick=()=>w5TypeLetter(letter);
-      row.appendChild(key);
-    });
-    kb.appendChild(row);
-  });
-  // add a backspace on the last row
-  const last=kb.lastChild;
-  const back=document.createElement('div');
-  back.textContent='⌫';
-  back.style.cssText='min-width:34px;height:32px;display:flex;align-items:center;justify-content:center;background:rgba(196,64,42,.25);border-radius:5px;font-size:.8rem;color:#fff;cursor:pointer;user-select:none;';
-  back.onclick=w5Backspace;
-  last.appendChild(back);
-}
-
-function w5TypeLetter(l){
-  const inp=document.getElementById('w5-input');
-  if(inp.value.length<5){ inp.value+=l; w5Mirror(); }
-}
-function w5Backspace(){
-  const inp=document.getElementById('w5-input');
-  inp.value=inp.value.slice(0,-1); w5Mirror();
-}
-
-function w5Guess(){
-  const inp=document.getElementById('w5-input');
-  const msg=document.getElementById('w5-msg');
-  const g=(inp.value||'').trim().toUpperCase();
-  if(g.length!==5){ msg.textContent='Type all 5 letters.'; w5Shake(); return; }
-  // Lightweight gibberish filter — always allow the answer words, otherwise require
-  // it to look like a real word (has a vowel, no wild repeats/clusters)
-  if(!W5_WORDS.includes(g) && !w5LooksLikeWord(g)){ msg.textContent="That's not a word — try again."; w5Shake(); return; }
-
-  const ans=w5Answer.split(''), guess=g.split('');
-  const taken=[false,false,false,false,false], state=[0,0,0,0,0];
-  for(let i=0;i<5;i++){ if(guess[i]===ans[i]){state[i]=2;taken[i]=true;} }
-  for(let i=0;i<5;i++){ if(state[i]===2)continue; for(let j=0;j<5;j++){ if(!taken[j]&&guess[i]===ans[j]){state[i]=1;taken[j]=true;break;} } }
-
-  // paint the active row with a staggered flip, and LOCK it so it stays visible
-  for(let i=0;i<5;i++){
-    const cell=document.getElementById('w5-c-'+w5Row+'-'+i);
-    setTimeout(()=>{
-      cell.textContent=guess[i];
-      cell.dataset.locked='1';
-      cell.style.transform='scale(1.1)';
-      setTimeout(()=>cell.style.transform='scale(1)',150);
-      if(state[i]===2){ cell.style.background='#0e6e72'; cell.style.borderColor='#0e6e72'; }
-      else if(state[i]===1){ cell.style.background='rgba(201,146,46,.9)'; cell.style.borderColor='rgba(201,146,46,.9)'; }
-      else { cell.style.background='rgba(250,248,244,.05)'; cell.style.borderColor='rgba(250,248,244,.1)'; cell.style.color='rgba(250,248,244,.4)'; }
-      // update keyboard colors (best state wins)
-      w5PaintKey(guess[i],state[i]);
-    }, i*80);
-  }
-
-  inp.value='';
-
-  if(g===w5Answer){
-    setTimeout(()=>{ msg.textContent='Unlocked 🔓'; w5Celebrate(); setTimeout(()=>w5Reveal(false),900); },700);
-    return;
-  }
-
-  w5Row++;
-  if(w5Row>=W5_MAX){
-    setTimeout(()=>{
-      msg.textContent='Out of tries — new word! Keep going.';
-      w5Answer=W5_WORDS[Math.floor(Math.random()*W5_WORDS.length)];
-      w5Row=0; w5KeyState={};
-      setTimeout(()=>{ w5BuildGrid(); w5BuildKeyboard(); w5HighlightActive(); msg.textContent='↓ Type your guess below'; },1200);
-    },700);
-  } else {
-    setTimeout(()=>{ w5HighlightActive(); msg.textContent=(W5_MAX-w5Row)+' tries left'; },700);
-  }
-}
-
-function w5PaintKey(letter,st){
-  const cur=w5KeyState[letter]||0;
-  if(st>cur) w5KeyState[letter]=st; // teal(2) beats amber(1) beats none(0)
-  const key=document.getElementById('w5-key-'+letter);
-  if(!key)return;
-  const best=w5KeyState[letter];
-  if(best===2){ key.style.background='#0e6e72'; key.style.color='#fff'; }
-  else if(best===1){ key.style.background='rgba(201,146,46,.9)'; key.style.color='#fff'; }
-  else { key.style.background='rgba(250,248,244,.04)'; key.style.color='rgba(250,248,244,.25)'; key.style.opacity='.5'; }
-}
-
-function w5Shake(){
-  const inp=document.getElementById('w5-input');
-  if(!inp)return;
-  let x=0; const seq=[-6,6,-4,4,-2,0];
-  const iv=setInterval(()=>{ inp.style.transform='translateX('+seq[x]+'px)'; x++; if(x>=seq.length){clearInterval(iv);inp.style.transform='';} },45);
-}
-
-function w5Celebrate(){
-  for(let i=0;i<5;i++){
-    const cell=document.getElementById('w5-c-'+(w5Row)+'-'+i);
-    if(!cell)continue;
-    setTimeout(()=>{
-      cell.style.boxShadow='0 0 18px rgba(201,146,46,.7)';
-      cell.style.transform='scale(1.15)';
-      setTimeout(()=>{cell.style.transform='scale(1)';cell.style.boxShadow='';},240);
-    }, i*70);
-  }
-}
-
-function w5LooksLikeWord(w){
-  // must contain at least one vowel
-  if(!/[AEIOUY]/.test(w))return false;
-  // no letter 3+ times in a row (AAAAA, BBBXX)
-  if(/(.)\1\1/.test(w))return false;
-  // block long consonant runs of 4+ (keyboard mashing like SDFGH, QWRTP)
-  if(/[BCDFGHJKLMNPQRSTVWXZ]{4,}/.test(w))return false;
-  return true;
-}
-
-function w5Hint(){
-  document.getElementById('w5-msg').textContent='Starts with "'+w5Answer[0]+'", ends with "'+w5Answer[4]+'"';
-}
-
-function w5Reveal(instant){
-  try{ localStorage.setItem('the5_unlocked','yes'); }catch(e){}
-  const locked=document.getElementById('the5-locked');
-  const unlocked=document.getElementById('the5-unlocked');
-  if(!locked||!unlocked)return;
-  locked.style.display='none';
-  unlocked.style.display='block';
-  if(!instant){ unlocked.scrollIntoView({behavior:'smooth',block:'center'}); }
-}
-
-// Run now if DOM is ready, otherwise wait for it
-if(document.readyState==='loading'){
-  document.addEventListener('DOMContentLoaded',w5Init);
-}else{
-  w5Init();
-}
 
 
 
