@@ -2579,19 +2579,19 @@ requestAnimationFrame(tick);
 
   function buildCoins(){
     coins=[];
-    // Arcs sit in the OPEN GAPS where you'd naturally jump, low enough to grab
-    // even on a small hop. Heights kept modest so a normal jump sweeps through them.
+    // First four arcs: low and easy, grabbed on a normal hop.
+    // Last arc: a bit higher/tighter as a small skill reward — but all reachable.
     const arcs=[
-      {start:340, n:3, peak:34},   // opening straight — easy warmup grabs
-      {start:840, n:3, peak:34},   // gap before/after block
-      {start:1300,n:3, peak:34},   // mid gap
-      {start:1760,n:3, peak:34},   // gap before combo
-      {start:2180,n:4, peak:34},   // last stretch before the finale — reward run
+      {start:360, n:3, base:34, peak:20, gap:52},
+      {start:860, n:3, base:34, peak:20, gap:52},
+      {start:1320,n:3, base:34, peak:20, gap:52},
+      {start:1780,n:3, base:34, peak:20, gap:52},
+      {start:2180,n:4, base:40, peak:16, gap:46},   // final stretch — slightly raised, still fair
     ];
     arcs.forEach(a=>{
       for(let k=0;k<a.n;k++){
-        const arc=Math.sin(((k+0.5)/a.n)*Math.PI);          // smooth arc
-        coins.push({wx:a.start+k*46, y:GROUND-30-arc*a.peak, got:false});
+        const arc=Math.sin(((k+0.5)/a.n)*Math.PI);          // gentle arc
+        coins.push({wx:a.start+k*(a.gap||50), y:GROUND-a.base-arc*a.peak, got:false});
       }
     });
     coinsTotal=coins.length;
@@ -2695,7 +2695,7 @@ requestAnimationFrame(tick);
     for(const c of coins){
       if(c.got)continue;
       const sx=c.wx-scroll;
-      if(Math.abs(sx-bot.x)<28 && Math.abs(c.y-bot.y)<34){
+      if(Math.abs(sx-bot.x)<38 && Math.abs(c.y-bot.y)<44){
         c.got=true; coinsGot++; score+=50; sfxCoin();
         for(let k=0;k<6;k++) particles.push({x:sx,y:c.y,vx:Math.random()*4-2,vy:Math.random()*-3-1,life:18,c:'#ffd23f',r:2+Math.random()*2});
       }
