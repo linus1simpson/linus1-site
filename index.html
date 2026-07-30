@@ -2490,7 +2490,7 @@ requestAnimationFrame(tick);
 // ══════════════════════════════════════════════
 (function(){
   const RW=760, RH=340, GROUND=RH-54, GOAL=3200;
-  const GRAV=0.8, JUMP=-13.6, SPEED=4.2;
+  const GRAV=0.82, JUMP=-13.9, SPEED=5.4;
   let canvas,ctx,DPR=1,raf=null;
   let running=false,started=false,won=false,respawning=false;
   let scroll=0, frame=0;
@@ -2571,29 +2571,27 @@ requestAnimationFrame(tick);
       {type:'block',  wx:1080, w:110, h:58},
       {type:'goblin', wx:1560, w:34, h:38},
       {type:'block',  wx:2000, w:110, h:66},
-      // quick one-two combo — the skill moment
+      // quick one-two combo — the skill moment (spaced for the faster pace)
       {type:'goblin', wx:2380, w:32, h:36},
-      {type:'goblin', wx:2560, w:32, h:38},
+      {type:'goblin', wx:2660, w:32, h:38},
     ];
   }
 
   function buildCoins(){
     coins=[];
-    // Place gentle arcs of stars in the OPEN GAPS between obstacles,
-    // at a height Lbot passes through on a normal jump — all collectible.
-    // gaps (from buildObstacles): before 620, ~700-1080, ~1190-1560, ~1600-2000, ~2110-2480, after 2514
+    // Arcs sit in the OPEN GAPS where you'd naturally jump, low enough to grab
+    // even on a small hop. Heights kept modest so a normal jump sweeps through them.
     const arcs=[
-      {start:300, n:3},   // opening straight
-      {start:820, n:3},   // between goblin & block
-      {start:1290,n:3},   // between block & goblin
-      {start:1700,n:3},   // between goblin & block
-      {start:2150,n:3},   // before the combo
-      {start:2380,n:2},   // over the combo goblins (skill reward)
+      {start:340, n:3, peak:34},   // opening straight — easy warmup grabs
+      {start:840, n:3, peak:34},   // gap before/after block
+      {start:1300,n:3, peak:34},   // mid gap
+      {start:1760,n:3, peak:34},   // gap before combo
+      {start:2180,n:4, peak:34},   // last stretch before the finale — reward run
     ];
     arcs.forEach(a=>{
       for(let k=0;k<a.n;k++){
-        const arc=Math.sin(((k+0.5)/a.n)*Math.PI);      // smooth arc
-        coins.push({wx:a.start+k*40, y:GROUND-34-arc*40, got:false});
+        const arc=Math.sin(((k+0.5)/a.n)*Math.PI);          // smooth arc
+        coins.push({wx:a.start+k*46, y:GROUND-30-arc*a.peak, got:false});
       }
     });
     coinsTotal=coins.length;
@@ -2636,22 +2634,35 @@ requestAnimationFrame(tick);
     reset();
     startTheme();
     if(raf)cancelAnimationFrame(raf);
+    _lastT=performance.now();
     loop();
   }
 
-  function loop(){ if(!running)return; update(); draw(); raf=requestAnimationFrame(loop); }
+  let _lastT=0;
+  function loop(ts){
+    if(!running)return;
+    // delta-time: normalize to 60fps so speed is consistent on any device
+    if(!ts) ts=performance.now();
+    let dt=(ts-_lastT)/16.667;        // 1.0 = a 60fps frame
+    _lastT=ts;
+    if(!isFinite(dt)||dt<=0) dt=1;
+    if(dt>3) dt=3;                     // clamp after tab-switch/hiccup so it doesn't teleport
+    update(dt); draw();
+    raf=requestAnimationFrame(loop);
+  }
 
-  function update(){
-    frame++; scroll+=SPEED; score++;
+  function update(dt){
+    if(!dt) dt=1;
+    frame++; scroll+=SPEED*dt; score++;
     // FINALE: last stretch before the vault — the dragon swoops in behind, chasing (always tense)
     finaleActive = scroll > GOAL-700;
-    // apply gravity/motion
-    bot.vy+=GRAV; bot.y+=bot.vy;
+    // apply gravity/motion (scaled by dt for consistent feel on any framerate)
+    bot.vy+=GRAV*dt; bot.y+=bot.vy*dt;
     const wasAir=!bot.onGround;
     bot.onGround=false; // will be set true by platform or ground below
 
     // ── platform + obstacle collision (runs BEFORE ground snap) ──
-    const botL=bot.x-13, botR=bot.x+13, botBottom=bot.y+18, botPrevBottom=(bot.y-bot.vy)+18;
+    const botL=bot.x-13, botR=bot.x+13, botBottom=bot.y+18, botPrevBottom=(bot.y-bot.vy*dt)+18;
     let onPlatform=false;
     if(scroll<GOAL){
       for(const o of obstacles){
@@ -2684,7 +2695,7 @@ requestAnimationFrame(tick);
     for(const c of coins){
       if(c.got)continue;
       const sx=c.wx-scroll;
-      if(Math.abs(sx-bot.x)<20 && Math.abs(c.y-bot.y)<26){
+      if(Math.abs(sx-bot.x)<28 && Math.abs(c.y-bot.y)<34){
         c.got=true; coinsGot++; score+=50; sfxCoin();
         for(let k=0;k<6;k++) particles.push({x:sx,y:c.y,vx:Math.random()*4-2,vy:Math.random()*-3-1,life:18,c:'#ffd23f',r:2+Math.random()*2});
       }
