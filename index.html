@@ -179,7 +179,35 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:cen
 .h2 .emg{font-style:italic;color:var(--forest);}
 .body{font-size:.92rem;line-height:1.9;color:var(--muted);margin-bottom:1.1rem;font-weight:300;}
 section{padding:5.5rem 3rem;}
+/* ── hero catalog list + platform links ── */
+.htrk-scroll{ display:flex; flex-direction:column; gap:.28rem;
+  max-height:300px; overflow-y:auto; padding-right:.4rem;
+  scrollbar-width:thin; scrollbar-color:rgba(14,110,114,.45) transparent; }
+.htrk-scroll::-webkit-scrollbar{ width:5px; }
+.htrk-scroll::-webkit-scrollbar-track{ background:transparent; }
+.htrk-scroll::-webkit-scrollbar-thumb{ background:rgba(14,110,114,.4); border-radius:3px; }
+.htrk-scroll::-webkit-scrollbar-thumb:hover{ background:rgba(14,110,114,.65); }
+.htrk-d{ margin-left:auto; font-family:'IBM Plex Mono',monospace; font-size:.42rem;
+  color:rgba(15,30,28,.4); letter-spacing:.06em; }
+.htrk.active .htrk-d{ color:rgba(15,30,28,.6); }
+
+.hero-listen-lbl{ font-family:'IBM Plex Mono',monospace; font-size:.42rem; letter-spacing:.25em;
+  text-transform:uppercase; color:var(--forest); margin:1.5rem 0 .9rem; text-align:center; }
+.plat-row{ display:flex; flex-direction:row; align-items:center; justify-content:center;
+  gap:2.6rem; flex-wrap:wrap; }
+.plat{ display:inline-flex; align-items:center; justify-content:center; text-decoration:none;
+  color:var(--ink); opacity:.85; transition:opacity .18s, transform .18s; padding:.4rem; }
+.plat svg{ height:32px; width:auto; display:block; }
+.plat[aria-label="SoundCloud"] svg{ height:26px; }
+.plat:hover{ opacity:1; transform:translateY(-2px); }
+@media(max-width:520px){ .htrk-scroll{ max-height:260px; } }
 .reveal{opacity:0;transform:translateY(16px);transition:opacity .75s,transform .75s;}
+
+/* ── 3D solid extruded face (hero signature) ── */
+.face3d{ width:200px; height:200px; margin:0 auto 1.4rem; }
+#face3d-host{ width:100%; height:100%; filter:drop-shadow(0 16px 14px rgba(0,0,0,.26)); }
+#face3d-host canvas{ display:block; width:100% !important; height:100% !important; }
+@media(max-width:520px){ .face3d{ width:155px; height:155px; } }
 .reveal.in{opacity:1;transform:translateY(0);}
 
 /* ═══ HERO ═══ */
@@ -774,7 +802,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
 <nav>
   <a href="#home" class="nav-logo">L<em>1</em> <div class="pip"></div></a>
   <ul class="nav-rooms">
-    <li><a href="#sound">The Booth</a></li>
+    <li><a href="#home">The Music</a></li>
     <li><a href="#gallery">Gallery</a></li>
     <li><a href="#artrate">Rate the Art</a></li>
     <li><a href="#dispatch">Dispatch</a></li>
@@ -790,12 +818,13 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
 
   <!-- Centered brand block -->
   <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <!-- 3D solid extruded face -->
+    <div class="face3d" aria-hidden="true"><div id="face3d-host"></div></div>
     <p class="hero-eyebrow" style="justify-content:center;"><span class="kd"></span>Now Open · The Lounge</p>
     <h1 class="hero-h1"><b style="font-weight:600;">LINUS</b><em style="font-style:italic;color:var(--gold);font-weight:600;">1</em></h1>
     <div class="brass-rule" style="margin:1.2rem auto;"></div>
     <p class="hero-desc" style="font-family:'DM Sans',sans-serif;font-size:1.1rem;color:var(--ink);font-weight:500;max-width:420px;line-height:1.5;">Play games to unlock unreleased tracks. Explore the art. Dig through the music.</p>
     <div class="hero-actions" style="justify-content:center;">
-      <a href="#sound"   class="btn btn-crimson">♩ &nbsp;Music</a>
       <a href="#maze-section" class="btn btn-forest">🎮 &nbsp;Play</a>
       <a href="#gallery" class="btn btn-gold">🎨 Art</a>
     </div>
@@ -816,21 +845,61 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
     </div>
 
     <!-- Track picker -->
-    <div class="hero-tracks" style="width:280px;max-width:100%;">
-      <p style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;letter-spacing:.25em;text-transform:uppercase;color:var(--forest);margin-bottom:.9rem;">◈ Pick a Track</p>
-      <div style="display:flex;flex-direction:column;gap:.3rem;max-height:280px;overflow-y:auto;">
-        <div class="htrk active" onclick="heroPick(this,'Let\'s jus Dance','Smoove Bapi · 2024')"><span class="htrk-n">01</span><span class="htrk-t">Let's jus Dance</span></div>
-        <div class="htrk" onclick="heroPick(this,'Woah','prod. ALEC BOi · 2026')"><span class="htrk-n">02</span><span class="htrk-t">Woah</span></div>
-        <div class="htrk" onclick="heroPick(this,'Right Now','Smoove Bapi · 2025')"><span class="htrk-n">03</span><span class="htrk-t">Right Now</span></div>
-        <div class="htrk" onclick="heroPick(this,'Gemini','Smoove Bapi · 2025')"><span class="htrk-n">04</span><span class="htrk-t">Gemini</span></div>
-        <div class="htrk" onclick="heroPick(this,'Find Luv','Smoove Bapi · 2025')"><span class="htrk-n">05</span><span class="htrk-t">Find Luv</span></div>
-        <div class="htrk" onclick="heroPick(this,'Serenity','Smoove Bapi · 2024')"><span class="htrk-n">06</span><span class="htrk-t">Serenity</span></div>
-        <div class="htrk" onclick="heroPick(this,'Notice','Smoove Bapi · 2024')"><span class="htrk-n">07</span><span class="htrk-t">Notice</span></div>
-        <div class="htrk" onclick="heroPick(this,'Mornin','Smoove Bapi · 2024')"><span class="htrk-n">08</span><span class="htrk-t">Mornin</span></div>
+    <div class="hero-tracks" style="width:320px;max-width:100%;">
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;letter-spacing:.25em;text-transform:uppercase;color:var(--forest);margin-bottom:.9rem;">◈ The Catalog &nbsp;·&nbsp; 30 Tracks</p>
+      <div class="htrk-scroll">
+        <div class="htrk active" onclick="heroPick(this,'Woah','Smoove Bapi · prod. ALEC BOi · 2026')"><span class="htrk-n">01</span><span class="htrk-t">Woah</span><span class="htrk-d">2:38</span></div>
+        <div class="htrk" onclick="heroPick(this,'ATP','Smoove Bapi · 2026')"><span class="htrk-n">02</span><span class="htrk-t">ATP</span><span class="htrk-d">3:10</span></div>
+        <div class="htrk" onclick="heroPick(this,'Right Now','Smoove Bapi · 2025')"><span class="htrk-n">03</span><span class="htrk-t">Right Now</span><span class="htrk-d">3:22</span></div>
+        <div class="htrk" onclick="heroPick(this,'Gemini','Smoove Bapi · prod. outtafunds · 2025')"><span class="htrk-n">04</span><span class="htrk-t">Gemini</span><span class="htrk-d">3:05</span></div>
+        <div class="htrk" onclick="heroPick(this,'Find Luv','Smoove Bapi · prod. renai · 2025')"><span class="htrk-n">05</span><span class="htrk-t">Find Luv</span><span class="htrk-d">2:58</span></div>
+        <div class="htrk" onclick="heroPick(this,'Walk This Way','Smoove Bapi · 2024')"><span class="htrk-n">06</span><span class="htrk-t">Walk This Way</span><span class="htrk-d">3:14</span></div>
+        <div class="htrk" onclick="heroPick(this,'Let\'s jus Dance','Smoove Bapi · 2024')"><span class="htrk-n">07</span><span class="htrk-t">Let's jus Dance</span><span class="htrk-d">3:28</span></div>
+        <div class="htrk" onclick="heroPick(this,'Serenity','Smoove Bapi · SoundCloud')"><span class="htrk-n">08</span><span class="htrk-t">Serenity</span><span class="htrk-d">3:15</span></div>
+        <div class="htrk" onclick="heroPick(this,'Notice','Smoove Bapi · SoundCloud')"><span class="htrk-n">09</span><span class="htrk-t">Notice</span><span class="htrk-d">3:00</span></div>
+        <div class="htrk" onclick="heroPick(this,'Faded','Smoove Bapi · SoundCloud')"><span class="htrk-n">10</span><span class="htrk-t">Faded</span><span class="htrk-d">3:10</span></div>
+        <div class="htrk" onclick="heroPick(this,'Udontknow','Smoove Bapi · SoundCloud')"><span class="htrk-n">11</span><span class="htrk-t">Udontknow</span><span class="htrk-d">3:05</span></div>
+        <div class="htrk" onclick="heroPick(this,'Take a Min','Smoove Bapi · SoundCloud')"><span class="htrk-n">12</span><span class="htrk-t">Take a Min</span><span class="htrk-d">3:20</span></div>
+        <div class="htrk" onclick="heroPick(this,'Slowdowjn','Smoove Bapi · SoundCloud')"><span class="htrk-n">13</span><span class="htrk-t">Slowdowjn</span><span class="htrk-d">3:15</span></div>
+        <div class="htrk" onclick="heroPick(this,'Black Boots','Smoove Bapi · SoundCloud')"><span class="htrk-n">14</span><span class="htrk-t">Black Boots</span><span class="htrk-d">2:55</span></div>
+        <div class="htrk" onclick="heroPick(this,'My Way','Smoove Bapi · SoundCloud')"><span class="htrk-n">15</span><span class="htrk-t">My Way</span><span class="htrk-d">3:18</span></div>
+        <div class="htrk" onclick="heroPick(this,'Sometimez','Smoove Bapi · SoundCloud')"><span class="htrk-n">16</span><span class="htrk-t">Sometimez</span><span class="htrk-d">3:08</span></div>
+        <div class="htrk" onclick="heroPick(this,'Perfect Play','Smoove Bapi · SoundCloud')"><span class="htrk-n">17</span><span class="htrk-t">Perfect Play</span><span class="htrk-d">3:25</span></div>
+        <div class="htrk" onclick="heroPick(this,'Mornin','Smoove Bapi · SoundCloud')"><span class="htrk-n">18</span><span class="htrk-t">Mornin</span><span class="htrk-d">3:10</span></div>
+        <div class="htrk" onclick="heroPick(this,'Memory Loss','Smoove Bapi · SoundCloud')"><span class="htrk-n">19</span><span class="htrk-t">Memory Loss</span><span class="htrk-d">3:05</span></div>
+        <div class="htrk" onclick="heroPick(this,'That Night','Smoove Bapi · SoundCloud')"><span class="htrk-n">20</span><span class="htrk-t">That Night</span><span class="htrk-d">3:15</span></div>
+        <div class="htrk" onclick="heroPick(this,'Left Right','Smoove Bapi · SoundCloud')"><span class="htrk-n">21</span><span class="htrk-t">Left Right</span><span class="htrk-d">2:58</span></div>
+        <div class="htrk" onclick="heroPick(this,'L8ly','Smoove Bapi · SoundCloud')"><span class="htrk-n">22</span><span class="htrk-t">L8ly</span><span class="htrk-d">3:20</span></div>
+        <div class="htrk" onclick="heroPick(this,'My Love','Smoove Bapi · SoundCloud')"><span class="htrk-n">23</span><span class="htrk-t">My Love</span><span class="htrk-d">3:00</span></div>
+        <div class="htrk" onclick="heroPick(this,'Infinite Possibilities','Smoove Bapi · prod. GiobtW')"><span class="htrk-n">24</span><span class="htrk-t">Infinite Possibilities</span><span class="htrk-d">3:30</span></div>
+        <div class="htrk" onclick="heroPick(this,'Crying Out','Smoove Bapi · SoundCloud')"><span class="htrk-n">25</span><span class="htrk-t">Crying Out</span><span class="htrk-d">3:10</span></div>
+        <div class="htrk" onclick="heroPick(this,'What U Need','Smoove Bapi · SoundCloud')"><span class="htrk-n">26</span><span class="htrk-t">What U Need</span><span class="htrk-d">2:55</span></div>
+        <div class="htrk" onclick="heroPick(this,'My Way','Smoove Bapi · SoundCloud')"><span class="htrk-n">27</span><span class="htrk-t">My Way</span><span class="htrk-d">3:20</span></div>
+        <div class="htrk" onclick="heroPick(this,'FADED','Smoove Bapi · prod. SlayingIbis')"><span class="htrk-n">28</span><span class="htrk-t">FADED</span><span class="htrk-d">3:15</span></div>
+        <div class="htrk" onclick="heroPick(this,'Footwork.','Smoove Bapi · SoundCloud')"><span class="htrk-n">29</span><span class="htrk-t">Footwork.</span><span class="htrk-d">2:50</span></div>
+        <div class="htrk" onclick="heroPick(this,'To Myself Freestyle','Smoove Bapi · SoundCloud')"><span class="htrk-n">30</span><span class="htrk-t">To Myself Freestyle</span><span class="htrk-d">3:00</span></div>
       </div>
-      <a href="#sound" style="display:inline-block;margin-top:.9rem;font-family:'IBM Plex Mono',monospace;font-size:.42rem;letter-spacing:.12em;color:var(--gold);text-decoration:none;">See all 30 tracks in The Booth →</a>
+
+      <!-- Listen on -->
+      <p class="hero-listen-lbl">◈ Listen Everywhere</p>
+      <div class="plat-row">
+        <a class="plat" href="https://soundcloud.com/smoovebapi" target="_blank" rel="noopener" aria-label="SoundCloud">
+          <svg viewBox="0 0 800 347" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M7 208 L6 209 L6 213 L5 214 L5 220 L4 221 L4 227 L3 228 L3 235 L2 236 L2 243 L1 244 L1 250 L0 251 L0 258 L1 259 L1 265 L2 266 L2 272 L3 273 L3 280 L4 281 L4 287 L5 288 L5 294 L6 295 L6 299 L8 301 L9 301 L11 299 L11 296 L12 295 L12 290 L13 289 L13 284 L14 283 L14 278 L15 277 L15 271 L16 270 L16 265 L17 264 L17 259 L18 258 L18 251 L17 250 L17 245 L16 244 L16 239 L15 238 L15 232 L14 231 L14 226 L13 225 L13 220 L12 219 L12 213 L11 212 L11 209 L10 208 Z M37 180 L35 183 L35 191 L34 192 L34 200 L33 201 L33 210 L32 211 L32 218 L31 219 L31 227 L30 228 L30 235 L29 236 L29 245 L28 246 L28 262 L29 263 L29 272 L30 273 L30 280 L31 281 L31 289 L32 290 L32 297 L33 298 L33 307 L34 308 L34 315 L35 316 L35 324 L37 327 L40 327 L41 326 L41 321 L42 320 L42 314 L43 313 L43 306 L44 305 L44 299 L45 298 L45 291 L46 290 L46 282 L47 281 L47 275 L48 274 L48 267 L49 266 L49 259 L50 258 L50 250 L49 249 L49 243 L48 242 L48 235 L47 234 L47 227 L46 226 L46 218 L45 217 L45 210 L44 209 L44 203 L43 202 L43 195 L42 194 L42 187 L41 186 L41 182 L39 180 Z M131 169 L129 171 L129 173 L128 174 L128 184 L127 185 L127 196 L126 197 L126 208 L125 209 L125 219 L124 220 L124 231 L123 232 L123 242 L122 243 L122 266 L123 267 L123 278 L124 279 L124 290 L125 291 L125 302 L126 303 L126 315 L127 316 L127 328 L128 329 L128 339 L129 340 L129 342 L130 343 L130 344 L131 344 L132 345 L134 345 L138 342 L138 338 L139 337 L139 325 L140 324 L140 314 L141 313 L141 302 L142 301 L142 291 L143 290 L143 279 L144 278 L144 267 L145 266 L145 244 L144 243 L144 232 L143 231 L143 220 L142 219 L142 210 L141 209 L141 199 L140 198 L140 188 L139 187 L139 176 L138 175 L138 172 L137 171 L137 170 L136 170 L135 169 Z M68 166 L66 168 L66 174 L65 175 L65 185 L64 186 L64 198 L63 199 L63 209 L62 210 L62 221 L61 222 L61 232 L60 233 L60 245 L59 246 L59 263 L60 264 L60 275 L61 276 L61 286 L62 287 L62 297 L63 298 L63 308 L64 309 L64 320 L65 321 L65 331 L66 332 L66 338 L69 340 L71 340 L73 338 L73 332 L74 331 L74 322 L75 321 L75 313 L76 312 L76 304 L77 303 L77 294 L78 293 L78 285 L79 284 L79 275 L80 274 L80 266 L81 265 L81 256 L82 255 L82 254 L81 253 L81 243 L80 242 L80 234 L79 233 L79 224 L78 223 L78 215 L77 214 L77 204 L76 203 L76 195 L75 194 L75 185 L74 184 L74 176 L73 175 L73 168 L71 166 Z M100 163 L99 164 L98 164 L98 165 L97 166 L97 175 L96 176 L96 187 L95 188 L95 200 L94 201 L94 211 L93 212 L93 223 L92 224 L92 234 L91 235 L91 248 L90 249 L90 260 L91 261 L91 273 L92 274 L92 284 L93 285 L93 295 L94 296 L94 306 L95 307 L95 318 L96 319 L96 330 L97 331 L97 340 L98 341 L98 342 L99 342 L100 343 L103 343 L106 339 L106 330 L107 329 L107 320 L108 319 L108 309 L109 308 L109 298 L110 297 L110 288 L111 287 L111 278 L112 277 L112 267 L113 266 L113 256 L114 255 L114 254 L113 253 L113 243 L112 242 L112 232 L111 231 L111 221 L110 220 L110 211 L109 210 L109 200 L108 199 L108 188 L107 187 L107 178 L106 177 L106 167 L104 164 L103 164 L102 163 Z M164 117 L163 118 L162 118 L160 121 L160 127 L159 128 L159 148 L158 149 L158 170 L157 171 L157 191 L156 192 L156 211 L155 212 L155 232 L154 233 L154 252 L153 253 L153 255 L154 256 L154 269 L155 270 L155 282 L156 283 L156 295 L157 296 L157 309 L158 310 L158 324 L159 325 L159 337 L160 338 L160 342 L163 345 L168 345 L171 341 L171 332 L172 331 L172 321 L173 320 L173 310 L174 309 L174 297 L175 296 L175 285 L176 284 L176 274 L177 273 L177 262 L178 261 L178 244 L177 243 L177 225 L176 224 L176 208 L175 207 L175 188 L174 187 L174 170 L173 169 L173 152 L172 151 L172 134 L171 133 L171 121 L169 118 L168 118 L167 117 Z M195 87 L194 88 L193 88 L191 91 L191 105 L190 106 L190 133 L189 134 L189 164 L188 165 L188 193 L187 194 L187 222 L186 223 L186 250 L185 251 L185 257 L186 258 L186 272 L187 273 L187 287 L188 288 L188 302 L189 303 L189 318 L190 319 L190 333 L191 334 L191 341 L194 345 L195 345 L196 346 L198 346 L199 345 L201 345 L202 344 L202 343 L203 342 L203 340 L204 339 L204 328 L205 327 L205 315 L206 314 L206 301 L207 300 L207 289 L208 288 L208 276 L209 275 L209 264 L210 263 L210 239 L209 238 L209 216 L208 215 L208 192 L207 191 L207 168 L206 167 L206 142 L205 141 L205 117 L204 116 L204 94 L203 93 L203 90 L200 87 Z M329 75 L328 76 L326 76 L322 80 L322 82 L321 83 L321 110 L320 111 L320 151 L319 152 L319 190 L318 191 L318 234 L317 235 L317 264 L318 265 L318 286 L319 287 L319 304 L320 305 L320 324 L321 325 L321 338 L322 339 L322 341 L325 344 L326 344 L327 345 L334 345 L335 344 L336 344 L339 340 L339 332 L340 331 L340 316 L341 315 L341 299 L342 298 L342 283 L343 282 L343 267 L344 266 L344 233 L343 232 L344 231 L343 230 L343 196 L342 195 L342 163 L341 162 L341 129 L340 128 L340 95 L339 94 L339 81 L336 77 L335 77 L332 75 Z M228 72 L224 76 L224 82 L223 83 L223 113 L222 114 L222 144 L221 145 L221 175 L220 176 L220 209 L219 210 L219 240 L218 241 L218 261 L219 262 L219 276 L220 277 L220 292 L221 293 L221 307 L222 308 L222 321 L223 322 L223 336 L224 337 L224 341 L226 344 L227 344 L228 345 L233 345 L236 343 L236 342 L237 341 L237 339 L238 338 L238 326 L239 325 L239 312 L240 311 L240 300 L241 299 L241 286 L242 285 L242 272 L243 271 L243 259 L244 258 L244 246 L243 245 L243 219 L242 218 L242 191 L241 190 L241 160 L240 159 L240 134 L239 133 L239 107 L238 106 L238 80 L237 79 L237 76 L234 73 L233 73 L232 72 Z M293 70 L289 74 L289 77 L288 78 L288 111 L287 112 L287 149 L286 150 L286 186 L285 187 L285 221 L284 222 L284 269 L285 270 L285 286 L286 287 L286 303 L287 304 L287 321 L288 322 L288 337 L289 338 L289 341 L293 345 L300 345 L303 343 L303 342 L305 339 L305 328 L306 327 L306 313 L307 312 L307 297 L308 296 L308 280 L309 279 L309 264 L310 263 L310 235 L309 234 L309 202 L308 201 L308 166 L307 165 L307 132 L306 131 L306 99 L305 98 L305 76 L302 71 L301 71 L300 70 Z M260 66 L257 69 L257 70 L256 71 L256 85 L255 86 L255 123 L254 124 L254 159 L253 160 L253 194 L252 195 L252 230 L251 231 L251 265 L252 266 L252 281 L253 282 L253 298 L254 299 L254 314 L255 315 L255 332 L256 333 L256 340 L257 341 L257 342 L260 345 L267 345 L270 342 L270 341 L271 340 L271 334 L272 333 L272 318 L273 317 L273 303 L274 302 L274 289 L275 288 L275 275 L276 274 L276 260 L277 259 L277 243 L276 242 L276 212 L275 211 L275 181 L274 180 L274 150 L273 149 L273 117 L272 116 L272 82 L271 81 L271 71 L270 70 L270 69 L267 66 Z M362 42 L361 43 L358 44 L356 46 L356 47 L355 48 L355 50 L354 51 L354 85 L353 86 L353 148 L352 149 L352 203 L351 204 L351 273 L352 274 L352 293 L353 294 L353 316 L354 317 L354 337 L355 338 L355 340 L356 341 L356 342 L358 344 L359 344 L362 346 L365 346 L366 345 L368 345 L369 344 L370 344 L372 342 L372 341 L373 340 L373 338 L374 337 L374 319 L375 318 L375 298 L376 297 L376 280 L377 279 L377 261 L378 260 L378 241 L377 240 L377 193 L376 192 L376 146 L375 145 L375 95 L374 94 L374 51 L373 50 L373 48 L372 47 L372 46 L370 44 L369 44 L366 42 Z M396 23 L395 24 L393 24 L392 25 L391 25 L389 27 L389 28 L388 29 L388 31 L387 32 L387 65 L386 66 L386 115 L385 116 L385 171 L384 172 L384 226 L383 227 L383 264 L384 265 L384 284 L385 285 L385 305 L386 306 L386 323 L387 324 L387 336 L388 337 L388 339 L389 340 L389 341 L391 343 L392 343 L395 345 L400 345 L401 344 L403 344 L407 340 L407 338 L408 337 L408 328 L409 327 L409 312 L410 311 L410 294 L411 293 L411 277 L412 276 L412 260 L413 259 L413 242 L412 241 L412 197 L411 196 L411 151 L410 150 L410 100 L409 99 L409 57 L408 56 L408 31 L405 26 L404 26 L402 24 L400 24 L399 23 Z M419 17 L419 19 L418 20 L418 337 L419 338 L420 341 L423 344 L425 344 L426 345 L714 345 L715 344 L720 344 L721 343 L725 343 L726 342 L728 342 L729 341 L731 341 L732 340 L737 339 L740 337 L742 337 L743 336 L750 333 L752 331 L755 330 L762 324 L763 324 L778 309 L778 308 L781 305 L781 304 L785 299 L785 298 L786 297 L786 296 L787 295 L787 294 L793 283 L793 281 L794 280 L794 278 L795 277 L795 274 L796 273 L796 270 L797 269 L797 265 L798 264 L798 257 L799 256 L799 240 L798 239 L798 232 L797 231 L797 227 L796 226 L796 223 L795 222 L795 219 L793 216 L792 211 L791 210 L791 209 L790 208 L790 207 L789 206 L789 205 L788 204 L785 197 L783 195 L783 194 L781 192 L781 191 L778 188 L778 187 L762 171 L761 171 L758 168 L757 168 L752 164 L751 164 L750 163 L749 163 L738 157 L736 157 L735 156 L733 156 L732 155 L730 155 L729 154 L727 154 L726 153 L723 153 L722 152 L717 152 L716 151 L708 151 L707 150 L696 150 L695 151 L686 151 L685 152 L681 152 L680 153 L677 153 L676 154 L673 154 L672 155 L667 156 L664 158 L662 156 L662 149 L661 148 L661 143 L660 142 L660 138 L659 137 L659 133 L658 132 L658 129 L657 128 L657 126 L656 125 L656 123 L655 122 L655 119 L654 118 L654 116 L652 113 L651 108 L648 103 L648 101 L647 100 L644 93 L642 91 L639 84 L637 82 L637 81 L635 79 L635 78 L633 76 L633 75 L631 73 L631 72 L624 64 L624 63 L619 58 L619 57 L607 45 L606 45 L600 39 L599 39 L595 35 L594 35 L592 33 L591 33 L585 28 L582 27 L580 25 L577 24 L575 22 L574 22 L573 21 L572 21 L561 15 L559 15 L554 12 L552 12 L551 11 L549 11 L548 10 L546 10 L545 9 L543 9 L542 8 L540 8 L539 7 L537 7 L536 6 L533 6 L532 5 L529 5 L528 4 L524 4 L523 3 L519 3 L518 2 L510 2 L509 1 L498 1 L497 0 L483 0 L482 1 L471 1 L470 2 L463 2 L462 3 L457 3 L456 4 L453 4 L452 5 L448 5 L447 6 L444 6 L443 7 L441 7 L440 8 L438 8 L437 9 L435 9 L434 10 L429 11 L426 13 L424 13 Z"/></svg>
+        </a>
+        <a class="plat" href="https://open.spotify.com/artist/0jvzWeLTBXahyvkRTlzx0E" target="_blank" rel="noopener" aria-label="Spotify">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm5.5 17.3c-.2.4-.7.5-1 .3-2.8-1.7-6.4-2.1-10.6-1.1-.4.1-.8-.2-.9-.6-.1-.4.2-.8.6-.9 4.6-1 8.6-.6 11.7 1.3.4.2.5.6.2 1zm1.5-3.3c-.3.4-.8.6-1.2.3-3.2-2-8.1-2.5-11.9-1.4-.5.1-1-.1-1.1-.6-.1-.5.1-1 .6-1.1 4.4-1.3 9.8-.7 13.4 1.6.4.2.6.8.2 1.2zm.1-3.4C15.3 8.3 8.8 8.1 5.2 9.2c-.6.2-1.2-.2-1.4-.7-.2-.6.2-1.2.7-1.4C8.7 5.8 15.9 6 20.2 8.6c.5.3.7 1 .4 1.5-.3.5-1 .7-1.5.5z"/></svg>
+        </a>
+        <a class="plat" href="https://music.apple.com/us/search?term=smoove%20bapi" target="_blank" rel="noopener" aria-label="Apple Music">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.1 6.2c0-.5-.1-1-.2-1.4-.2-.9-.7-1.7-1.4-2.3-.4-.3-.8-.5-1.2-.7-.5-.2-1-.3-1.5-.3-.2 0-.5 0-.7-.1H5.9c-.4 0-.8 0-1.2.1-.6.1-1.2.3-1.7.6-1 .6-1.7 1.5-2 2.7-.1.4-.2.9-.2 1.4v11.6c0 .5.1 1 .2 1.4.3 1.2 1 2.1 2 2.7.5.3 1.1.5 1.7.6.4.1.8.1 1.2.1h12.2c.4 0 .8 0 1.2-.1.6-.1 1.2-.3 1.7-.6 1-.6 1.7-1.5 2-2.7.1-.4.2-.9.2-1.4V6.2zM17.4 5.9v9.4c0 .4 0 .8-.2 1.1-.3.6-.8 1-1.5 1.1l-.9.2c-.8.1-1.4-.4-1.5-1.1-.1-.6.2-1.2.8-1.5.3-.1.6-.2.9-.2l.6-.1c.3-.1.5-.3.5-.6V8.3c0-.3-.1-.4-.4-.3l-5.4 1.1c-.3.1-.4.2-.4.5v7.6c0 .4 0 .8-.2 1.1-.3.6-.8 1-1.5 1.1l-.9.2c-.8.1-1.4-.4-1.5-1.2-.1-.7.3-1.3 1-1.5.3-.1.6-.1.9-.2.4-.1.6-.3.6-.7V6.8c0-.2 0-.3.1-.4.1-.2.2-.3.5-.3l7.6-1.5c.1 0 .2 0 .3-.1.3 0 .5.2.5.5v.9z"/></svg>
+        </a>
+      </div>
     </div>
   </div>
+
+  <!-- SoundCloud engine for the turntable (hidden, drives playback) -->
+  <iframe id="sc-widget" width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay"
+    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/smoovebapi/lets-jus-dance&color=%231a3d2b&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&enable_api=true"
+    style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;left:-9999px;"></iframe>
 </section>
 
 <!-- ══ THE 5 — EARLY ACCESS UNLOCK ══ -->
@@ -885,70 +954,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
   </div>
 </section>
 <!-- ══ END THE 5 ══ -->
-<div class="room-div"><div class="rd-line" style="background:rgba(250,248,244,.08);"></div><div class="rd-badge" style="background:var(--navy2);border-color:rgba(176,125,42,.14);"><span class="rd-num">01</span>The Booth — Sound</div><div class="rd-line" style="background:rgba(250,248,244,.08);"></div></div>
-<section id="sound">
-  <div class="booth-grid">
-    <div class="reveal"><div class="bk"><div class="bk-l"></div>On the Needle</div><h2 class="bh2">Music from<br>the <em>Inside Out</em></h2><p class="bbody">Sound, feelings, and everything in between. Find the full catalog on SoundCloud and Spotify below.</p>
-      <!-- Track carousel with prev/next arrows -->
-      <div style="position:relative;margin-top:.5rem;">
-        <!-- Prev / Next arrows -->
-        <button onclick="slideTrack(-1)" style="position:absolute;left:-1.2rem;top:50%;transform:translateY(-50%);background:rgba(250,248,244,.08);border:1px solid rgba(250,248,244,.15);color:rgba(250,248,244,.6);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:.8rem;display:flex;align-items:center;justify-content:center;z-index:2;transition:all .2s;" onmouseover="this.style.background='rgba(250,248,244,.15)'" onmouseout="this.style.background='rgba(250,248,244,.08)'">‹</button>
-        <button onclick="slideTrack(1)"  style="position:absolute;right:-1.2rem;top:50%;transform:translateY(-50%);background:rgba(250,248,244,.08);border:1px solid rgba(250,248,244,.15);color:rgba(250,248,244,.6);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:.8rem;display:flex;align-items:center;justify-content:center;z-index:2;transition:all .2s;" onmouseover="this.style.background='rgba(250,248,244,.15)'" onmouseout="this.style.background='rgba(250,248,244,.08)'">›</button>
-        <!-- Visible window — shows 4 tracks at a time -->
-        <div style="overflow:hidden;">
-          <div id="trackList" style="display:flex;flex-direction:column;transition:transform .35s cubic-bezier(.4,0,.2,1);">
-            <div class="trk active" onclick="pickTrack(this,'Woah','2:38')"><span class="t-n">01</span><div class="t-i"><p class="t-name">Woah</p><p class="t-meta">Smoove Bapi · prod. ALEC BOi · 2026</p></div><span class="t-dur">2:38</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'ATP','3:10')"><span class="t-n">02</span><div class="t-i"><p class="t-name">ATP</p><p class="t-meta">Smoove Bapi · 2026</p></div><span class="t-dur">3:10</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'Right Now','3:22')"><span class="t-n">03</span><div class="t-i"><p class="t-name">Right Now</p><p class="t-meta">Smoove Bapi · 2025</p></div><span class="t-dur">3:22</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'Gemini','3:05')"><span class="t-n">04</span><div class="t-i"><p class="t-name">Gemini</p><p class="t-meta">Smoove Bapi · prod. outtafunds · 2025</p></div><span class="t-dur">3:05</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'Find Luv','2:58')"><span class="t-n">05</span><div class="t-i"><p class="t-name">Find Luv</p><p class="t-meta">Smoove Bapi · prod. renai · 2025</p></div><span class="t-dur">2:58</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'Walk This Way','3:14')"><span class="t-n">06</span><div class="t-i"><p class="t-name">Walk This Way</p><p class="t-meta">Smoove Bapi · 2024</p></div><span class="t-dur">3:14</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'Let\'s jus Dance','3:28')"><span class="t-n">07</span><div class="t-i"><p class="t-name">Let's jus Dance</p><p class="t-meta">Smoove Bapi · 2024</p></div><span class="t-dur">3:28</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'Serenity','3:15')"><span class="t-n">08</span><div class="t-i"><p class="t-name">Serenity</p><p class="t-meta">Smoove Bapi · SoundCloud</p></div><span class="t-dur">3:15</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'Notice','3:00')"><span class="t-n">09</span><div class="t-i"><p class="t-name">Notice</p><p class="t-meta">Smoove Bapi · SoundCloud</p></div><span class="t-dur">3:00</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'Faded','3:10')"><span class="t-n">10</span><div class="t-i"><p class="t-name">Faded</p><p class="t-meta">Smoove Bapi · SoundCloud</p></div><span class="t-dur">3:10</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'Udontknow','3:05')"><span class="t-n">11</span><div class="t-i"><p class="t-name">Udontknow</p><p class="t-meta">Smoove Bapi · SoundCloud</p></div><span class="t-dur">3:05</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'Take a Min','3:20')"><span class="t-n">12</span><div class="t-i"><p class="t-name">Take a Min</p><p class="t-meta">Smoove Bapi · SoundCloud</p></div><span class="t-dur">3:20</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'Slowdowjn','3:15')"><span class="t-n">13</span><div class="t-i"><p class="t-name">Slowdowjn</p><p class="t-meta">Smoove Bapi · SoundCloud</p></div><span class="t-dur">3:15</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'Black Boots','2:55')"><span class="t-n">14</span><div class="t-i"><p class="t-name">Black Boots</p><p class="t-meta">Smoove Bapi · SoundCloud</p></div><span class="t-dur">2:55</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'My Way','3:18')"><span class="t-n">15</span><div class="t-i"><p class="t-name">My Way</p><p class="t-meta">Smoove Bapi · SoundCloud</p></div><span class="t-dur">3:18</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'Sometimez','3:08')"><span class="t-n">16</span><div class="t-i"><p class="t-name">Sometimez</p><p class="t-meta">Smoove Bapi · SoundCloud</p></div><span class="t-dur">3:08</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'Perfect Play','3:25')"><span class="t-n">17</span><div class="t-i"><p class="t-name">Perfect Play</p><p class="t-meta">Smoove Bapi · SoundCloud</p></div><span class="t-dur">3:25</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'Mornin','3:10')"><span class="t-n">18</span><div class="t-i"><p class="t-name">Mornin</p><p class="t-meta">Smoove Bapi · SoundCloud</p></div><span class="t-dur">3:10</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'Memory Loss','3:05')"><span class="t-n">19</span><div class="t-i"><p class="t-name">Memory Loss</p><p class="t-meta">Smoove Bapi · SoundCloud</p></div><span class="t-dur">3:05</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'That Night','3:15')"><span class="t-n">20</span><div class="t-i"><p class="t-name">That Night</p><p class="t-meta">Smoove Bapi · SoundCloud</p></div><span class="t-dur">3:15</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'Left Right','2:58')"><span class="t-n">21</span><div class="t-i"><p class="t-name">Left Right</p><p class="t-meta">Smoove Bapi · SoundCloud</p></div><span class="t-dur">2:58</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'L8ly','3:20')"><span class="t-n">22</span><div class="t-i"><p class="t-name">L8ly</p><p class="t-meta">Smoove Bapi · SoundCloud</p></div><span class="t-dur">3:20</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'My Love','3:00')"><span class="t-n">23</span><div class="t-i"><p class="t-name">My Love</p><p class="t-meta">Smoove Bapi · SoundCloud</p></div><span class="t-dur">3:00</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'Infinite Possibilities','3:30')"><span class="t-n">24</span><div class="t-i"><p class="t-name">Infinite Possibilities</p><p class="t-meta">Smoove Bapi · prod. GiobtW</p></div><span class="t-dur">3:30</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'Crying Out','3:10')"><span class="t-n">25</span><div class="t-i"><p class="t-name">Crying Out</p><p class="t-meta">Smoove Bapi · SoundCloud</p></div><span class="t-dur">3:10</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'What U Need','2:55')"><span class="t-n">26</span><div class="t-i"><p class="t-name">What U Need</p><p class="t-meta">Smoove Bapi · SoundCloud</p></div><span class="t-dur">2:55</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'My Way','3:20')"><span class="t-n">27</span><div class="t-i"><p class="t-name">My Way</p><p class="t-meta">Smoove Bapi · SoundCloud</p></div><span class="t-dur">3:20</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'FADED','3:15')"><span class="t-n">28</span><div class="t-i"><p class="t-name">FADED</p><p class="t-meta">Smoove Bapi · prod. SlayingIbis</p></div><span class="t-dur">3:15</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'Footwork.','2:50')"><span class="t-n">29</span><div class="t-i"><p class="t-name">Footwork.</p><p class="t-meta">Smoove Bapi · SoundCloud</p></div><span class="t-dur">2:50</span><div class="t-dot"></div></div>
-            <div class="trk" onclick="pickTrack(this,'To Myself Freestyle','3:00')"><span class="t-n">30</span><div class="t-i"><p class="t-name">To Myself Freestyle</p><p class="t-meta">Smoove Bapi · SoundCloud</p></div><span class="t-dur">3:00</span><div class="t-dot"></div></div>
-          </div>
-        </div>
-        <!-- Page indicator -->
-        <div id="trackPageIndicator" style="text-align:center;margin-top:.6rem;font-family:'IBM Plex Mono',monospace;font-size:.38rem;letter-spacing:.12em;color:rgba(250,248,244,.3);">1 – 4 of 17</div>
-      </div>
-      <!-- SoundCloud — visible embed + hidden API-controlled player -->
-      <div style="margin-top:1.8rem;">
-        <p style="font-family:'IBM Plex Mono',monospace;font-size:.4rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(250,248,244,.3);margin-bottom:.7rem;">Stream on SoundCloud</p>
-        <!-- This iframe is controlled by the vinyl button and play button via the SC Widget API -->
-        <iframe id="sc-widget" width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay"
-          src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/smoovebapi/lets-jus-dance&color=%231a3d2b&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&enable_api=true"
-          style="border-radius:8px;"></iframe>
-      </div>
-      <!-- Spotify embed — artist page -->
-      <div style="margin-top:1.2rem;">
-        <p style="font-family:'IBM Plex Mono',monospace;font-size:.4rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(250,248,244,.3);margin-bottom:.7rem;">Stream on Spotify</p>
-        <iframe style="border-radius:8px;" src="https://open.spotify.com/embed/artist/0jvzWeLTBXahyvkRTlzx0E?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-      </div>
-    </div>
-    <div class="reveal"><div class="player"><div class="pl-head">▸ Now Playing — The Booth</div><div class="pl-disp"><p class="pl-now" id="plNow">Let's jus Dance</p><p class="pl-sub">Smoove Bapi · 2024</p><div class="pl-eq"><div class="pl-bar" style="--h:30px;animation-duration:.38s;height:4px;"></div><div class="pl-bar" style="--h:20px;animation-duration:.46s;animation-delay:.06s;height:4px;"></div><div class="pl-bar" style="--h:36px;animation-duration:.34s;animation-delay:.04s;height:4px;"></div><div class="pl-bar" style="--h:16px;animation-duration:.54s;animation-delay:.12s;height:4px;"></div><div class="pl-bar" style="--h:32px;animation-duration:.41s;animation-delay:.08s;height:4px;"></div><div class="pl-bar" style="--h:24px;animation-duration:.49s;animation-delay:.1s;height:4px;"></div><div class="pl-bar" style="--h:38px;animation-duration:.37s;animation-delay:.02s;height:4px;"></div><div class="pl-bar" style="--h:18px;animation-duration:.52s;animation-delay:.14s;height:4px;"></div></div></div><div class="pl-prog"><div class="pl-track"><div class="pl-fill" id="plFill"></div></div><div class="pl-times"><span id="plEl">1:42</span><span id="plTot">3:58</span></div></div><div class="pl-ctrls"><button class="pl-btn">⏮</button><button class="pl-play" id="mainPlay" onclick="togglePlay()">▶</button><button class="pl-btn">⏭</button></div></div></div>
-  </div>
-</section>
+
 
 <!-- ══ UNRELEASED ══ -->
 
@@ -1977,7 +1983,7 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
 <footer>
   <div class="ft">
     <div><p class="ft-brand">The <em>Lounge</em></p><p style="font-family:'IBM Plex Mono',monospace;font-size:.44rem;letter-spacing:.18em;color:rgba(26,61,43,.7);margin-top:.3rem;">linus1.com</p><p class="ft-tag">Sound · Art · Community · San Juan Capistrano, CA</p><div class="ft-socs"><a href="https://soundcloud.com/smoovebapi" target="_blank" class="ft-s">sc</a><a href="https://open.spotify.com/artist/0jvzWeLTBXahyvkRTlzx0E" target="_blank" class="ft-s">sp</a><a href="https://www.instagram.com/linus_pimpson/" target="_blank" class="ft-s">ig</a><a href="https://www.youtube.com/@smoovebapi" target="_blank" class="ft-s">yt</a></div></div>
-    <div><p class="ft-ct">Rooms</p><ul class="ft-l"><li><a href="#home">Entrance</a></li><li><a href="#sound">The Booth</a></li><li><a href="#vault">The Vault</a></li><li><a href="#maze-section">The Maze</a></li><li><a href="#matchbox">The Matchbox</a></li><li><a href="#gallery">Gallery Wall</a></li><li><a href="#dispatch">The Dispatch</a></li><li><a href="#pullup">Pull Up</a></li><li><a href="#about">The Bar</a></li>
+    <div><p class="ft-ct">Rooms</p><ul class="ft-l"><li><a href="#home">Entrance</a></li><li><a href="#home">The Music</a></li><li><a href="#vault">The Vault</a></li><li><a href="#maze-section">The Maze</a></li><li><a href="#matchbox">The Matchbox</a></li><li><a href="#gallery">Gallery Wall</a></li><li><a href="#dispatch">The Dispatch</a></li><li><a href="#pullup">Pull Up</a></li><li><a href="#about">The Bar</a></li>
     <li><a href="#guestbook">Guestbook</a></li><li><a href="#artists">Back Room</a></li></ul></div>
     <div><p class="ft-ct">Contact</p><ul class="ft-l"><li><a href="mailto:hello@linus1.com">hello@linus1.com</a></li><li><a href="#">Bookings</a></li><li><a href="#">Artist Submissions</a></li><li><a href="#">Press</a></li><li><a href="#">Advertise</a></li></ul></div>
     <div><p class="ft-ct">Stay Updated</p><p style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;line-height:1.8;color:rgba(250,248,244,.25);margin-bottom:.9rem;">Monthly from the lounge.</p><div style="display:flex;border-radius:var(--radius-sm);overflow:hidden;"><input type="email" id="ftEm" placeholder="email" style="flex:1;background:rgba(250,248,244,.05);border:1px solid rgba(250,248,244,.1);border-right:none;color:var(--white);padding:.55rem .75rem;font-family:'IBM Plex Mono',monospace;font-size:.42rem;outline:none;"/><button onclick="ftSub()" style="background:var(--forest);color:var(--white);border:none;padding:.55rem .85rem;font-family:'IBM Plex Mono',monospace;font-size:.4rem;letter-spacing:.12em;box-shadow:0 3px 0 var(--forest3);transition:all .08s;">Go</button></div></div>
@@ -1989,6 +1995,11 @@ footer{padding:4.5rem 3rem 2rem;background:var(--ink);color:var(--white);border-
 <div id="galleryUnlockBanner">✓ Maze complete — Gallery unlocked ◈</div>
 
 <script>
+// Booth was merged into the hero; these elements may no longer exist.
+function _el(id){ return document.getElementById(id); }
+function _setTxt(id,v){ var e=_el(id); if(e) e.textContent=v; }
+function _setW(id,v){ var e=_el(id); if(e) e.style.width=v; }
+
 /* ══ ENTRANCE ══ */
 spawnAmbients();
 
@@ -4250,9 +4261,9 @@ function bindWidgetEvents(){
     progressTimer=setInterval(()=>{
       widget.getPosition(pos=>{
         if(scDuration>0){
-          document.getElementById('plFill').style.width=(pos/scDuration*100)+'%';
+          _setW('plFill', (pos/scDuration*100)+'%');
           const s=Math.floor(pos/1000);
-          document.getElementById('plEl').textContent=Math.floor(s/60)+':'+(s%60<10?'0':'')+(s%60);
+          _setTxt('plEl', Math.floor(s/60)+':'+(s%60<10?'0':'')+(s%60));
         }
       });
     },800);
@@ -4268,8 +4279,8 @@ function bindWidgetEvents(){
     playing=false;
     setVisualPlay(false);
     clearInterval(progressTimer);
-    document.getElementById('plFill').style.width='0%';
-    document.getElementById('plEl').textContent='0:00';
+    _setW('plFill', '0%');
+    _setTxt('plEl', '0:00');
   });
 
   widget.bind(SC.Widget.Events.ERROR,()=>{
@@ -4292,7 +4303,7 @@ function setVisualPlay(on){
   document.getElementById('vinylDisc').classList.toggle('playing',on);
   document.getElementById('tonearm').classList.toggle('playing',on);
   document.getElementById('playRing').textContent=on?'⏸':'▶';
-  document.getElementById('mainPlay').textContent=on?'⏸':'▶';
+  _setTxt('mainPlay', on?'⏸':'▶');
   [...document.querySelectorAll('.vs-bar,.pl-bar')].forEach(b=>{
     b.classList.toggle('on',on);
     b.style.height=on?'':'4px';
@@ -4315,6 +4326,7 @@ let trackSlide=0;
 const TRACKS_PER_PAGE=4;
 function slideTrack(dir){
   const list=document.getElementById('trackList');
+  if(!list) return;
   if(!list)return;
   const items=list.querySelectorAll('.trk');
   const totalPages=Math.ceil(items.length/TRACKS_PER_PAGE);
@@ -4361,11 +4373,11 @@ function heroPick(el,title,sub){
 function pickTrack(el,title,dur){
   document.querySelectorAll('.trk').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
-  document.getElementById('plNow').textContent=title;
+  _setTxt('plNow', title);
   document.getElementById('vsTitle').textContent=title;
-  document.getElementById('plTot').textContent=dur;
-  document.getElementById('plEl').textContent='0:00';
-  document.getElementById('plFill').style.width='0%';
+  _setTxt('plTot', dur);
+  _setTxt('plEl', '0:00');
+  _setW('plFill', '0%');
   const url=scTracks[title];
   if(!url||!scReady)return;
   trackLoading=true;
@@ -4988,6 +5000,87 @@ document.addEventListener('click',function(e){
 
 
 
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  var GEO = {"w":560,"h":560,"shapes":[{"o":[[132,211],[120,221],[114,231],[114,234],[113,235],[114,251],[110,262],[104,269],[102,273],[103,283],[112,306],[112,309],[115,317],[115,322],[116,323],[116,344],[115,345],[115,352],[114,353],[113,364],[112,365],[109,365],[105,361],[96,356],[89,355],[88,354],[83,354],[75,363],[75,365],[73,368],[73,372],[71,376],[71,382],[75,391],[83,398],[86,399],[96,399],[101,397],[110,390],[114,389],[117,392],[121,400],[127,406],[133,408],[148,408],[155,406],[159,404],[164,399],[168,392],[171,391],[182,399],[196,414],[196,417],[183,433],[179,444],[179,447],[189,459],[193,461],[197,460],[203,454],[208,445],[208,429],[207,428],[207,423],[206,421],[209,418],[222,418],[223,419],[228,419],[229,420],[240,422],[246,425],[248,432],[249,447],[253,456],[262,469],[281,487],[285,489],[290,489],[299,480],[303,480],[306,482],[313,482],[317,480],[322,475],[325,470],[330,467],[335,462],[335,453],[326,436],[291,398],[290,396],[290,391],[287,382],[288,379],[293,374],[300,376],[305,369],[315,369],[322,372],[326,376],[329,382],[329,385],[328,386],[328,389],[326,391],[315,385],[308,384],[306,386],[301,395],[301,397],[304,403],[312,412],[316,412],[324,407],[330,405],[339,410],[353,410],[361,407],[366,402],[386,403],[394,400],[407,386],[412,377],[412,373],[413,372],[412,371],[412,360],[408,352],[408,349],[409,348],[408,333],[403,324],[393,313],[387,309],[375,303],[365,300],[355,295],[350,291],[350,287],[354,281],[356,275],[356,271],[357,270],[357,257],[353,250],[349,246],[345,244],[334,244],[331,245],[326,249],[326,255],[328,259],[328,263],[331,272],[334,278],[341,286],[342,291],[338,296],[334,298],[323,300],[314,304],[309,305],[302,298],[300,294],[293,287],[290,282],[284,277],[274,278],[266,281],[258,281],[243,289],[238,289],[226,283],[209,280],[203,277],[199,274],[199,271],[203,268],[210,266],[214,261],[216,256],[216,248],[215,245],[209,239],[200,236],[194,237],[191,240],[186,251],[182,254],[178,248],[175,239],[175,234],[174,233],[175,230],[174,229],[175,221],[172,215],[163,205],[158,203],[150,203],[143,205]],"h":[[[315,450],[319,451],[323,456],[323,460],[321,463],[317,462],[314,458],[314,454],[313,453]],[[200,423],[203,428],[203,438],[204,439],[203,445],[200,451],[196,455],[192,455],[186,449],[184,444],[186,438],[191,430],[198,423]],[[293,407],[300,413],[306,420],[308,424],[321,437],[326,445],[326,448],[324,449],[317,445],[314,445],[309,451],[309,459],[310,461],[318,468],[318,472],[315,475],[311,477],[308,477],[300,473],[292,480],[289,481],[269,463],[253,433],[252,428],[255,425],[258,426],[272,426],[279,423],[288,414],[289,409],[291,407]],[[284,404],[285,409],[283,413],[278,418],[272,421],[259,421],[258,420],[255,420],[252,417],[258,402],[263,398],[272,396],[280,400]],[[306,396],[307,393],[310,390],[314,390],[321,394],[324,397],[324,400],[318,405],[313,406],[307,400]],[[359,371],[364,373],[368,377],[367,387],[364,391],[362,391],[359,386],[358,376],[357,375],[357,373]],[[86,359],[92,360],[102,365],[108,371],[110,375],[110,381],[108,385],[103,390],[94,395],[89,395],[81,391],[76,381],[76,377],[77,376],[77,372],[81,362]],[[390,344],[394,345],[398,348],[401,352],[401,355],[395,362],[390,362],[386,360],[382,355],[382,351]],[[407,362],[408,371],[404,381],[392,395],[384,398],[373,398],[370,396],[369,394],[372,388],[373,378],[362,365],[355,365],[353,368],[353,379],[355,385],[355,391],[360,397],[360,401],[355,404],[345,405],[344,406],[336,403],[332,397],[333,395],[333,379],[330,374],[323,367],[319,365],[307,364],[305,362],[307,360],[321,359],[331,355],[333,355],[339,359],[342,359],[344,358],[354,347],[361,344],[365,344],[371,347],[374,350],[378,359],[386,366],[396,367],[403,361],[406,361]],[[173,382],[179,374],[182,368],[183,363],[188,352],[188,349],[191,346],[194,345],[197,341],[202,337],[208,338],[214,336],[216,338],[218,347],[213,354],[213,359],[216,362],[218,362],[222,359],[223,353],[226,350],[233,347],[236,348],[241,354],[241,358],[239,360],[239,368],[244,374],[247,373],[250,370],[252,366],[252,360],[255,357],[258,357],[267,353],[271,354],[275,358],[281,361],[288,361],[293,364],[293,367],[287,373],[282,380],[283,387],[286,394],[285,396],[283,397],[275,392],[266,392],[258,395],[254,399],[253,403],[245,417],[239,417],[230,414],[203,413],[201,412],[185,395],[180,392],[176,388]],[[173,336],[177,338],[181,342],[183,346],[183,351],[174,373],[171,376],[168,376],[161,368],[158,362],[157,356],[158,355],[158,351],[162,343],[167,338]],[[309,315],[311,318],[313,331],[310,336],[306,338],[300,338],[295,334],[296,327],[300,320],[305,315]],[[192,315],[194,317],[196,327],[197,328],[196,330],[187,338],[182,337],[179,334],[174,332],[172,330],[173,324],[176,321],[187,316]],[[136,305],[140,308],[140,310],[143,316],[143,318],[138,326],[138,330],[139,331],[145,330],[149,326],[151,318],[154,316],[165,313],[168,318],[160,328],[160,333],[163,337],[156,344],[153,350],[153,355],[152,356],[153,363],[157,371],[162,376],[166,384],[166,387],[158,399],[152,402],[147,402],[140,404],[133,403],[129,401],[125,397],[116,377],[116,371],[117,370],[118,360],[120,355],[120,346],[121,345],[121,328],[120,327],[119,310],[120,309],[126,309]],[[239,297],[241,297],[245,301],[249,310],[248,314],[242,318],[234,317],[231,314],[231,305],[232,303]],[[117,260],[122,253],[131,250],[142,255],[145,258],[150,267],[150,270],[149,272],[146,274],[137,274],[126,269],[120,265]],[[335,249],[344,249],[348,251],[353,261],[352,273],[349,280],[347,282],[344,282],[338,276],[333,266],[333,260],[331,253],[332,251]],[[201,241],[209,245],[211,249],[211,257],[207,262],[196,266],[192,263],[189,254],[195,243],[198,241]],[[118,233],[122,225],[126,221],[137,213],[143,210],[150,208],[157,208],[163,211],[170,222],[170,229],[169,230],[170,231],[170,239],[174,251],[179,260],[204,283],[208,285],[213,285],[218,287],[222,287],[233,292],[234,294],[227,304],[227,312],[226,313],[226,317],[233,322],[242,323],[249,320],[252,317],[254,313],[254,309],[252,303],[247,296],[247,293],[249,291],[262,285],[271,285],[277,282],[281,282],[288,287],[304,307],[304,310],[295,319],[291,328],[291,337],[295,341],[299,343],[308,343],[312,341],[317,335],[317,325],[316,324],[316,318],[314,314],[314,310],[320,306],[337,302],[346,296],[348,296],[360,303],[363,303],[368,306],[370,306],[391,317],[401,329],[404,335],[404,341],[401,343],[395,340],[387,340],[377,346],[368,340],[358,340],[352,343],[343,353],[340,353],[339,350],[343,346],[344,340],[341,337],[339,337],[334,342],[331,349],[327,352],[317,355],[301,356],[298,358],[294,358],[290,356],[284,357],[274,351],[274,347],[279,341],[279,338],[276,335],[274,335],[268,341],[267,346],[264,349],[255,353],[248,354],[243,350],[240,345],[241,340],[246,334],[245,331],[239,332],[235,336],[235,339],[232,342],[225,344],[222,341],[220,335],[220,329],[223,325],[223,321],[222,320],[220,320],[217,323],[215,328],[213,330],[207,333],[205,333],[202,330],[201,323],[198,315],[198,310],[201,306],[201,301],[197,297],[194,297],[192,300],[192,307],[190,310],[176,316],[174,316],[171,313],[171,311],[175,304],[175,301],[174,300],[170,301],[165,307],[161,309],[155,310],[152,312],[147,312],[145,309],[144,302],[143,301],[144,298],[147,295],[146,293],[143,293],[134,301],[128,302],[124,304],[121,303],[118,300],[114,286],[108,282],[107,274],[109,270],[111,268],[115,267],[129,276],[135,278],[146,279],[151,277],[154,274],[155,268],[150,257],[140,248],[138,248],[135,246],[126,246],[123,248],[120,248],[117,243],[118,241]]]},{"o":[[252,114],[250,114],[248,117],[248,128],[247,129],[248,148],[262,179],[265,184],[273,193],[279,205],[279,209],[276,218],[270,225],[264,229],[256,231],[249,235],[249,238],[250,239],[258,235],[261,235],[270,231],[280,220],[283,213],[283,202],[275,188],[270,183],[253,148],[253,144],[252,143],[253,115]],"h":[]},{"o":[[396,100],[392,97],[382,93],[379,87],[378,88],[375,88],[372,86],[361,87],[357,82],[344,77],[342,77],[342,79],[345,82],[351,84],[354,88],[354,91],[353,92],[347,91],[341,84],[337,84],[336,85],[332,85],[331,84],[317,84],[317,86],[320,89],[319,90],[315,88],[311,88],[309,90],[305,89],[304,91],[309,95],[308,98],[298,93],[290,94],[287,92],[285,92],[284,94],[290,101],[290,103],[288,104],[283,100],[281,100],[281,105],[284,108],[286,114],[289,114],[305,106],[311,107],[315,102],[320,102],[321,101],[324,101],[325,102],[324,106],[321,109],[317,116],[316,125],[317,126],[317,135],[318,137],[321,138],[324,135],[328,139],[328,141],[326,143],[323,143],[311,138],[297,126],[292,118],[287,122],[287,130],[285,133],[289,134],[292,137],[292,139],[298,144],[296,150],[299,150],[302,155],[308,155],[313,158],[315,158],[317,155],[326,155],[330,160],[332,160],[333,157],[329,153],[329,150],[332,149],[335,154],[340,159],[342,159],[343,156],[340,152],[340,150],[343,149],[345,152],[352,158],[355,157],[354,155],[354,152],[355,151],[358,151],[360,154],[365,158],[366,157],[365,153],[363,150],[357,145],[357,143],[360,141],[362,141],[365,144],[366,148],[370,151],[373,155],[375,155],[378,150],[384,151],[386,148],[386,143],[390,139],[394,139],[400,136],[398,130],[395,129],[394,127],[403,119],[403,117],[401,116],[397,118],[393,122],[378,130],[362,135],[359,137],[346,140],[345,137],[353,129],[357,123],[357,121],[360,118],[358,112],[358,106],[356,104],[355,100],[358,97],[364,96],[388,107],[391,110],[396,110],[396,107],[395,106]],"h":[[[312,146],[315,145],[319,147],[321,149],[321,151],[318,154],[316,153],[312,148]],[[350,120],[351,121],[350,125],[347,127],[344,127],[343,126],[344,123]],[[334,110],[335,111],[335,114],[331,119],[329,119],[326,115],[326,112],[330,110]],[[326,90],[328,88],[331,88],[333,91],[331,93],[327,92]]]},{"o":[[240,93],[236,89],[234,89],[231,91],[222,89],[220,87],[222,85],[226,87],[229,87],[230,86],[229,83],[221,79],[217,79],[211,76],[209,76],[206,79],[201,79],[195,77],[190,81],[186,81],[185,84],[187,87],[185,89],[177,84],[175,84],[172,86],[166,84],[165,85],[166,88],[171,93],[171,95],[169,97],[162,96],[162,100],[160,102],[157,102],[153,100],[148,100],[145,101],[145,104],[149,111],[158,110],[165,105],[168,105],[171,107],[171,113],[169,119],[170,137],[168,138],[158,131],[151,119],[145,112],[143,112],[142,115],[147,122],[149,128],[148,129],[144,128],[142,130],[142,133],[148,138],[147,141],[149,143],[154,142],[156,144],[156,148],[157,149],[160,147],[160,143],[162,141],[164,141],[168,144],[168,147],[166,149],[168,152],[172,152],[174,148],[176,146],[178,146],[180,148],[179,152],[181,155],[183,155],[185,153],[184,147],[187,144],[189,144],[191,146],[191,152],[193,153],[195,151],[195,148],[197,146],[200,147],[203,146],[203,141],[205,139],[208,144],[212,147],[214,145],[212,139],[212,136],[213,135],[216,136],[216,138],[219,142],[223,140],[228,141],[231,138],[234,138],[235,136],[227,129],[225,129],[224,127],[229,124],[231,124],[235,127],[238,127],[238,125],[236,123],[236,119],[240,114],[244,106],[242,97]],"h":[[[148,130],[149,129],[151,130],[156,136],[154,137],[148,132]],[[182,113],[184,113],[186,115],[186,122],[185,123],[182,123],[177,119],[178,116]],[[202,94],[204,92],[217,92],[231,98],[236,107],[235,113],[230,118],[208,129],[204,124],[205,121],[205,109],[204,108],[204,103],[202,99]]]},{"o":[[353,69],[362,80],[368,83],[372,83],[373,82],[372,80],[365,77],[356,68]],"h":[]},{"o":[[277,11],[272,13],[247,17],[231,25],[225,26],[220,29],[218,29],[213,32],[204,35],[191,42],[189,42],[164,59],[153,69],[147,73],[132,88],[119,105],[107,128],[105,135],[100,145],[95,161],[91,169],[88,167],[86,158],[75,134],[65,124],[55,119],[46,118],[45,117],[36,117],[24,122],[8,139],[6,149],[4,153],[6,174],[10,184],[4,195],[4,202],[8,207],[18,207],[20,208],[26,215],[26,219],[24,222],[23,228],[20,233],[20,236],[25,248],[30,252],[37,252],[41,249],[46,247],[53,239],[57,237],[60,237],[70,233],[73,233],[75,235],[75,240],[72,248],[72,253],[65,276],[63,291],[62,292],[61,300],[59,304],[56,321],[54,326],[54,331],[52,336],[52,343],[51,344],[51,352],[48,362],[48,365],[49,366],[49,393],[51,397],[50,399],[51,400],[51,404],[61,434],[66,444],[79,464],[102,486],[111,489],[129,498],[139,501],[140,499],[134,495],[99,479],[81,460],[72,446],[64,430],[55,402],[54,392],[53,391],[53,359],[55,353],[55,345],[56,344],[57,333],[58,332],[61,313],[63,309],[63,306],[66,297],[66,291],[71,273],[71,269],[75,258],[76,250],[82,230],[82,225],[83,224],[83,219],[85,214],[87,202],[92,197],[91,183],[110,131],[124,104],[135,91],[138,86],[145,79],[155,72],[163,64],[172,59],[184,49],[225,30],[236,27],[247,21],[259,19],[260,18],[270,17],[271,16],[275,16],[276,15],[281,15],[282,14],[298,15],[299,16],[329,17],[334,19],[339,19],[353,25],[362,27],[384,38],[409,61],[414,68],[422,83],[432,97],[437,102],[447,119],[459,154],[459,161],[461,166],[463,179],[470,197],[473,212],[480,230],[480,234],[482,238],[482,243],[483,244],[483,288],[482,289],[481,305],[480,306],[480,319],[479,320],[480,323],[479,324],[479,338],[478,339],[478,352],[476,359],[476,369],[473,379],[473,383],[472,384],[472,388],[471,389],[468,406],[463,419],[461,428],[443,463],[438,469],[428,485],[397,521],[371,539],[353,548],[335,553],[318,553],[317,554],[288,553],[287,552],[277,552],[276,551],[252,549],[248,547],[245,547],[236,544],[221,537],[214,532],[194,522],[190,518],[187,517],[168,504],[163,499],[158,488],[156,486],[155,486],[153,489],[153,492],[160,501],[170,510],[188,521],[195,527],[215,537],[222,542],[224,542],[234,547],[250,552],[262,553],[263,554],[274,554],[279,556],[295,556],[296,557],[330,557],[331,556],[340,556],[358,550],[373,542],[389,531],[392,530],[413,509],[436,481],[437,478],[449,461],[463,434],[474,401],[477,382],[480,372],[480,364],[481,363],[481,355],[482,354],[484,311],[485,310],[487,280],[488,279],[488,276],[487,275],[488,273],[488,267],[487,266],[487,243],[486,242],[486,236],[485,234],[487,231],[493,228],[498,228],[501,231],[504,238],[510,243],[521,243],[524,242],[533,234],[535,230],[535,221],[534,219],[526,212],[525,210],[525,204],[528,201],[538,196],[542,192],[544,188],[543,184],[540,181],[535,179],[533,176],[534,167],[538,159],[540,151],[539,150],[538,138],[530,121],[520,112],[509,112],[504,114],[498,114],[494,116],[485,118],[474,123],[466,134],[463,142],[460,143],[448,112],[443,104],[427,84],[422,74],[411,57],[401,49],[388,36],[381,31],[361,22],[355,21],[340,15],[335,15],[328,13],[314,13],[313,12]],"h":[[[35,216],[37,216],[45,220],[49,224],[51,229],[49,235],[45,240],[42,242],[37,242],[33,240],[28,231],[29,224],[31,220]],[[527,219],[529,222],[529,229],[526,234],[517,237],[512,237],[509,235],[508,233],[508,227],[513,217],[519,215]],[[47,186],[50,188],[50,191],[53,198],[66,210],[72,208],[78,202],[80,201],[82,202],[83,204],[81,208],[79,223],[75,228],[58,229],[56,227],[54,222],[46,214],[41,211],[40,209],[44,198],[44,190]],[[466,161],[468,161],[474,164],[478,164],[480,165],[484,170],[484,173],[485,174],[484,179],[480,186],[476,190],[473,190],[469,184],[464,166],[464,163]],[[500,148],[510,152],[513,155],[514,171],[508,186],[494,197],[491,204],[492,208],[495,211],[499,212],[503,215],[502,220],[499,223],[492,223],[487,226],[484,226],[481,222],[476,206],[480,201],[494,189],[494,184],[491,175],[491,171],[489,167],[489,162],[486,156],[490,151],[497,148]],[[43,143],[46,143],[52,146],[54,149],[50,176],[47,181],[46,181],[43,177],[36,174],[34,172],[31,163],[33,155],[37,147]],[[25,127],[31,124],[40,122],[58,131],[67,139],[75,148],[80,160],[79,163],[79,173],[82,180],[80,185],[80,191],[75,198],[71,200],[66,200],[61,197],[58,191],[58,184],[60,180],[60,176],[62,171],[62,161],[63,158],[58,146],[50,138],[42,138],[34,141],[22,152],[20,157],[24,169],[29,174],[32,180],[38,186],[36,192],[35,202],[32,205],[30,205],[24,201],[20,193],[19,186],[14,173],[14,170],[12,166],[12,163],[9,154],[13,143],[18,138]],[[506,118],[514,118],[524,122],[532,137],[533,145],[534,146],[532,149],[529,149],[525,153],[523,157],[523,174],[527,182],[527,187],[521,198],[520,203],[517,207],[515,207],[505,201],[505,198],[513,190],[517,182],[518,174],[519,173],[519,156],[515,147],[506,139],[502,137],[495,137],[488,140],[483,145],[481,149],[480,156],[478,158],[475,158],[471,156],[467,151],[469,146],[469,141],[473,133],[478,128],[494,121],[501,120]]]}]};
+  function boot(){
+    var host = document.getElementById('face3d-host');
+    if(!host || !window.THREE) return;
+    var W = host.clientWidth || 200;
+    var FOV = 34;
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(FOV, 1, 1, 5000);
+    var renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+    renderer.setSize(W,W);
+    host.appendChild(renderer.domElement);
+
+    var shapes = [];
+    GEO.shapes.forEach(function(s){
+      var sh = new THREE.Shape();
+      s.o.forEach(function(p,i){ i? sh.lineTo(p[0],p[1]) : sh.moveTo(p[0],p[1]); });
+      sh.closePath();
+      (s.h||[]).forEach(function(hole){
+        var pa = new THREE.Path();
+        hole.forEach(function(p,i){ i? pa.lineTo(p[0],p[1]) : pa.moveTo(p[0],p[1]); });
+        pa.closePath();
+        sh.holes.push(pa);
+      });
+      shapes.push(sh);
+    });
+
+    var geom = new THREE.ExtrudeGeometry(shapes, {
+      depth: 26, bevelEnabled: true,
+      bevelThickness: 3.4, bevelSize: 3.0, bevelSegments: 5,
+      curveSegments: 12, steps: 1
+    });
+    geom.center();
+
+    var mat = new THREE.MeshStandardMaterial({ color:0x141414, roughness:0.34, metalness:0.12 });
+    var mesh = new THREE.Mesh(geom, mat);
+    mesh.scale.y = -1;
+    var group = new THREE.Group();
+    group.add(mesh);
+    scene.add(group);
+
+    // ── AUTO-FIT: use the bounding SPHERE so nothing clips at any rotation ──
+    geom.computeBoundingSphere();
+    var r = geom.boundingSphere.radius;
+    var margin = 1.12;                       // breathing room around the drawing
+    var dist = (r*margin) / Math.tan(THREE.Math.degToRad(FOV/2));
+    camera.position.set(0,0,dist);
+    camera.lookAt(0,0,0);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+    var key = new THREE.DirectionalLight(0xffffff, 0.95); key.position.set(-180,240,420); scene.add(key);
+    var rim = new THREE.DirectionalLight(0xffd9a0, 0.5);  rim.position.set(260,-120,180); scene.add(rim);
+    var fill= new THREE.DirectionalLight(0x9fc7d8, 0.35); fill.position.set(120,180,-320); scene.add(fill);
+
+    function fit(){
+      var w = host.clientWidth || 200;
+      renderer.setSize(w,w);
+      camera.aspect = 1;
+      camera.updateProjectionMatrix();
+    }
+    window.addEventListener('resize', fit, {passive:true});
+    fit();
+
+    var t0 = performance.now();
+    (function loop(){
+      requestAnimationFrame(loop);
+      var t = (performance.now()-t0)/1000;
+      group.rotation.y = t * 0.52;
+      group.rotation.x = Math.sin(t*0.4)*0.09;
+      renderer.render(scene,camera);
+    })();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
+  else boot();
+})();
+</script>
 
 </body>
 </html>
