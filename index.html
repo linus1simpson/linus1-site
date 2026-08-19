@@ -2590,6 +2590,64 @@ nav .nav-face img{
   .mm-back span{ font-size:.95rem !important; }
 }
 
+
+/* ══ 1. GUESTBOOK ENTRIES — dark text on the white cards ══ */
+#gb-entries > div{
+  background:#fdfbf5 !important;
+  border:1px solid rgba(0,0,0,.14) !important;
+  border-radius:14px !important;
+  box-shadow:0 8px 20px -14px rgba(0,0,0,.7) !important;
+}
+#gb-entries > div p{ color:#241d15 !important; }
+#gb-entries > div p:first-child{ color:#141210 !important; font-weight:600 !important; }
+#gb-entries > div p:nth-child(2),
+#gb-entries > div > p:last-child{ color:rgba(36,29,21,.55) !important; }
+#gb-entries > div > div p:last-child{ color:rgba(36,29,21,.55) !important; }
+#gb-entries{
+  max-width:700px !important; margin-left:auto !important; margin-right:auto !important;
+}
+
+/* ══ 2. IMAGES — uniform crop + border everywhere ══ */
+.gp-img,.mm-front img,.ar-card img{
+  width:100% !important; height:100% !important;
+  object-fit:cover !important; object-position:center !important;
+  display:block !important; max-width:none !important;
+  border:none !important; border-radius:0 !important;
+}
+.ar-card{ border:2px solid rgba(240,145,60,.35) !important; overflow:hidden !important; }
+.mm-front{ border:2px solid rgba(240,145,60,.55) !important; overflow:hidden !important; }
+.mm-card.matched .mm-front{ border-color:#3fa3a0 !important; }
+
+/* ══ 3+4. DISPATCH — centred, even margins, title on one line ══ */
+#dispatch{ text-align:center !important; }
+#dispatch > .reveal:first-child{
+  max-width:760px !important; margin:0 auto 1.6rem !important;
+}
+#dispatch .h2{
+  white-space:nowrap !important;          /* "Dispatches from The Lounge" on one line */
+  font-size:clamp(1.35rem,4.4vw,2.6rem) !important;
+  display:inline-block !important;
+  margin:0 auto .5rem !important;
+}
+#dispatch .body{
+  max-width:480px !important;
+  margin-left:auto !important; margin-right:auto !important;
+}
+#dispatch .dg{
+  max-width:1000px !important;
+  margin:1.6rem auto 0 !important;        /* even margins both sides */
+  padding:0 !important;
+  justify-content:center !important;
+  text-align:left !important;
+}
+@media(max-width:900px){
+  #dispatch .dg{ grid-template-columns:repeat(2,1fr) !important; }
+}
+@media(max-width:600px){
+  #dispatch .dg{ grid-template-columns:1fr !important; max-width:440px !important; }
+  #dispatch .h2{ white-space:normal !important; }   /* allow wrap on small phones */
+}
+
 </style>
 <body>
 
@@ -6100,18 +6158,21 @@ function bindWidgetEvents(){
   });
 
   widget.bind(SC.Widget.Events.FINISH,()=>{
-    playing=false;
-    setVisualPlay(false);
     clearInterval(progressTimer);
     _setW('plFill', '0%');
     _setTxt('plEl', '0:00');
+    // keep the music going — shuffle to the next track automatically
+    if(typeof playRandomTrack==='function'){ playRandomTrack(); }
+    else { playing=false; setVisualPlay(false); }
   });
 
   widget.bind(SC.Widget.Events.ERROR,()=>{
     trackLoading=false;
+    clearInterval(progressTimer);
+    // a track failed to load — don't freeze, move to the next one
+    if(typeof playRandomTrack==='function'){ setTimeout(playRandomTrack,300); return; }
     playing=false;
     setVisualPlay(false);
-    clearInterval(progressTimer);
   });
 }
 
@@ -6181,6 +6242,34 @@ function slideTrack(dir){
 })();
 
 /* ══ TRACKS — full rebind on every load to prevent stacking bug ══ */
+
+/* ══ CONTINUOUS SHUFFLE PLAYBACK ══
+   Once the music starts it keeps going until the user pauses.
+   Every track in the catalogue is reachable in one click. */
+var _played=[];
+function playRandomTrack(){
+  var rows=[].slice.call(document.querySelectorAll('.htrk'));
+  if(!rows.length) return;
+  // don't repeat until the whole catalogue has been heard
+  var pool=rows.filter(function(r){ return _played.indexOf(r)===-1; });
+  if(!pool.length){ _played=[]; pool=rows; }
+  var next=pool[Math.floor(Math.random()*pool.length)];
+  _played.push(next);
+  next.click();
+}
+
+/* watchdog: if a track never actually starts, move on rather than hang */
+var _loadWatch=null;
+function armLoadWatchdog(){
+  clearTimeout(_loadWatch);
+  _loadWatch=setTimeout(function(){
+    if(trackLoading){          // still stuck loading after 9s
+      trackLoading=false;
+      playRandomTrack();
+    }
+  }, 9000);
+}
+
 function heroPick(el,title,sub){
   document.querySelectorAll('.htrk').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
@@ -6200,6 +6289,7 @@ function playTrackByTitle(title){
 
   trackLoading=true;
   setVisualPlay(true);            // tonearm swings + bars animate immediately
+  if(typeof armLoadWatchdog==='function') armLoadWatchdog();
 
   try{ widget.pause(); }catch(e){}   // stop the current song first
 
@@ -6215,6 +6305,7 @@ function playTrackByTitle(title){
       try{ widget.getDuration(function(d){ scDuration=d; }); }catch(e){}
       try{ widget.play(); }catch(e){}   // guarantee it starts on one click
       setVisualPlay(true);
+      clearTimeout(_loadWatch);
     }
   });
 }
