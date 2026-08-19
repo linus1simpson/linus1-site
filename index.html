@@ -2691,6 +2691,407 @@ nav .nav-face img{
   color:rgba(253,245,232,.6) !important; padding:1.2rem 0 !important;
 }
 
+
+/* ══ 1. GUESTBOOK — force dark text, whatever markup renders ══ */
+#gb-entries > div,
+#gb-entries .gb-entry{
+  background:#fdfbf5 !important;
+  border:1px solid rgba(0,0,0,.16) !important;
+  border-radius:14px !important;
+  padding:1rem 1.15rem !important;
+  box-shadow:0 8px 20px -14px rgba(0,0,0,.7) !important;
+  text-align:left !important;
+}
+/* every text node inside an entry, no matter the class or inline style */
+#gb-entries > div p,
+#gb-entries > div span,
+#gb-entries > div div,
+#gb-entries .gb-entry p,
+#gb-entries .gb-name,
+#gb-entries .gb-msg,
+#gb-entries .gb-loc,
+#gb-entries .gb-date{
+  color:#241d15 !important;
+}
+#gb-entries .gb-name,
+#gb-entries > div p:first-child{
+  color:#141210 !important; font-weight:700 !important;
+  font-family:'Fraunces',Georgia,serif !important; font-size:1rem !important;
+}
+#gb-entries .gb-msg{ color:#2a231b !important; font-size:.88rem !important; line-height:1.55 !important; }
+#gb-entries .gb-loc,
+#gb-entries .gb-date{ color:rgba(36,29,21,.55) !important; font-size:.66rem !important; }
+
+/* ══ 2. DISPATCH TITLES — same size as every other card title ══ */
+.dc-title{
+  font-family:'Fraunces',Georgia,serif !important;
+  font-size:1.18rem !important;
+  font-weight:700 !important;
+  line-height:1.25 !important;
+  margin:0 0 .35rem !important;
+}
+
+/* ══ 3. DISPATCH READ BUTTONS — 3D orange, like the turntable ══ */
+.dc::after{ content:none !important; }          /* drop the flat "Read →" text */
+.dc-read{
+  display:inline-flex !important; align-items:center; justify-content:center; gap:.35rem;
+  margin-top:.75rem !important;
+  font-family:'DM Sans',sans-serif !important; font-weight:700 !important;
+  font-size:.8rem !important; text-decoration:none !important; cursor:pointer;
+  padding:.5rem 1.1rem !important;
+  border-radius:11px !important;
+  color:#2a1608 !important;
+  background:linear-gradient(180deg,#f0913c 0%,#d9752a 100%) !important;
+  border:2px solid #8f4715 !important;
+  box-shadow:0 4px 0 #8f4715,
+             0 5px 12px -4px rgba(0,0,0,.55),
+             inset 0 1px 0 rgba(255,225,190,.6) !important;
+  transition:transform .09s ease, box-shadow .09s ease, filter .15s !important;
+}
+.dc-read:hover{ filter:brightness(1.06) !important; }
+.dc-read:active{
+  transform:translateY(4px) !important;
+  box-shadow:0 0 0 #8f4715, 0 2px 5px -2px rgba(0,0,0,.5),
+             inset 0 1px 0 rgba(255,225,190,.4) !important;
+}
+.dc{ padding-bottom:1rem !important; }
+
+/* ══ 4. PULL UP CARDS — solid & tangible, same 3D language ══ */
+.pu-card{
+  border:2px solid rgba(0,0,0,.28) !important;
+  border-radius:14px !important;
+  box-shadow:0 5px 0 rgba(0,0,0,.30),
+             0 8px 18px -6px rgba(0,0,0,.55),
+             inset 0 1px 0 rgba(255,255,255,.55) !important;
+  transition:transform .1s ease, box-shadow .1s ease !important;
+  padding:.9rem 1.05rem 1.9rem !important;
+}
+.pu-card:hover{ transform:translateY(-2px) !important;
+  box-shadow:0 7px 0 rgba(0,0,0,.30), 0 12px 22px -6px rgba(0,0,0,.6),
+             inset 0 1px 0 rgba(255,255,255,.55) !important; }
+.pu-card:active{ transform:translateY(4px) !important;
+  box-shadow:0 1px 0 rgba(0,0,0,.30), 0 3px 8px -3px rgba(0,0,0,.5),
+             inset 0 1px 0 rgba(255,255,255,.45) !important; }
+/* dispatch cards get the same solidity */
+.dc{
+  border:2px solid rgba(0,0,0,.26) !important;
+  box-shadow:0 5px 0 rgba(0,0,0,.28),
+             0 8px 18px -6px rgba(0,0,0,.55),
+             inset 0 1px 0 rgba(255,255,255,.5) !important;
+}
+.dc:hover{ transform:translateY(-2px) !important;
+  box-shadow:0 7px 0 rgba(0,0,0,.28), 0 12px 22px -6px rgba(0,0,0,.6),
+             inset 0 1px 0 rgba(255,255,255,.5) !important; }
+
+
+/* ══ DISPATCH TITLE — match every other section heading ══ */
+#dispatch .h2{
+  font-size:clamp(1.9rem,4.6vw,3.1rem) !important;   /* same as all other sections */
+  white-space:normal !important;
+  max-width:14ch;
+  margin-left:auto !important; margin-right:auto !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DISPATCH + PULL UP TILES — solid orange machined panels.
+   Same material language as the turntable: warm metal face,
+   bevelled edge, real depth, physical press.
+   ══════════════════════════════════════════════════════════════ */
+.dc,
+.pu-card{
+  position:relative !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.20) 0%, rgba(255,255,255,0) 42%),
+    linear-gradient(168deg, #f2984a 0%, #e07f2c 46%, #c2661c 100%) !important;
+  border:2px solid #8f4715 !important;
+  border-radius:16px !important;
+  color:#2a1608 !important;
+  box-shadow:
+    0 6px 0 #8f4715,                          /* the solid edge you press into */
+    0 12px 26px -8px rgba(0,0,0,.62),         /* cast shadow on the wood */
+    inset 0 1px 0 rgba(255,232,200,.85),      /* top highlight */
+    inset 0 -3px 8px rgba(120,55,10,.5) !important;  /* inner bottom shading */
+  transition:transform .1s ease, box-shadow .1s ease, filter .16s ease !important;
+  overflow:hidden !important;
+  cursor:pointer !important;
+}
+/* a faint sheen sweeping the face, like brushed metal catching light */
+.dc::before,
+.pu-card::before{
+  content:'' !important; position:absolute !important; inset:0 !important;
+  background:linear-gradient(112deg, transparent 34%, rgba(255,240,215,.16) 50%, transparent 62%);
+  pointer-events:none !important;
+}
+.dc:hover,
+.pu-card:hover{
+  filter:brightness(1.04) !important;
+  transform:translateY(-3px) !important;
+  box-shadow:
+    0 9px 0 #8f4715,
+    0 18px 34px -10px rgba(0,0,0,.68),
+    inset 0 1px 0 rgba(255,232,200,.9),
+    inset 0 -3px 8px rgba(120,55,10,.5) !important;
+}
+.dc:active,
+.pu-card:active{
+  transform:translateY(6px) !important;
+  box-shadow:
+    0 0 0 #8f4715,
+    0 3px 8px -3px rgba(0,0,0,.5),
+    inset 0 1px 0 rgba(255,232,200,.6),
+    inset 0 -2px 6px rgba(120,55,10,.45) !important;
+}
+
+/* ── type on the orange panels ── */
+.dc *,
+.pu-card *{ color:#2a1608 !important; position:relative; z-index:1; }
+.dc-date{ font-family:'DM Sans',sans-serif !important; font-size:.62rem !important;
+  font-weight:700 !important; letter-spacing:.16em !important; text-transform:uppercase !important;
+  color:rgba(42,22,8,.62) !important; margin:0 0 .3rem !important; }
+.dc-tag{
+  display:inline-block !important;
+  background:rgba(42,22,8,.16) !important;
+  border:1px solid rgba(42,22,8,.28) !important;
+  border-radius:999px !important;
+  padding:.16rem .6rem !important;
+  font-family:'DM Sans',sans-serif !important; font-size:.6rem !important;
+  font-weight:700 !important; letter-spacing:.08em !important;
+  color:#2a1608 !important; margin:0 0 .45rem !important;
+}
+.dc-title{
+  font-family:'Fraunces',Georgia,serif !important; font-weight:700 !important;
+  font-size:1.24rem !important; line-height:1.2 !important;
+  color:#221205 !important; margin:0 0 .35rem !important;
+}
+.dc-excerpt{
+  font-family:'DM Sans',sans-serif !important; font-size:.84rem !important;
+  line-height:1.5 !important; color:rgba(34,18,5,.78) !important; margin:0 !important;
+}
+.pu-q{
+  font-family:'DM Sans',sans-serif !important; font-weight:800 !important;
+  font-size:1.08rem !important; line-height:1.28 !important;
+  color:#221205 !important; margin:0 0 .22rem !important;
+}
+.pu-hint{
+  font-family:'DM Sans',sans-serif !important; font-weight:500 !important;
+  font-size:.74rem !important; color:rgba(34,18,5,.66) !important; margin:0 !important;
+}
+.pu-icon{
+  background:rgba(255,240,220,.5) !important;
+  border:1px solid rgba(42,22,8,.22) !important;
+  border-radius:50% !important;
+  width:38px !important; height:38px !important;
+  display:inline-flex !important; align-items:center; justify-content:center;
+  font-size:1.2rem !important; flex:0 0 auto !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7) !important;
+}
+.dc::after,.pu-card::after{ content:none !important; }
+
+/* ── the Read button: darker inset control on the orange face ── */
+.dc-read{
+  display:inline-flex !important; align-items:center; gap:.35rem;
+  margin-top:.8rem !important;
+  font-family:'DM Sans',sans-serif !important; font-weight:700 !important;
+  font-size:.78rem !important; text-decoration:none !important;
+  padding:.48rem 1.05rem !important; border-radius:10px !important;
+  color:#ffe9cf !important;
+  background:linear-gradient(180deg,#5a3316,#3d200c) !important;
+  border:1px solid #2a1608 !important;
+  box-shadow:0 3px 0 #2a1608, inset 0 1px 0 rgba(255,200,150,.3) !important;
+  transition:transform .09s, box-shadow .09s !important;
+}
+.dc-read:active{ transform:translateY(3px) !important; box-shadow:0 0 0 #2a1608 !important; }
+
+.dc{ padding:1rem 1.1rem 1.05rem !important; }
+.pu-card{ padding:.95rem 1.05rem !important; display:flex !important; gap:.8rem !important; align-items:flex-start !important; }
+.pu-cards,.dg{ gap:.9rem !important; }
+
+
+/* ══════════════════════════════════════════════════════════════
+   DISPATCH + PULL UP — machined metal artifacts.
+   Anodised orange plate: banded brushed grain, chamfered bevel,
+   corner rivets, and a hard specular band that catches the light.
+   ══════════════════════════════════════════════════════════════ */
+.dc,
+.pu-card{
+  position:relative !important;
+  isolation:isolate;
+  border-radius:14px !important;
+  border:1px solid #7a3d12 !important;
+  color:#2a1608 !important;
+  cursor:pointer !important;
+  overflow:hidden !important;
+  /* brushed grain + curved body + bevel edges, all in one paint */
+  background:
+    repeating-linear-gradient(90deg,
+      rgba(255,255,255,.055) 0 1px,
+      rgba(0,0,0,.045) 1px 2px,
+      rgba(255,255,255,0) 2px 4px),
+    linear-gradient(180deg,
+      #f7a659 0%, #ef8f3c 14%, #dd7a29 46%,
+      #c8661b 78%, #a85413 100%),
+    linear-gradient(90deg,
+      #a85413 0%, #ef8f3c 6%, #ef8f3c 94%, #a85413 100%) !important;
+  background-blend-mode:overlay, normal, normal !important;
+  box-shadow:
+    0 6px 0 #6d360f,                                  /* machined edge */
+    0 14px 28px -10px rgba(0,0,0,.66),                /* cast shadow */
+    inset 0 1px 0 rgba(255,240,215,.95),              /* top chamfer */
+    inset 0 -2px 0 rgba(90,40,6,.75),                 /* bottom chamfer */
+    inset 1px 0 0 rgba(255,225,190,.35),              /* left chamfer */
+    inset -1px 0 0 rgba(90,40,6,.55) !important;      /* right chamfer */
+  transition:transform .1s ease, box-shadow .1s ease, filter .16s ease !important;
+}
+/* hard specular sweep — the giveaway that it's metal, not paper */
+.dc::before,
+.pu-card::before{
+  content:'' !important; position:absolute !important; inset:0 !important;
+  background:linear-gradient(104deg,
+    transparent 30%,
+    rgba(255,246,225,.30) 44%,
+    rgba(255,255,255,.42) 49%,
+    rgba(255,246,225,.18) 55%,
+    transparent 68%) !important;
+  pointer-events:none !important; z-index:0 !important;
+}
+/* four corner rivets */
+.dc::after,
+.pu-card::after{
+  content:'' !important; position:absolute !important; inset:7px !important;
+  border-radius:9px !important; pointer-events:none !important; z-index:0 !important;
+  background:
+    radial-gradient(circle at 0 0,    rgba(255,240,215,.9) 0 1.6px, rgba(120,60,14,.85) 1.6px 3px, transparent 3.2px),
+    radial-gradient(circle at 100% 0, rgba(255,240,215,.9) 0 1.6px, rgba(120,60,14,.85) 1.6px 3px, transparent 3.2px),
+    radial-gradient(circle at 0 100%, rgba(255,240,215,.9) 0 1.6px, rgba(120,60,14,.85) 1.6px 3px, transparent 3.2px),
+    radial-gradient(circle at 100% 100%, rgba(255,240,215,.9) 0 1.6px, rgba(120,60,14,.85) 1.6px 3px, transparent 3.2px) !important;
+}
+.dc > *,
+.pu-card > *{ position:relative; z-index:1; }
+
+.dc:hover,
+.pu-card:hover{
+  filter:brightness(1.05) !important;
+  transform:translateY(-3px) !important;
+  box-shadow:
+    0 9px 0 #6d360f,
+    0 20px 36px -12px rgba(0,0,0,.7),
+    inset 0 1px 0 rgba(255,240,215,1),
+    inset 0 -2px 0 rgba(90,40,6,.75),
+    inset 1px 0 0 rgba(255,225,190,.4),
+    inset -1px 0 0 rgba(90,40,6,.55) !important;
+}
+.dc:active,
+.pu-card:active{
+  transform:translateY(6px) !important;
+  box-shadow:
+    0 0 0 #6d360f,
+    0 3px 8px -3px rgba(0,0,0,.5),
+    inset 0 1px 0 rgba(255,240,215,.7),
+    inset 0 -1px 0 rgba(90,40,6,.6) !important;
+}
+
+/* ── emoji: no white disc, just the mark stamped on the metal ── */
+.pu-icon{
+  background:none !important; background-color:transparent !important;
+  border:none !important; border-radius:0 !important;
+  box-shadow:none !important;
+  width:auto !important; height:auto !important;
+  font-size:1.5rem !important; line-height:1 !important;
+  flex:0 0 auto !important; margin-top:.05rem !important;
+  filter:drop-shadow(0 1px 0 rgba(255,235,205,.6)) drop-shadow(0 -1px 0 rgba(90,40,6,.35)) !important;
+}
+
+/* ── engraved type on the plate ── */
+.dc-title,.pu-q{
+  text-shadow:0 1px 0 rgba(255,235,205,.55), 0 -1px 0 rgba(90,40,6,.28) !important;
+}
+.dc-tag{
+  background:rgba(60,28,6,.22) !important;
+  border:1px solid rgba(255,235,205,.35) !important;
+  box-shadow:inset 0 1px 0 rgba(255,240,215,.4) !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   DISPATCH READER — a light page you actually read on.
+   The panel is white, so every bit of text inside must be dark,
+   overriding the site-wide "cream on wood" legibility layer.
+   ══════════════════════════════════════════════════════════════ */
+#dispatch-content{
+  background:#fdfaf3 !important;
+  color:#1a1712 !important;
+  padding:2.4rem 1.9rem 3rem !important;
+}
+/* every text element inside the reader */
+#dispatch-content,
+#dispatch-content *,
+#dispatch-content p,
+#dispatch-content span,
+#dispatch-content li,
+#dispatch-content div,
+#dispatch-content strong,
+#dispatch-content em,
+#dispatch-content h1,
+#dispatch-content h2,
+#dispatch-content h3,
+#dispatch-content h4{
+  color:#1a1712 !important;
+}
+/* headings */
+#dispatch-content h1,
+#dispatch-content h2,
+#dispatch-content h3{
+  font-family:'Fraunces',Georgia,serif !important;
+  font-weight:700 !important;
+  color:#120f0b !important;
+  line-height:1.18 !important;
+  margin:1.6rem 0 .6rem !important;
+}
+#dispatch-content h1:first-child,
+#dispatch-content h2:first-child{ margin-top:0 !important; }
+/* body copy — comfortable long-form reading */
+#dispatch-content p,
+#dispatch-content .dispatch-body p{
+  font-family:'DM Sans',sans-serif !important;
+  font-size:1rem !important;
+  line-height:1.75 !important;
+  color:#2b251d !important;
+  margin:0 0 1.25rem !important;
+  max-width:62ch;
+}
+#dispatch-content strong,
+#dispatch-content b{ color:#120f0b !important; font-weight:700 !important; }
+#dispatch-content em,
+#dispatch-content i{ color:#7a4412 !important; font-style:italic !important; }
+/* meta lines (date, tag) */
+#dispatch-content .dc-date,
+#dispatch-content .dispatch-meta{
+  color:rgba(43,37,29,.6) !important;
+  font-family:'DM Sans',sans-serif !important;
+  font-size:.68rem !important; letter-spacing:.14em !important;
+  text-transform:uppercase !important;
+}
+#dispatch-content .dc-tag{
+  background:rgba(240,145,60,.16) !important;
+  border:1px solid rgba(160,80,20,.35) !important;
+  color:#8a4a12 !important;
+  box-shadow:none !important;
+}
+/* links + footer controls stay readable on the light page */
+#dispatch-content a{ color:#b8601f !important; text-decoration:underline !important; }
+#dispatch-content a:hover{ color:#8a4512 !important; }
+#dispatch-content button{ color:#2b251d !important; }
+#dispatch-content #dispatch-share-btn{
+  color:rgba(43,37,29,.7) !important;
+  font-family:'DM Sans',sans-serif !important; font-size:.75rem !important;
+}
+#dispatch-content #dispatch-share-btn:hover{ color:#b8601f !important; }
+#dispatch-content blockquote{
+  border-left:3px solid #f0913c !important;
+  padding-left:1rem !important; margin:1.4rem 0 !important;
+  color:#3a3229 !important; font-style:italic !important;
+}
+
 </style>
 <body>
 
@@ -6312,35 +6713,84 @@ function slideTrack(dir){
 
 /* ══ TRACKS — full rebind on every load to prevent stacking bug ══ */
 
-/* ══ CONTINUOUS SHUFFLE PLAYBACK ══
-   Once the music starts it keeps going until the user pauses.
-   Every track in the catalogue is reachable in one click. */
-var _played=[];
-function playRandomTrack(){
-  var rows=[].slice.call(document.querySelectorAll('.htrk'));
-  if(!rows.length) return;
-  // don't repeat until the whole catalogue has been heard
-  var pool=rows.filter(function(r){ return _played.indexOf(r)===-1; });
-  if(!pool.length){ _played=[]; pool=rows; }
-  var next=pool[Math.floor(Math.random()*pool.length)];
-  _played.push(next);
-  next.click();
+/* ══ PLAYER QUEUE — one source of truth ══
+   rows()        the playlist in DOM order
+   _queue        a pre-shuffled running order (not random-per-song)
+   _qPos         where we are in that order
+   shuffleOn     shuffle mode toggle
+   Clicking a track always plays it immediately (one click). */
+var _queue=[], _qPos=-1, shuffleOn=true;
+
+function rows(){ return [].slice.call(document.querySelectorAll('.htrk')); }
+function currentIndex(){ var r=rows(); for(var i=0;i<r.length;i++){ if(r[i].classList.contains('active')) return i; } return -1; }
+
+function buildQueue(startIdx){
+  var n=rows().length, idx=[];
+  for(var i=0;i<n;i++) idx.push(i);
+  if(shuffleOn){                       // Fisher-Yates: a real shuffled running order
+    for(var j=idx.length-1;j>0;j--){
+      var k=Math.floor(Math.random()*(j+1));
+      var t=idx[j]; idx[j]=idx[k]; idx[k]=t;
+    }
+    if(typeof startIdx==='number'){    // keep the song they picked at the front
+      var at=idx.indexOf(startIdx);
+      if(at>0){ idx.splice(at,1); idx.unshift(startIdx); }
+    }
+  }
+  _queue=idx;
+  _qPos = (typeof startIdx==='number') ? _queue.indexOf(startIdx) : 0;
 }
 
-/* watchdog: if a track never actually starts, move on rather than hang */
+var _fromQueue=false;
+function playAt(i){
+  var r=rows();
+  if(!r.length) return;
+  if(i<0) i=r.length-1;
+  if(i>=r.length) i=0;
+  _fromQueue=true;                     // this click came from next/prev, not the user
+  r[i].click();                        // one click = load + play
+  _fromQueue=false;
+}
+
+function nextTrack(){
+  var r=rows(); if(!r.length) return;
+  if(!_queue.length) buildQueue(currentIndex());
+  _qPos++;
+  if(_qPos>=_queue.length){ buildQueue(); _qPos=0; }   // reshuffle for a fresh pass
+  playAt(_queue[_qPos]);
+}
+
+function prevTrack(){
+  var r=rows(); if(!r.length) return;
+  if(!_queue.length) buildQueue(currentIndex());
+  _qPos--;
+  if(_qPos<0) _qPos=_queue.length-1;
+  playAt(_queue[_qPos]);
+}
+
+function playRandomTrack(){ nextTrack(); }   // song-end handler uses the queue
+
+function toggleShuffle(){
+  shuffleOn=!shuffleOn;
+  buildQueue(currentIndex());
+  var b=document.getElementById('shuffleBtn');
+  if(b){ b.classList.toggle('on',shuffleOn); b.title = shuffleOn?'Shuffle on':'Shuffle off'; }
+  return shuffleOn;
+}
+
+/* watchdog: if a track never starts, move on rather than hang */
 var _loadWatch=null;
 function armLoadWatchdog(){
   clearTimeout(_loadWatch);
   _loadWatch=setTimeout(function(){
-    if(trackLoading){          // still stuck loading after 9s
-      trackLoading=false;
-      playRandomTrack();
-    }
+    if(trackLoading){ trackLoading=false; nextTrack(); }
   }, 9000);
 }
 
 function heroPick(el,title,sub){
   document.querySelectorAll('.htrk').forEach(t=>t.classList.remove('active'));
+  // only a direct user click rebuilds the running order
+  try{ if(!_fromQueue){ var _i=rows().indexOf(el); if(_i>-1){ buildQueue(_i); } } }catch(e){}
   el.classList.add('active');
   var t=document.getElementById('vsTitle'); if(t) t.textContent=title;
   var wrap=el.closest('.hero-player');
