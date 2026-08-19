@@ -2648,6 +2648,49 @@ nav .nav-face img{
   #dispatch .h2{ white-space:normal !important; }   /* allow wrap on small phones */
 }
 
+
+/* ══ GUESTBOOK ENTRIES — readable notes on paper ══ */
+#gb-entries{
+  max-width:700px !important;
+  margin:1.6rem auto 0 !important;
+  display:grid !important;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr)) !important;
+  gap:.8rem !important;
+}
+.gb-entry{
+  background:#fdfbf5 !important;
+  border:1px solid rgba(0,0,0,.14) !important;
+  border-radius:14px !important;
+  padding:1rem 1.15rem !important;
+  box-shadow:0 8px 20px -14px rgba(0,0,0,.7) !important;
+  text-align:left !important;
+}
+.gb-head{
+  display:flex !important; justify-content:space-between !important;
+  align-items:baseline !important; gap:.6rem !important; margin-bottom:.4rem !important;
+}
+.gb-name{
+  font-family:'Fraunces',Georgia,serif !important; font-weight:700 !important;
+  font-size:1rem !important; color:#141210 !important; margin:0 !important;
+}
+.gb-loc{
+  font-family:'DM Sans',sans-serif !important; font-size:.66rem !important;
+  color:rgba(36,29,21,.55) !important; margin:0 !important; white-space:nowrap;
+}
+.gb-msg{
+  font-family:'DM Sans',sans-serif !important; font-size:.86rem !important;
+  line-height:1.55 !important; color:#2a231b !important; margin:0 0 .45rem !important;
+}
+.gb-date{
+  font-family:'DM Sans',sans-serif !important; font-size:.62rem !important;
+  color:rgba(36,29,21,.45) !important; margin:0 !important;
+}
+.gb-empty{
+  grid-column:1/-1; text-align:center !important;
+  font-family:'DM Sans',sans-serif !important; font-size:.85rem !important;
+  color:rgba(253,245,232,.6) !important; padding:1.2rem 0 !important;
+}
+
 </style>
 <body>
 
@@ -6056,19 +6099,47 @@ async function signGuestbook(){
 async function loadGuestbook(){
   const container = document.getElementById('gb-entries');
   if(!container) return;
+
+  function card(name, loc, msg, when){
+    return '<div class="gb-entry">'
+      + '<div class="gb-head">'
+      +   '<p class="gb-name">' + name + '</p>'
+      +   (loc ? '<p class="gb-loc">' + loc + '</p>' : '')
+      + '</div>'
+      + '<p class="gb-msg">\u201C' + msg + '\u201D</p>'
+      + (when ? '<p class="gb-date">' + when + '</p>' : '')
+      + '</div>';
+  }
+  function esc(s){ return String(s==null?'':s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
   try{
-    const { data } = await _sb.from('guestbook').select('*').order('created_at',{ascending:false}).limit(20);
-    if(!data||!data.length){ container.innerHTML='<p style="font-family:\'IBM Plex Mono\',monospace;font-size:.45rem;color:var(--muted);">Be the first to sign.</p>'; return; }
-    container.innerHTML = data.map(e=>`
-      <div style="background:var(--white);border-radius:var(--radius-sm);padding:1.1rem 1.3rem;border:1px solid var(--border);">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem;">
-          <p style="font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;color:var(--ink);">${e.name}</p>
-          ${e.location?`<p style="font-family:'IBM Plex Mono',monospace;font-size:.38rem;color:var(--muted);">${e.location}</p>`:''}
-        </div>
-        <p style="font-family:'DM Sans',sans-serif;font-size:.82rem;color:rgba(26,22,18,.65);line-height:1.6;">"${e.message}"</p>
-        <p style="font-family:'IBM Plex Mono',monospace;font-size:.38rem;color:var(--dim);margin-top:.5rem;">${new Date(e.created_at).toLocaleDateString('en-US',{month:'short',year:'numeric'})}</p>
-      </div>`).join('');
-  }catch(e){ console.log('Guestbook load error:', e); }
+    if(!window._sb || !_sb.from){ throw new Error('no database connection'); }
+    const res = await _sb.from('guestbook')
+      .select('*').order('created_at',{ascending:false}).limit(30);
+    const data = res && res.data ? res.data : [];
+    const err  = res && res.error ? res.error : null;
+
+    if(err){ throw err; }
+
+    if(!data.length){
+      container.innerHTML =
+        '<p class="gb-empty">No notes yet — be the first to sign.</p>';
+      return;                                   // <- this return was missing
+    }
+
+    container.innerHTML = data.map(function(e){
+      var when='';
+      try{ when = new Date(e.created_at)
+        .toLocaleDateString('en-US',{month:'short', day:'numeric', year:'numeric'}); }catch(_){}
+      return card(esc(e.name)||'Anonymous', esc(e.location), esc(e.message), when);
+    }).join('');
+
+  }catch(e){
+    console.log('Guestbook load error:', e);
+    container.innerHTML =
+      '<p class="gb-empty">Couldn\u2019t load the guestbook right now. Please refresh.</p>';
+  }
 }
 
 // Load guestbook entries on page load
