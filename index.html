@@ -3092,6 +3092,79 @@ nav .nav-face img{
   color:#3a3229 !important; font-style:italic !important;
 }
 
+
+/* ══════════════════════════════════════════════════════════════
+   DISPATCH TILES — identical material to the turntable cabinet.
+   Same gradient, same burnt-orange edge, same speckle + sheen.
+   ══════════════════════════════════════════════════════════════ */
+.dc{
+  position:relative !important;
+  isolation:isolate;
+  border-radius:16px !important;
+  border:2px solid #8f4715 !important;      /* same edge colour as .tt-cab */
+  cursor:pointer !important;
+  overflow:hidden !important;
+  /* flat speckle + the turntable's 168deg orange body */
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.10) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 68% 62%, rgba(0,0,0,.07) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 84% 28%, rgba(255,255,255,.07) 0 1px, transparent 1.6px),
+    linear-gradient(168deg,#f0913c 0%,#d9752a 42%,#b8601f 100%) !important;
+  background-size:38px 38px, 52px 52px, 44px 44px, auto !important;
+  /* the turntable's exact shadow stack */
+  box-shadow:
+    0 6px 0 #8f4715,
+    0 22px 44px -16px rgba(0,0,0,.7),
+    inset 0 2px 0 rgba(255,225,190,.55),
+    inset 0 -3px 8px rgba(120,55,10,.55) !important;
+  transition:transform .1s ease, box-shadow .1s ease, filter .16s ease !important;
+  padding:1rem 1.15rem 1.1rem !important;
+}
+/* sleek flat shine sweeping the plate */
+.dc::before{
+  content:'' !important; position:absolute !important; inset:0 !important;
+  background:linear-gradient(106deg,
+    transparent 32%,
+    rgba(255,244,222,.26) 46%,
+    rgba(255,255,255,.34) 50%,
+    rgba(255,244,222,.14) 56%,
+    transparent 70%) !important;
+  pointer-events:none !important; z-index:0 !important;
+}
+/* brass corner screws, same as the cabinet */
+.dc::after{
+  content:'' !important; position:absolute !important; inset:8px !important;
+  border-radius:10px !important; pointer-events:none !important; z-index:0 !important;
+  background:
+    radial-gradient(circle at 0 0,     #fff3d8 0 1.4px, #8a6420 1.4px 2.8px, transparent 3px),
+    radial-gradient(circle at 100% 0,  #fff3d8 0 1.4px, #8a6420 1.4px 2.8px, transparent 3px),
+    radial-gradient(circle at 0 100%,  #fff3d8 0 1.4px, #8a6420 1.4px 2.8px, transparent 3px),
+    radial-gradient(circle at 100% 100%,#fff3d8 0 1.4px, #8a6420 1.4px 2.8px, transparent 3px) !important;
+}
+.dc > *{ position:relative; z-index:1; }
+.dc:hover{
+  filter:brightness(1.05) !important; transform:translateY(-3px) !important;
+  box-shadow:0 9px 0 #8f4715, 0 28px 52px -18px rgba(0,0,0,.72),
+             inset 0 2px 0 rgba(255,225,190,.6),
+             inset 0 -3px 8px rgba(120,55,10,.55) !important;
+}
+.dc:active{
+  transform:translateY(6px) !important;
+  box-shadow:0 0 0 #8f4715, 0 3px 8px -3px rgba(0,0,0,.5),
+             inset 0 2px 0 rgba(255,225,190,.45) !important;
+}
+/* type engraved into the plate */
+.dc-date{ color:rgba(42,22,8,.66) !important; }
+.dc-title{ color:#221205 !important;
+  text-shadow:0 1px 0 rgba(255,235,205,.5), 0 -1px 0 rgba(90,40,6,.25) !important; }
+.dc-excerpt{ color:rgba(34,18,5,.8) !important; }
+.dc-tag{
+  background:rgba(60,28,6,.20) !important;
+  border:1px solid rgba(255,235,205,.4) !important;
+  color:#2a1608 !important;
+  box-shadow:inset 0 1px 0 rgba(255,240,215,.45) !important;
+}
+
 </style>
 <body>
 
@@ -3200,7 +3273,7 @@ nav .nav-face img{
 
     <!-- Track picker -->
     <div class="hero-tracks" style="width:320px;max-width:100%;">
-      <p style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;letter-spacing:.25em;text-transform:uppercase;color:var(--forest);margin-bottom:.9rem;">◈ The Catalog &nbsp;·&nbsp; 30 Tracks</p>
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;letter-spacing:.25em;text-transform:uppercase;color:var(--forest);margin-bottom:.9rem;">◈ The Catalog &nbsp;·&nbsp; 29 Tracks</p>
       <div class="htrk-scroll">
         <div class="htrk active" onclick="heroPick(this,'The 5','Smoove Bapi · Out Now · 2026')"><span class="htrk-n">01</span><span class="htrk-t">The 5</span><span class="htrk-d">2:40</span></div>
         <div class="htrk" onclick="heroPick(this,'Woah','Smoove Bapi · prod. ALEC BOi · 2026')"><span class="htrk-n">02</span><span class="htrk-t">Woah</span><span class="htrk-d">2:38</span></div>
@@ -3228,10 +3301,9 @@ nav .nav-face img{
         <div class="htrk" onclick="heroPick(this,'Infinite Possibilities','Smoove Bapi · prod. GiobtW')"><span class="htrk-n">24</span><span class="htrk-t">Infinite Possibilities</span><span class="htrk-d">3:30</span></div>
         <div class="htrk" onclick="heroPick(this,'Crying Out','Smoove Bapi · SoundCloud')"><span class="htrk-n">25</span><span class="htrk-t">Crying Out</span><span class="htrk-d">3:10</span></div>
         <div class="htrk" onclick="heroPick(this,'What U Need','Smoove Bapi · SoundCloud')"><span class="htrk-n">26</span><span class="htrk-t">What U Need</span><span class="htrk-d">2:55</span></div>
-        <div class="htrk" onclick="heroPick(this,'My Way','Smoove Bapi · SoundCloud')"><span class="htrk-n">27</span><span class="htrk-t">My Way</span><span class="htrk-d">3:20</span></div>
-        <div class="htrk" onclick="heroPick(this,'FADED','Smoove Bapi · prod. SlayingIbis')"><span class="htrk-n">28</span><span class="htrk-t">FADED</span><span class="htrk-d">3:15</span></div>
-        <div class="htrk" onclick="heroPick(this,'Footwork.','Smoove Bapi · SoundCloud')"><span class="htrk-n">29</span><span class="htrk-t">Footwork.</span><span class="htrk-d">2:50</span></div>
-        <div class="htrk" onclick="heroPick(this,'To Myself Freestyle','Smoove Bapi · SoundCloud')"><span class="htrk-n">30</span><span class="htrk-t">To Myself Freestyle</span><span class="htrk-d">3:00</span></div>
+        <div class="htrk" onclick="heroPick(this,'FADED','Smoove Bapi · prod. SlayingIbis')"><span class="htrk-n">27</span><span class="htrk-t">FADED</span><span class="htrk-d">3:15</span></div>
+        <div class="htrk" onclick="heroPick(this,'Footwork.','Smoove Bapi · SoundCloud')"><span class="htrk-n">28</span><span class="htrk-t">Footwork.</span><span class="htrk-d">2:50</span></div>
+        <div class="htrk" onclick="heroPick(this,'To Myself Freestyle','Smoove Bapi · SoundCloud')"><span class="htrk-n">29</span><span class="htrk-t">To Myself Freestyle</span><span class="htrk-d">3:00</span></div>
       </div>
 
       <!-- Listen on -->
@@ -6802,6 +6874,30 @@ function heroPick(el,title,sub){
 /* One-click playback: stops whatever is playing and starts the new track.
    Uses the SoundCloud load callback so events are re-bound AFTER the new
    sound is ready — this is what was freezing playback on the 2nd track. */
+
+/* ══ AUDIO UNLOCK ══
+   Browsers only allow audio that starts inside a real user gesture.
+   widget.load() is async, so by the time its callback runs the gesture
+   is gone — which is why the first click "selected" and a second click
+   was needed to actually play. We unlock the widget on the very first
+   tap anywhere, so every later play() is permitted. */
+var _scUnlocked=false;
+function unlockAudio(){
+  if(_scUnlocked) return;
+  _scUnlocked=true;
+  try{
+    if(typeof widget!=='undefined' && widget){
+      widget.play();                                  // inside the gesture
+      setTimeout(function(){                          // silence it immediately
+        try{ if(!playing) widget.pause(); }catch(e){}
+      }, 60);
+    }
+  }catch(e){}
+}
+['pointerdown','touchstart','click','keydown'].forEach(function(ev){
+  document.addEventListener(ev, unlockAudio, {once:false, passive:true, capture:true});
+});
+
 function playTrackByTitle(title){
   var url=(typeof scTracks!=='undefined') ? scTracks[title] : null;
   if(!url || typeof widget==='undefined' || !widget){ return; }
@@ -6809,6 +6905,7 @@ function playTrackByTitle(title){
   trackLoading=true;
   setVisualPlay(true);            // tonearm swings + bars animate immediately
   if(typeof armLoadWatchdog==='function') armLoadWatchdog();
+  unlockAudio();                  // claim the user gesture NOW, before the async load
 
   try{ widget.pause(); }catch(e){}   // stop the current song first
 
