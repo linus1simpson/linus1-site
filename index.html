@@ -6925,11 +6925,17 @@ function setVisualPlay(on){
 }
 
 function togglePlay(){
+  // local file playing?
+  if(_localAudio && _localAudio.src && !_localAudio.paused){
+    _localAudio.pause(); setVisualPlay(false); return;
+  }
+  if(_localAudio && _localAudio.src && _localAudio.paused && _localAudio.currentTime>0){
+    var p=_localAudio.play(); if(p&&p.catch) p.catch(function(){});
+    setVisualPlay(true); return;
+  }
   if(typeof widget==='undefined' || !widget) return;
-  // still loading? remember that the user wants it playing, don't cancel out
   if(trackLoading || !scReady){
-    pendingPlay=true;
-    setVisualPlay(true);
+    pendingPlay=true; setVisualPlay(true);
     try{ widget.play(); }catch(e){}
     return;
   }
@@ -7085,41 +7091,80 @@ function unlockAudio(){
   document.addEventListener(ev, unlockAudio, {once:false, passive:true, capture:true});
 });
 
-function playTrackByTitle(title){
-  var url=(typeof scTracks!=='undefined') ? scTracks[title] : null;
-  if(!url || typeof widget==='undefined' || !widget){ return; }
+/* ══════════════════════════════════════════════════════════════
+   PLAYER — modern music-app behaviour.
+   Click a song → it plays. No second click, no drag, no ceremony.
+   Local files (The 5) use a native <audio> element, which is fast
+   and gives us real control. Everything else uses the SC widget.
+   ══════════════════════════════════════════════════════════════ */
+var localTracks = { 'The 5': 'the5.mp3' };
+var _localAudio = null;
 
-  trackLoading=true;
-  pendingPlay=true;               // we ALWAYS intend to play — never just "select"
-  setVisualPlay(true);
+function getLocalAudio(){
+  if(_localAudio) return _localAudio;
+  _localAudio = new Audio();
+  _localAudio.preload = 'auto';
+  _localAudio.addEventListener('play',  function(){ playing=true;  setVisualPlay(true);  });
+  _localAudio.addEventListener('pause', function(){ playing=false; setVisualPlay(false); });
+  _localAudio.addEventListener('ended', function(){
+    playing=false;
+    if(typeof nextTrack==='function') nextTrack();
+  });
+  _localAudio.addEventListener('error', function(){
+    playing=false; trackLoading=false;
+    if(typeof nextTrack==='function') nextTrack();
+  });
+  return _localAudio;
+}
+
+function stopEverything(){
+  try{ if(_localAudio){ _localAudio.pause(); } }catch(e){}
+  try{ if(widget) widget.pause(); }catch(e){}
+}
+
+function playTrackByTitle(title){
+  trackLoading = true;
+  setVisualPlay(true);                    // deck spins straight away
   if(typeof armLoadWatchdog==='function') armLoadWatchdog();
 
-  // Keep the gesture alive: touch the widget synchronously on EVERY click,
-  // not only the first one. (The old unlock ran once, so later clicks lost it.)
-  try{ widget.play(); }catch(e){}
+  /* ── local file: instant, reliable ── */
+  if(localTracks[title]){
+    try{ if(widget) widget.pause(); }catch(e){}
+    var a = getLocalAudio();
+    if(!a.src || a.src.indexOf(localTracks[title]) === -1){
+      a.src = localTracks[title];
+    }
+    a.currentTime = 0;
+    var p = a.play();
+    if(p && p.catch){ p.catch(function(){ setVisualPlay(false); }); }
+    trackLoading = false;
+    clearTimeout(_loadWatch);
+    return;
+  }
 
-  // don't pause first — load() replaces the track and pausing can drop the
-  // playback permission chain in some browsers.
+  /* ── streamed track ── */
+  var url = (typeof scTracks!=='undefined') ? scTracks[title] : null;
+  if(!url || typeof widget==='undefined' || !widget){
+    trackLoading=false; setVisualPlay(false); return;
+  }
+  try{ if(_localAudio) _localAudio.pause(); }catch(e){}
+
+  pendingPlay = true;
+  try{ widget.play(); }catch(e){}         // keep the gesture alive on every click
+
   widget.load(url,{
-    auto_play:true,
-    show_comments:false,
-    visual:false,
+    auto_play:true, show_comments:false, visual:false,
     callback:function(){
-      trackLoading=false;
-      scReady=true;
+      trackLoading=false; scReady=true;
       try{ bindWidgetEvents(); }catch(e){}
       try{ widget.getDuration(function(d){ scDuration=d; }); }catch(e){}
       try{ widget.play(); }catch(e){}
-      // belt and braces: some browsers need one more nudge a beat later
       setTimeout(function(){
-        try{
-          widget.isPaused(function(paused){
-            if(paused && pendingPlay){ widget.play(); }
-            pendingPlay=false;
-            setVisualPlay(!paused || pendingPlay);
-          });
-        }catch(e){ pendingPlay=false; }
-      }, 220);
+        try{ widget.isPaused(function(paused){
+          if(paused && pendingPlay){ widget.play(); }
+          pendingPlay=false;
+        }); }catch(e){ pendingPlay=false; }
+      },200);
       setVisualPlay(true);
       clearTimeout(_loadWatch);
     }
