@@ -6865,6 +6865,7 @@ function bindWidgetEvents(){
   });
 
   widget.bind(SC.Widget.Events.PLAY,()=>{
+    if(_priming) return;                 // ignore the silent priming play
     playing=true;
     trackLoading=false;
     setVisualPlay(true);
@@ -7083,8 +7084,12 @@ function getLocalAudio(){
   if(_localAudio) return _localAudio;
   _localAudio = new Audio();
   _localAudio.preload = 'auto';
-  _localAudio.addEventListener('play',  function(){ playing=true;  setVisualPlay(true);  });
-  _localAudio.addEventListener('pause', function(){ playing=false; setVisualPlay(false); });
+  _localAudio.addEventListener('playing', function(){ playing=true;  setVisualPlay(true);  });
+  _localAudio.addEventListener('play',    function(){ playing=true;  setVisualPlay(true);  });
+  _localAudio.addEventListener('pause',   function(){
+    if(activeSource!=='local') return;      // ignore when the deck moved on
+    playing=false; setVisualPlay(false);
+  });
   _localAudio.addEventListener('ended', function(){
     playing=false;
     if(typeof nextTrack==='function') nextTrack();
@@ -7103,28 +7108,35 @@ function stopEverything(){
 
 
 /* ══ ONE-TIME AUDIO PRIMER ══
-   Browsers only let audio start from a user gesture. We spend the very
-   first tap priming the widget (play → immediately pause), after which
-   every catalogue click can start a song directly. */
+   Spends the first tap unlocking audio WITHOUT touching the player's
+   visual state or the real audio element. Uses a throwaway silent
+   element so no PLAY/PAUSE events reach the deck. */
 var _primed=false;
 function primeAudio(){
   if(_primed) return;
   _primed=true;
   try{
-    if(typeof widget!=='undefined' && widget){
-      widget.play();
-      setTimeout(function(){ try{ if(!playing) widget.pause(); }catch(e){} }, 80);
-    }
-    if(typeof getLocalAudio==='function'){
-      var a=getLocalAudio();
-      a.muted=true;
-      var p=a.play();
-      if(p&&p.then){ p.then(function(){ a.pause(); a.currentTime=0; a.muted=false; })
-                      .catch(function(){ a.muted=false; }); }
-      else { a.pause(); a.muted=false; }
-    }
+    var s=document.createElement('audio');
+    s.src='data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQxAADB8AhSmxhIIEVCSiJrDCQBTcu3UrAIwUdkRgQbFAZC1CQEwTJ9mjRvBA4UOLD8nKVOWfh+UlK3z/177OXrfOdKl7pyn3Xf//WreyTRUoAWgBgkOAd9khjBHLEK3BMSpAKcp0Ku5vAA';
+    s.volume=0;
+    var p=s.play();
+    if(p&&p.then) p.then(function(){ s.pause(); }).catch(function(){});
   }catch(e){}
+  // prime the SoundCloud widget without letting it flip the deck's UI
+  try{
+    if(typeof widget!=='undefined' && widget){
+      _priming=true;
+      widget.setVolume(0);
+      widget.play();
+      setTimeout(function(){
+        try{ widget.pause(); widget.setVolume(100); }catch(e){}
+        _priming=false;
+        setVisualPlay(false);          // make sure the deck reads "paused"
+      }, 120);
+    }
+  }catch(e){ _priming=false; }
 }
+var _priming=false;
 ['pointerdown','touchstart','keydown'].forEach(function(ev){
   document.addEventListener(ev, primeAudio, {capture:true, passive:true});
 });
@@ -7945,6 +7957,11 @@ window.enterLounge = enterLounge;
     }catch(e){}
   });
 })();
+
+/* deck starts paused — nothing plays until the user acts */
+document.addEventListener('DOMContentLoaded', function(){
+  try{ setVisualPlay(false); }catch(e){}
+});
 </script>
 </body>
 </html>
