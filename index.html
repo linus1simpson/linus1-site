@@ -3165,6 +3165,74 @@ nav .nav-face img{
   box-shadow:inset 0 1px 0 rgba(255,240,215,.45) !important;
 }
 
+
+/* ══ 1. FOOTER EMAIL SIGNUP — contained, Go button always visible ══ */
+.ft-sub{
+  display:flex !important;
+  align-items:stretch !important;
+  gap:.4rem !important;
+  max-width:240px !important;      /* stops the runaway stretch */
+  width:100% !important;
+}
+.ft-sub input[type="email"]{
+  flex:1 1 auto !important;
+  min-width:0 !important;           /* the key: lets it shrink instead of pushing Go out */
+  width:auto !important;
+  background:rgba(250,248,244,.06) !important;
+  border:1px solid rgba(250,248,244,.16) !important;
+  border-radius:9px !important;
+  color:#fdf5e8 !important;
+  padding:.5rem .7rem !important;
+  font-family:'DM Sans',sans-serif !important;
+  font-size:.78rem !important;
+  outline:none !important;
+  box-sizing:border-box !important;
+}
+.ft-sub input[type="email"]::placeholder{ color:rgba(253,245,232,.4) !important; }
+.ft-sub input[type="email"]:focus{ border-color:#f0913c !important; }
+.ft-sub button{
+  flex:0 0 auto !important;
+  white-space:nowrap !important;
+  padding:.5rem .95rem !important;
+  border-radius:9px !important;
+  font-family:'DM Sans',sans-serif !important;
+  font-size:.75rem !important; font-weight:700 !important;
+  letter-spacing:.02em !important;
+  color:#2a1608 !important;
+  background:linear-gradient(180deg,#f0913c,#d9752a) !important;
+  border:1px solid #8f4715 !important;
+  box-shadow:0 3px 0 #8f4715, inset 0 1px 0 rgba(255,235,200,.5) !important;
+  cursor:pointer !important;
+  transition:transform .08s, box-shadow .08s !important;
+}
+.ft-sub button:active{ transform:translateY(3px) !important; box-shadow:0 0 0 #8f4715 !important; }
+@media(max-width:520px){ .ft-sub{ max-width:100% !important; } }
+
+/* ══ 2. DISPATCH CATEGORY TAGS — orange, matching the site ══ */
+.dc-tag,
+.dc-tag.tg,
+.dc-tag.tn,
+.dc-tag.tc,
+.tg,.tn,.tc{
+  color:#2a1608 !important;
+  background:rgba(60,28,6,.20) !important;
+  border:1px solid rgba(255,235,205,.42) !important;
+  box-shadow:inset 0 1px 0 rgba(255,240,215,.45) !important;
+  border-radius:999px !important;
+  padding:.18rem .62rem !important;
+  font-family:'DM Sans',sans-serif !important;
+  font-size:.6rem !important; font-weight:700 !important;
+  letter-spacing:.07em !important;
+  display:inline-block !important;
+}
+/* the little colour chip in the dispatch reader / list — orange too */
+#dispatch .dc-date::before,
+#dispatch [class*="swatch"],
+#dispatch [class*="chip"]{
+  background:linear-gradient(180deg,#f0913c,#d9752a) !important;
+  border-color:#8f4715 !important;
+}
+
 </style>
 <body>
 
@@ -4377,7 +4445,7 @@ nav .nav-face img{
     <div><p class="ft-ct">Rooms</p><ul class="ft-l"><li><a href="#home">Entrance</a></li><li><a href="#home">The Music</a></li><li><a href="#the5">The Five</a></li><li><a href="#vault">The Vault</a></li><li><a href="#maze-section">The Maze</a></li><li><a href="#matchbox">The Matchbox</a></li><li><a href="#dispatch">The Dispatch</a></li><li><a href="#pullup">Pull Up</a></li><li><a href="#about">The Bar</a></li>
     <li><a href="#guestbook">Guestbook</a></li><li><a href="#artists">Back Room</a></li></ul></div>
     <div><p class="ft-ct">Contact</p><ul class="ft-l"><li><a href="mailto:hello@linus1.com">hello@linus1.com</a></li><li><a href="#">Bookings</a></li><li><a href="#">Artist Submissions</a></li><li><a href="#">Press</a></li><li><a href="#">Advertise</a></li></ul></div>
-    <div><p class="ft-ct">Stay Updated</p><p style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;line-height:1.8;color:rgba(250,248,244,.25);margin-bottom:.9rem;">Monthly from the lounge.</p><div style="display:flex;border-radius:var(--radius-sm);overflow:hidden;"><input type="email" id="ftEm" placeholder="email" style="flex:1;background:rgba(250,248,244,.05);border:1px solid rgba(250,248,244,.1);border-right:none;color:var(--white);padding:.55rem .75rem;font-family:'IBM Plex Mono',monospace;font-size:.42rem;outline:none;"/><button onclick="ftSub()" style="background:var(--forest);color:var(--white);border:none;padding:.55rem .85rem;font-family:'IBM Plex Mono',monospace;font-size:.4rem;letter-spacing:.12em;box-shadow:0 3px 0 var(--forest3);transition:all .08s;">Go</button></div></div>
+    <div><p class="ft-ct">Stay Updated</p><p style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;line-height:1.8;color:rgba(250,248,244,.25);margin-bottom:.9rem;">Monthly from the lounge.</p><div class="ft-sub"><input type="email" id="ftEm" placeholder="email" style="flex:1;background:rgba(250,248,244,.05);border:1px solid rgba(250,248,244,.1);border-right:none;color:var(--white);padding:.55rem .75rem;font-family:'IBM Plex Mono',monospace;font-size:.42rem;outline:none;"/><button onclick="ftSub()" style="background:var(--forest);color:var(--white);border:none;padding:.55rem .85rem;font-family:'IBM Plex Mono',monospace;font-size:.4rem;letter-spacing:.12em;box-shadow:0 3px 0 var(--forest3);transition:all .08s;">Go</button></div></div>
   </div>
   <div class="ft-bot"><p class="ft-copy">© 2025 Linus Simpson · linus1.com · All rights reserved · Built with love from SJC</p><div class="ft-live"><div class="live-d"></div>Live &amp; Building</div></div>
 </footer>
