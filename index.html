@@ -3509,7 +3509,7 @@ nav .nav-face img{
   <!-- SoundCloud engine for the turntable (hidden, drives playback) -->
   <iframe id="sc-widget" width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay"
     src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/smoovebapi/lets-jus-dance&color=%231a3d2b&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&enable_api=true"
-    style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;left:-9999px;"></iframe>
+    style="position:absolute;bottom:0;left:0;width:300px;height:80px;border:0;opacity:.001;pointer-events:none;z-index:-1;"></iframe>
 
 </section>
 
@@ -7067,32 +7067,6 @@ function heroPick(el,title,sub){
   playTrackByTitle(title);
 }
 
-/* One-click playback: stops whatever is playing and starts the new track.
-   Uses the SoundCloud load callback so events are re-bound AFTER the new
-   sound is ready — this is what was freezing playback on the 2nd track. */
-
-/* ══ AUDIO UNLOCK ══
-   Browsers only allow audio that starts inside a real user gesture.
-   widget.load() is async, so by the time its callback runs the gesture
-   is gone — which is why the first click "selected" and a second click
-   was needed to actually play. We unlock the widget on the very first
-   tap anywhere, so every later play() is permitted. */
-var _scUnlocked=false;
-function unlockAudio(){
-  if(_scUnlocked) return;
-  _scUnlocked=true;
-  try{
-    if(typeof widget!=='undefined' && widget){
-      widget.play();                                  // inside the gesture
-      setTimeout(function(){                          // silence it immediately
-        try{ if(!playing) widget.pause(); }catch(e){}
-      }, 60);
-    }
-  }catch(e){}
-}
-['pointerdown','touchstart','click','keydown'].forEach(function(ev){
-  document.addEventListener(ev, unlockAudio, {once:false, passive:true, capture:true});
-});
 
 /* ══════════════════════════════════════════════════════════════
    PLAYER — modern music-app behaviour.
@@ -7127,59 +7101,72 @@ function stopEverything(){
   try{ if(widget) widget.pause(); }catch(e){}
 }
 
+
+/* ══ ONE-TIME AUDIO PRIMER ══
+   Browsers only let audio start from a user gesture. We spend the very
+   first tap priming the widget (play → immediately pause), after which
+   every catalogue click can start a song directly. */
+var _primed=false;
+function primeAudio(){
+  if(_primed) return;
+  _primed=true;
+  try{
+    if(typeof widget!=='undefined' && widget){
+      widget.play();
+      setTimeout(function(){ try{ if(!playing) widget.pause(); }catch(e){} }, 80);
+    }
+    if(typeof getLocalAudio==='function'){
+      var a=getLocalAudio();
+      a.muted=true;
+      var p=a.play();
+      if(p&&p.then){ p.then(function(){ a.pause(); a.currentTime=0; a.muted=false; })
+                      .catch(function(){ a.muted=false; }); }
+      else { a.pause(); a.muted=false; }
+    }
+  }catch(e){}
+}
+['pointerdown','touchstart','keydown'].forEach(function(ev){
+  document.addEventListener(ev, primeAudio, {capture:true, passive:true});
+});
+
 function playTrackByTitle(title){
-  // decide who owns playback FIRST, before any early return
+  primeAudio();                                   // claim this click's gesture
   activeSource = localTracks[title] ? 'local' : 'stream';
   activeTitle  = title;
-  if(activeSource==='stream'){
-    try{ if(_localAudio){ _localAudio.pause(); _localAudio.currentTime=0; } }catch(e){}
-  }
   trackLoading = true;
-  setVisualPlay(true);                    // deck spins straight away
+  setVisualPlay(true);                            // deck starts spinning now
   if(typeof armLoadWatchdog==='function') armLoadWatchdog();
 
-  /* ── local file: instant, reliable ── */
-  if(localTracks[title]){
-    activeSource='local'; activeTitle=title;
+  if(activeSource === 'local'){
     try{ if(widget) widget.pause(); }catch(e){}
     var a = getLocalAudio();
-    if(!a.src || a.src.indexOf(localTracks[title]) === -1){
-      a.src = localTracks[title];
-    }
+    if(!a.src || a.src.indexOf(localTracks[title]) === -1) a.src = localTracks[title];
     a.currentTime = 0;
-    var p = a.play();
-    if(p && p.catch){ p.catch(function(){ setVisualPlay(false); }); }
-    trackLoading = false;
-    clearTimeout(_loadWatch);
+    var lp = a.play();
+    if(lp && lp.catch) lp.catch(function(){ setVisualPlay(false); });
+    trackLoading = false; clearTimeout(_loadWatch);
     return;
   }
 
-  /* ── streamed track ── */
-  var url = (typeof scTracks!=='undefined') ? scTracks[title] : null;
-  if(!url || typeof widget==='undefined' || !widget){
-    trackLoading=false; setVisualPlay(false); return;
+  var url = (typeof scTracks !== 'undefined') ? scTracks[title] : null;
+  if(!url || typeof widget === 'undefined' || !widget){
+    trackLoading = false; setVisualPlay(false); return;
   }
-  activeSource='stream'; activeTitle=title;
-  try{ if(_localAudio){ _localAudio.pause(); _localAudio.currentTime=0; } }catch(e){}
+  try{ if(_localAudio){ _localAudio.pause(); _localAudio.currentTime = 0; } }catch(e){}
 
-  pendingPlay = true;
-  try{ widget.play(); }catch(e){}         // keep the gesture alive on every click
+  try{ widget.play(); }catch(e){}                 // keep the gesture chain alive
 
-  widget.load(url,{
-    auto_play:true, show_comments:false, visual:false,
-    callback:function(){
-      trackLoading=false; scReady=true;
+  widget.load(url, {
+    auto_play: true, show_comments: false, visual: false,
+    callback: function(){
+      trackLoading = false; scReady = true;
       try{ bindWidgetEvents(); }catch(e){}
-      try{ widget.getDuration(function(d){ scDuration=d; }); }catch(e){}
+      try{ widget.getDuration(function(d){ scDuration = d; }); }catch(e){}
       try{ widget.play(); }catch(e){}
-      setTimeout(function(){
-        try{ widget.isPaused(function(paused){
-          if(paused && pendingPlay){ widget.play(); }
-          pendingPlay=false;
-        }); }catch(e){ pendingPlay=false; }
-      },200);
-      setVisualPlay(true);
-      clearTimeout(_loadWatch);
+      setTimeout(function(){                      // one nudge if it didn't take
+        try{ widget.isPaused(function(paused){ if(paused) widget.play(); }); }catch(e){}
+      }, 250);
+      setVisualPlay(true); clearTimeout(_loadWatch);
     }
   });
 }
