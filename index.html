@@ -6925,13 +6925,15 @@ function setVisualPlay(on){
 }
 
 function togglePlay(){
-  // local file playing?
-  if(_localAudio && _localAudio.src && !_localAudio.paused){
-    _localAudio.pause(); setVisualPlay(false); return;
-  }
-  if(_localAudio && _localAudio.src && _localAudio.paused && _localAudio.currentTime>0){
-    var p=_localAudio.play(); if(p&&p.catch) p.catch(function(){});
-    setVisualPlay(true); return;
+  // whichever engine currently owns playback decides
+  if(activeSource==='local' && _localAudio){
+    if(_localAudio.paused){
+      var p=_localAudio.play(); if(p&&p.catch) p.catch(function(){});
+      setVisualPlay(true);
+    } else {
+      _localAudio.pause(); setVisualPlay(false);
+    }
+    return;
   }
   if(typeof widget==='undefined' || !widget) return;
   if(trackLoading || !scReady){
@@ -6942,6 +6944,7 @@ function togglePlay(){
   if(playing){ try{ widget.pause(); }catch(e){} setVisualPlay(false); }
   else       { try{ widget.play();  }catch(e){} setVisualPlay(true);  }
 }
+
 
 document.getElementById('vinylBtn').addEventListener('click',togglePlay);
 
@@ -7099,6 +7102,8 @@ function unlockAudio(){
    ══════════════════════════════════════════════════════════════ */
 var localTracks = { 'The 5': 'the5.mp3' };
 var _localAudio = null;
+var activeSource = null;    // 'local' | 'stream' — who owns playback right now
+var activeTitle  = null;
 
 function getLocalAudio(){
   if(_localAudio) return _localAudio;
@@ -7123,12 +7128,19 @@ function stopEverything(){
 }
 
 function playTrackByTitle(title){
+  // decide who owns playback FIRST, before any early return
+  activeSource = localTracks[title] ? 'local' : 'stream';
+  activeTitle  = title;
+  if(activeSource==='stream'){
+    try{ if(_localAudio){ _localAudio.pause(); _localAudio.currentTime=0; } }catch(e){}
+  }
   trackLoading = true;
   setVisualPlay(true);                    // deck spins straight away
   if(typeof armLoadWatchdog==='function') armLoadWatchdog();
 
   /* ── local file: instant, reliable ── */
   if(localTracks[title]){
+    activeSource='local'; activeTitle=title;
     try{ if(widget) widget.pause(); }catch(e){}
     var a = getLocalAudio();
     if(!a.src || a.src.indexOf(localTracks[title]) === -1){
@@ -7147,7 +7159,8 @@ function playTrackByTitle(title){
   if(!url || typeof widget==='undefined' || !widget){
     trackLoading=false; setVisualPlay(false); return;
   }
-  try{ if(_localAudio) _localAudio.pause(); }catch(e){}
+  activeSource='stream'; activeTitle=title;
+  try{ if(_localAudio){ _localAudio.pause(); _localAudio.currentTime=0; } }catch(e){}
 
   pendingPlay = true;
   try{ widget.play(); }catch(e){}         // keep the gesture alive on every click
