@@ -96,7 +96,7 @@ if(typeof IntersectionObserver==='undefined'){
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;overflow-x:hidden;width:100%;-webkit-text-size-adjust:100%;}
 body{background:var(--white);color:var(--ink);font-family:'Fraunces',serif;overflow-x:hidden;width:100%;position:relative;touch-action:pan-y;-webkit-tap-highlight-color:transparent;}
-button,.pu-card,.nav-link,a,.gallery-piece,
+button,.pu-card,.nav-link,a,.gallery-piece{cursor:pointer;}
 
 
 /* ═══ CURSOR ═══ */
@@ -3233,6 +3233,122 @@ nav .nav-face img{
   border-color:#8f4715 !important;
 }
 
+
+/* ══ DISPATCH TILES — solid orange base under the gradient ══
+   background-color is set separately so the tile is orange even
+   if a gradient layer fails to paint. */
+.dc{ background-color:#e07f2c !important; }
+.dc,.dc *{ color:#2a1608 !important; }
+.dc-title{ color:#221205 !important; }
+.dc-excerpt{ color:rgba(34,18,5,.82) !important; }
+.dc-date{ color:rgba(42,22,8,.66) !important; }
+/* kill any leftover green from the old palette anywhere in dispatch */
+#dispatch [style*="var(--forest"],
+#dispatch [style*="#1a3d2b"],
+#dispatch [style*="rgba(26,61,43"]{
+  background:transparent !important; border-color:rgba(255,235,205,.4) !important;
+  color:#2a1608 !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   DISPATCH TILE FACE — one bright orange plate, brown type.
+   No dark panels, no dark falloff, nothing dark-on-dark.
+   ══════════════════════════════════════════════════════════════ */
+.dc{
+  background-color:#ef9440 !important;
+  background-image:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.12) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 68% 62%, rgba(255,255,255,.08) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 84% 30%, rgba(255,255,255,.10) 0 1px, transparent 1.6px),
+    linear-gradient(168deg,#f7a558 0%,#ef9440 46%,#e5892f 100%) !important;
+  background-size:38px 38px, 52px 52px, 44px 44px, auto !important;
+  border:2px solid #a8541a !important;
+  box-shadow:
+    0 6px 0 #a8541a,
+    0 20px 40px -16px rgba(0,0,0,.6),
+    inset 0 2px 0 rgba(255,240,215,.75) !important;   /* highlight only — no dark inner shade */
+}
+.dc:hover{
+  background-color:#f7a558 !important;
+  box-shadow:0 9px 0 #a8541a, 0 26px 48px -18px rgba(0,0,0,.65),
+             inset 0 2px 0 rgba(255,240,215,.85) !important;
+}
+.dc:active{
+  transform:translateY(6px) !important;
+  box-shadow:0 0 0 #a8541a, 0 3px 8px -3px rgba(0,0,0,.45),
+             inset 0 2px 0 rgba(255,240,215,.6) !important;
+}
+/* softer sheen so it doesn't read as a dark band */
+.dc::before{
+  background:linear-gradient(106deg,
+    transparent 34%,
+    rgba(255,250,235,.22) 47%,
+    rgba(255,255,255,.30) 51%,
+    transparent 66%) !important;
+}
+/* screws stay light on the orange */
+.dc::after{
+  background:
+    radial-gradient(circle at 0 0,      #fff6e2 0 1.3px, #c08c3a 1.3px 2.6px, transparent 2.9px),
+    radial-gradient(circle at 100% 0,   #fff6e2 0 1.3px, #c08c3a 1.3px 2.6px, transparent 2.9px),
+    radial-gradient(circle at 0 100%,   #fff6e2 0 1.3px, #c08c3a 1.3px 2.6px, transparent 2.9px),
+    radial-gradient(circle at 100% 100%,#fff6e2 0 1.3px, #c08c3a 1.3px 2.6px, transparent 2.9px) !important;
+}
+
+/* ── all type: warm brown, clearly readable on orange ── */
+.dc-date{ color:#7a3d0e !important; font-weight:700 !important; }
+.dc-title{
+  color:#5c2a06 !important;
+  text-shadow:0 1px 0 rgba(255,240,215,.5) !important;
+}
+.dc-excerpt{ color:#6b3a12 !important; }
+
+/* ── tag pill: light on orange, brown text (was a dark tint) ── */
+.dc-tag,.dc-tag.tg,.dc-tag.tn,.dc-tag.tc{
+  background:rgba(255,246,228,.55) !important;
+  border:1px solid rgba(122,61,14,.4) !important;
+  color:#7a3d0e !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7) !important;
+}
+
+/* ── Read more: light plate, brown text — never dark-on-dark ── */
+.dc-read{
+  display:inline-flex !important; align-items:center; gap:.35rem;
+  margin-top:.8rem !important;
+  padding:.5rem 1.05rem !important;
+  border-radius:10px !important;
+  font-family:'DM Sans',sans-serif !important; font-weight:700 !important;
+  font-size:.78rem !important; text-decoration:none !important;
+  color:#5c2a06 !important;
+  background:linear-gradient(180deg,#fff6e6,#f6e2c4) !important;
+  border:1px solid #a8541a !important;
+  box-shadow:0 3px 0 #a8541a, inset 0 1px 0 rgba(255,255,255,.9) !important;
+  transition:transform .09s, box-shadow .09s !important;
+}
+.dc-read:hover{ background:linear-gradient(180deg,#fffdf6,#fbeed8) !important; }
+.dc-read:active{ transform:translateY(3px) !important; box-shadow:0 0 0 #a8541a !important; }
+
+
+/* ══ HERO — pull everything up so the turntable is visible sooner ══ */
+#home{
+  padding-top:2.2rem !important;      /* was 5rem — closes the gap under the header */
+  padding-bottom:2.6rem !important;
+  gap:1.1rem !important;              /* tighter stack overall */
+}
+#home .face3d{ margin-top:0 !important; margin-bottom:.2rem !important; }
+.hero-eyebrow{ margin:0 0 .15rem !important; }
+.hero-h1{ margin:0 !important; }
+.hero-desc{ margin:.5rem auto 0 !important; }
+.hero-actions{ margin-top:.7rem !important; }
+/* the big one: close the gap between the tagline and the deck */
+.hero-player{ margin-top:.6rem !important; gap:1.8rem !important; }
+.vinyl-col{ padding-top:16px !important; }
+@media(max-width:820px){
+  #home{ padding-top:1.6rem !important; gap:.9rem !important; }
+  .hero-player{ margin-top:.4rem !important; gap:1.4rem !important; }
+}
+
 </style>
 <body>
 
@@ -3248,7 +3364,7 @@ nav .nav-face img{
   <p class="ent-kicker">linus1.com &nbsp;·&nbsp; San Juan Capistrano</p>
   <h1 class="ent-title">The<br><span>Lounge</span></h1>
 
-  <div id="lbot-stage" onclick="pokeLbot()" title="poke him">
+  <div id="lbot-stage" onclick="pokeLbot(event)" title="poke him">
     <svg id="lbot-svg" viewBox="0 0 160 170" width="150" height="160">
       <line x1="80" y1="34" x2="80" y2="14" stroke="#f0c44a" stroke-width="3"/>
       <circle id="lbot-bulb" cx="80" cy="11" r="6" fill="#f0c44a"/>
@@ -4496,10 +4612,13 @@ function _spawnStar(x,y){
 function pokeLbot(e){
   _lbotPokes++;
   _lbotSound();
+  try{ if(navigator.vibrate) navigator.vibrate([12,8,18]); }catch(_){}   // haptics
   const svg=document.getElementById('lbot-svg');
   const stage=document.getElementById('lbot-stage');
   const rect=stage.getBoundingClientRect();
-  const px=e.clientX-rect.left, py=e.clientY-rect.top;
+  const _cx=(e&&e.clientX!=null)?e.clientX:(rect.left+rect.width/2);
+  const _cy=(e&&e.clientY!=null)?e.clientY:(rect.top+rect.height/2);
+  const px=_cx-rect.left, py=_cy-rect.top;
   const tilt=(Math.random()-.5)*40;
   const sx=1+(Math.random()*.25), sy=1-(Math.random()*.18);
   svg.style.transform=`translateY(-14px) rotate(${tilt}deg) scale(${sx},${sy})`;
@@ -6971,12 +7090,16 @@ function playTrackByTitle(title){
   if(!url || typeof widget==='undefined' || !widget){ return; }
 
   trackLoading=true;
-  setVisualPlay(true);            // tonearm swings + bars animate immediately
+  pendingPlay=true;               // we ALWAYS intend to play — never just "select"
+  setVisualPlay(true);
   if(typeof armLoadWatchdog==='function') armLoadWatchdog();
-  unlockAudio();                  // claim the user gesture NOW, before the async load
 
-  try{ widget.pause(); }catch(e){}   // stop the current song first
+  // Keep the gesture alive: touch the widget synchronously on EVERY click,
+  // not only the first one. (The old unlock ran once, so later clicks lost it.)
+  try{ widget.play(); }catch(e){}
 
+  // don't pause first — load() replaces the track and pausing can drop the
+  // playback permission chain in some browsers.
   widget.load(url,{
     auto_play:true,
     show_comments:false,
@@ -6984,10 +7107,19 @@ function playTrackByTitle(title){
     callback:function(){
       trackLoading=false;
       scReady=true;
-      pendingPlay=false;
       try{ bindWidgetEvents(); }catch(e){}
       try{ widget.getDuration(function(d){ scDuration=d; }); }catch(e){}
-      try{ widget.play(); }catch(e){}   // guarantee it starts on one click
+      try{ widget.play(); }catch(e){}
+      // belt and braces: some browsers need one more nudge a beat later
+      setTimeout(function(){
+        try{
+          widget.isPaused(function(paused){
+            if(paused && pendingPlay){ widget.play(); }
+            pendingPlay=false;
+            setVisualPlay(!paused || pendingPlay);
+          });
+        }catch(e){ pendingPlay=false; }
+      }, 220);
       setVisualPlay(true);
       clearTimeout(_loadWatch);
     }
@@ -7733,33 +7865,7 @@ function enterLounge(){
 }
 window.enterLounge = enterLounge;
 
-var _pokes=0;
-function pokeLbot(){
-  try{
-    _pokes++;
-    var svg=document.getElementById('lbot-svg');
-    var mouth=document.getElementById('lbot-mouth');
-    var bulb=document.getElementById('lbot-bulb');
-    var pl=document.getElementById('pup-l'), pr=document.getElementById('pup-r');
-    var al=document.getElementById('lbot-arm-l'), ar=document.getElementById('lbot-arm-r');
-    var hint=document.getElementById('lbot-hint');
-    if(svg){ svg.style.transform='translateX('+(_pokes%2?-6:6)+'px) rotate('+(_pokes%2?-4:4)+'deg)';
-      setTimeout(function(){ svg.style.transform=''; },140); }
-    if(bulb){ bulb.setAttribute('fill', ['#f0c44a','#e8543a','#7ec46f','#4aa3e0','#ef6ea8'][_pokes%5]); }
-    if(al&&ar){ al.setAttribute('y2', 118-(_pokes%2?14:0)); ar.setAttribute('y2', 118-(_pokes%2?0:14)); }
-    if(pl&&pr){ var dx=(_pokes%3-1)*2; pl.setAttribute('cx',62+dx); pr.setAttribute('cx',98+dx); }
-    if(mouth){
-      if(_pokes<3) mouth.setAttribute('d','M64 78 Q80 88 96 78');
-      else if(_pokes<6) mouth.setAttribute('d','M64 82 L96 82');
-      else mouth.setAttribute('d','M64 86 Q80 74 96 86');
-    }
-    if(hint){
-      var msgs=['poke him →','hey!','again?','ok ok…','that tickles','alright, enough 😵'];
-      hint.textContent = msgs[Math.min(_pokes,msgs.length-1)];
-    }
-  }catch(e){}
-}
-window.pokeLbot = pokeLbot;
+
 </script>
 
 
