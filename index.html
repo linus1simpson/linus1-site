@@ -6948,7 +6948,8 @@ function bindWidgetEvents(){
   });
 
   widget.bind(SC.Widget.Events.PLAY,()=>{
-    if(_priming) return;                 // ignore the silent priming play
+    if(_priming || P.src!=='stream') return;
+    P.on=true; syncLegacy(); deck(true);
     playing=true;
     trackLoading=false;
     setVisualPlay(true);
@@ -6965,11 +6966,8 @@ function bindWidgetEvents(){
   });
 
   widget.bind(SC.Widget.Events.PAUSE,()=>{
-    if(_priming) return;                 // silent priming pause
-    if(trackLoading) return;             // load() pauses mid-swap — not a real stop
-    if(activeSource!=='stream') return;  // a local track owns the deck right now
-    playing=false;
-    setVisualPlay(false);
+    if(_priming || P.loading || P.src!=='stream') return;
+    P.on=false; syncLegacy(); deck(false);
     clearInterval(progressTimer);
   });
 
@@ -7161,123 +7159,137 @@ function heroPick(el,title,sub){
    Local files (The 5) use a native <audio> element, which is fast
    and gives us real control. Everything else uses the SC widget.
    ══════════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════
+   PLAYER — one state machine, one behaviour for every song.
+
+   State:  src      'local' | 'stream' | null   which engine owns audio
+           title    what is loaded
+           on       is it actually playing
+   Rules:  every play() stops everything else first (atomic switch)
+           every song behaves identically, local or streamed
+           one click plays · one click pauses · never a second step
+   ══════════════════════════════════════════════════════════════ */
 var localTracks = { 'The 5': 'the5.mp3' };
-var _localAudio = null;
-var activeSource = null;    // 'local' | 'stream' — who owns playback right now
-var activeTitle  = null;
+var P = { src:null, title:null, on:false, loading:false };
+var _audio = null;
+var _priming = false;
 
-function getLocalAudio(){
-  if(_localAudio) return _localAudio;
-  _localAudio = new Audio();
-  _localAudio.preload = 'auto';
-  _localAudio.addEventListener('playing', function(){ playing=true;  setVisualPlay(true);  });
-  _localAudio.addEventListener('play',    function(){ playing=true;  setVisualPlay(true);  });
-  _localAudio.addEventListener('pause',   function(){
-    if(activeSource!=='local') return;      // ignore when the deck moved on
-    if(trackLoading) return;                // mid-swap, not a real stop
-    playing=false; setVisualPlay(false);
-  });
-  _localAudio.addEventListener('ended', function(){
-    playing=false;
-    if(typeof nextTrack==='function') nextTrack();
-  });
-  _localAudio.addEventListener('error', function(){
-    playing=false; trackLoading=false;
-    if(typeof nextTrack==='function') nextTrack();
-  });
-  return _localAudio;
+/* keep the old globals in sync so existing code keeps working */
+function syncLegacy(){
+  activeSource = P.src; activeTitle = P.title; playing = P.on; trackLoading = P.loading;
 }
 
-function stopEverything(){
-  try{ if(_localAudio){ _localAudio.pause(); } }catch(e){}
+function audioEl(){
+  if(_audio) return _audio;
+  _audio = new Audio();
+  _audio.preload = 'auto';
+  _audio.addEventListener('playing', function(){ if(P.src==='local'){ P.on=true; syncLegacy(); deck(true); } });
+  _audio.addEventListener('pause',   function(){ if(P.src==='local' && !P.loading){ P.on=false; syncLegacy(); deck(false); } });
+  _audio.addEventListener('ended',   function(){ if(P.src==='local'){ P.on=false; syncLegacy(); nextTrack(); } });
+  _audio.addEventListener('error',   function(){ if(P.src==='local'){ P.loading=false; syncLegacy(); nextTrack(); } });
+  return _audio;
+}
+
+function deck(on){ try{ setVisualPlay(on); }catch(e){} }
+
+/* stop BOTH engines — always called before starting anything */
+function stopAll(){
+  P.loading = true;                       // suppress pause handlers during the swap
+  try{ if(_audio){ _audio.pause(); _audio.currentTime = 0; } }catch(e){}
   try{ if(widget) widget.pause(); }catch(e){}
+  P.on = false;
+  P.loading = false;
+  syncLegacy();
 }
 
-
-/* ══ ONE-TIME AUDIO PRIMER ══
-   Spends the first tap unlocking audio WITHOUT touching the player's
-   visual state or the real audio element. Uses a throwaway silent
-   element so no PLAY/PAUSE events reach the deck. */
-var _primed=false;
+/* one-time unlock so browsers allow programmatic playback afterwards */
+var _primed = false;
 function primeAudio(){
-  if(_primed) return;
-  _primed=true;
+  if(_primed) return; _primed = true;
   try{
-    var s=document.createElement('audio');
-    s.src='data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQxAADB8AhSmxhIIEVCSiJrDCQBTcu3UrAIwUdkRgQbFAZC1CQEwTJ9mjRvBA4UOLD8nKVOWfh+UlK3z/177OXrfOdKl7pyn3Xf//WreyTRUoAWgBgkOAd9khjBHLEK3BMSpAKcp0Ku5vAA';
-    s.volume=0;
-    var p=s.play();
-    if(p&&p.then) p.then(function(){ s.pause(); }).catch(function(){});
+    var s = document.createElement('audio');
+    s.src = 'data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQxAADB8AhSmxhIIEVCSiJrDCQBTcu3UrAIwUdkRgQbFAZC1CQEwTJ9mjRvBA4UOLD8nKVOWfh+UlK3z/177OXrfOdKl7pyn3Xf//WreyTRUoAWgBgkOAd9khjBHLEK3BMSpAKcp0Ku5vAA';
+    s.volume = 0; var p = s.play();
+    if(p && p.then) p.then(function(){ s.pause(); }).catch(function(){});
   }catch(e){}
-  // prime the SoundCloud widget without letting it flip the deck's UI
   try{
-    if(typeof widget!=='undefined' && widget){
-      _priming=true;
-      widget.setVolume(0);
-      widget.play();
+    if(typeof widget !== 'undefined' && widget){
+      _priming = true;
+      widget.setVolume(0); widget.play();
       setTimeout(function(){
         try{ widget.pause(); widget.setVolume(100); }catch(e){}
-        _priming=false;
-        setVisualPlay(false);          // make sure the deck reads "paused"
+        _priming = false; deck(false);
       }, 120);
     }
-  }catch(e){ _priming=false; }
+  }catch(e){ _priming = false; }
 }
-var _priming=false;
 ['pointerdown','touchstart','keydown'].forEach(function(ev){
   document.addEventListener(ev, primeAudio, {capture:true, passive:true});
 });
 
+/* ── PLAY: identical path for every song ── */
 function playTrackByTitle(title){
-  primeAudio();                                   // claim this click's gesture
-  activeSource = localTracks[title] ? 'local' : 'stream';
-  activeTitle  = title;
-  trackLoading = true;
-  setVisualPlay(true);                            // deck starts spinning now
-  if(typeof armLoadWatchdog==='function') armLoadWatchdog();
+  primeAudio();
+  stopAll();                                   // atomic: nothing else is playing
 
-  if(activeSource === 'local'){
-    try{ if(widget) widget.pause(); }catch(e){}
-    var a = getLocalAudio();
+  P.title   = title;
+  P.src     = localTracks[title] ? 'local' : 'stream';
+  P.loading = true;
+  syncLegacy();
+  deck(true);                                  // deck responds immediately
+  if(typeof armLoadWatchdog === 'function') armLoadWatchdog();
+
+  if(P.src === 'local'){
+    var a = audioEl();
     if(!a.src || a.src.indexOf(localTracks[title]) === -1) a.src = localTracks[title];
     a.currentTime = 0;
     var lp = a.play();
-    if(lp && lp.then){
-      lp.then(function(){ playing=true; setVisualPlay(true); })
-        .catch(function(){ setVisualPlay(false); });
-    } else { playing=true; setVisualPlay(true); }
-    trackLoading = false; clearTimeout(_loadWatch);
-    setVisualPlay(true);
+    P.loading = false; syncLegacy(); clearTimeout(_loadWatch);
+    if(lp && lp.catch) lp.catch(function(){ P.on=false; syncLegacy(); deck(false); });
     return;
   }
 
   var url = (typeof scTracks !== 'undefined') ? scTracks[title] : null;
-  if(!url){                                   // genuinely no track for this title
-    trackLoading = false; setVisualPlay(false); return;
-  }
+  if(!url){ P.loading=false; P.src=null; syncLegacy(); deck(false); return; }
   if(typeof widget === 'undefined' || !widget){
-    // widget hasn't finished booting — keep the deck spinning and retry shortly
-    pendingPlay = true;
-    setTimeout(function(){ playTrackByTitle(title); }, 300);
+    setTimeout(function(){ playTrackByTitle(title); }, 300);   // widget still booting
     return;
   }
-  try{ if(_localAudio){ _localAudio.pause(); _localAudio.currentTime = 0; } }catch(e){}
 
-  try{ widget.play(); }catch(e){}                 // keep the gesture chain alive
-
+  try{ widget.play(); }catch(e){}               // hold the gesture
   widget.load(url, {
-    auto_play: true, show_comments: false, visual: false,
-    callback: function(){
-      trackLoading = false; scReady = true;
+    auto_play:true, show_comments:false, visual:false,
+    callback:function(){
+      P.loading = false; scReady = true; syncLegacy();
       try{ bindWidgetEvents(); }catch(e){}
       try{ widget.getDuration(function(d){ scDuration = d; }); }catch(e){}
       try{ widget.play(); }catch(e){}
-      setTimeout(function(){                      // one nudge if it didn't take
-        try{ widget.isPaused(function(paused){ if(paused) widget.play(); }); }catch(e){}
+      setTimeout(function(){
+        try{ widget.isPaused(function(paused){ if(paused && P.src==='stream') widget.play(); }); }catch(e){}
       }, 250);
-      setVisualPlay(true); clearTimeout(_loadWatch);
+      deck(true); clearTimeout(_loadWatch);
     }
   });
+}
+
+/* ── PLAY / PAUSE: acts on whichever engine owns audio ── */
+function togglePlay(){
+  primeAudio();
+  if(!P.src){                                   // nothing chosen yet — start the selected row
+    var row = document.querySelector('.htrk.active') || document.querySelector('.htrk');
+    if(row){ row.click(); }
+    return;
+  }
+  if(P.src === 'local'){
+    var a = audioEl();
+    if(a.paused){ var p=a.play(); if(p&&p.catch) p.catch(function(){}); deck(true); }
+    else       { a.pause(); deck(false); }
+    return;
+  }
+  if(typeof widget === 'undefined' || !widget) return;
+  if(P.on){ try{ widget.pause(); }catch(e){} P.on=false; deck(false); }
+  else    { try{ widget.play();  }catch(e){} P.on=true;  deck(true);  }
+  syncLegacy();
 }
 
 function pickTrack(el,title,dur){
