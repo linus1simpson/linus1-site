@@ -3400,6 +3400,36 @@ section [style*="margin:2.5rem 0"]{
 #guestbook .h2, #guestbook > .reveal > .body{ text-align:center !important; }
 #guestbook .gb-entry{ text-align:left !important; }
 
+
+/* ══ THE BAR — was a 2-column grid from when a portrait sat beside
+   the text. The photo is gone, so make it a normal centred block. ══ */
+#about{
+  display:block !important;
+  grid-template-columns:none !important;
+  gap:0 !important;
+  text-align:center !important;
+}
+#about > .reveal{
+  max-width:620px !important;
+  margin-left:auto !important; margin-right:auto !important;
+  text-align:center !important;
+}
+#about .h2,
+#about .body{
+  text-align:center !important;
+  margin-left:auto !important; margin-right:auto !important;
+}
+#about .body{ max-width:560px !important; }
+/* the little skill chips centre as a row */
+#about .chips{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  justify-content:center !important;
+  gap:.5rem !important;
+  margin:1.4rem auto 0 !important;
+  max-width:560px !important;
+}
+
 </style>
 <body>
 
