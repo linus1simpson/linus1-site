@@ -3349,6 +3349,57 @@ nav .nav-face img{
   .hero-player{ margin-top:.4rem !important; gap:1.4rem !important; }
 }
 
+
+/* ══════════════════════════════════════════════════════════════
+   ONE ALIGNMENT RULE — every section centred the same way.
+   Headings and intro copy centre; card grids and reading copy
+   stay left-aligned inside their centred container.
+   ══════════════════════════════════════════════════════════════ */
+section{ text-align:center !important; }
+
+/* centred headings + intro paragraphs everywhere */
+section > .reveal > .h2,
+section > .reveal > h2,
+section .sec-lbl,
+section > .reveal > .body{
+  text-align:center !important;
+  margin-left:auto !important; margin-right:auto !important;
+}
+section > .reveal > .body{ max-width:480px !important; }
+
+/* any block that was pinned left now centres */
+section [style*="margin:2rem 0"],
+section [style*="margin:1.5rem 0"],
+section [style*="margin:2.5rem 0"]{
+  margin-left:auto !important; margin-right:auto !important;
+}
+
+/* content that should still READ left, inside a centred box */
+.dc, .pu-card, .gb-entry,
+#dispatch-content,
+#gb-entries,
+.htrk-scroll, .hero-tracks{
+  text-align:left !important;
+}
+#gb-entries{ margin-left:auto !important; margin-right:auto !important; }
+
+/* The Bar: centre the block, keep the prose readable */
+#about > .reveal{
+  max-width:620px !important; margin-left:auto !important; margin-right:auto !important;
+}
+#about .h2{ text-align:center !important; }
+#about .body{
+  text-align:center !important; max-width:560px !important;
+  margin-left:auto !important; margin-right:auto !important;
+}
+
+/* Guestbook: centre the form card and the entries grid */
+#guestbook > .reveal{
+  margin-left:auto !important; margin-right:auto !important;
+}
+#guestbook .h2, #guestbook > .reveal > .body{ text-align:center !important; }
+#guestbook .gb-entry{ text-align:left !important; }
+
 </style>
 <body>
 
@@ -3457,37 +3508,38 @@ nav .nav-face img{
 
     <!-- Track picker -->
     <div class="hero-tracks" style="width:320px;max-width:100%;">
-      <p style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;letter-spacing:.25em;text-transform:uppercase;color:var(--forest);margin-bottom:.9rem;">◈ The Catalog &nbsp;·&nbsp; 29 Tracks</p>
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;letter-spacing:.25em;text-transform:uppercase;color:var(--forest);margin-bottom:.9rem;">◈ The Catalog &nbsp;·&nbsp; 30 Tracks</p>
       <div class="htrk-scroll">
         <div class="htrk active" onclick="heroPick(this,'The 5','Smoove Bapi · Out Now · 2026')"><span class="htrk-n">01</span><span class="htrk-t">The 5</span><span class="htrk-d">2:40</span></div>
-        <div class="htrk" onclick="heroPick(this,'Woah','Smoove Bapi · prod. ALEC BOi · 2026')"><span class="htrk-n">02</span><span class="htrk-t">Woah</span><span class="htrk-d">2:38</span></div>
-        <div class="htrk" onclick="heroPick(this,'ATP','Smoove Bapi · 2026')"><span class="htrk-n">03</span><span class="htrk-t">ATP</span><span class="htrk-d">3:10</span></div>
-        <div class="htrk" onclick="heroPick(this,'Right Now','Smoove Bapi · 2025')"><span class="htrk-n">04</span><span class="htrk-t">Right Now</span><span class="htrk-d">3:22</span></div>
-        <div class="htrk" onclick="heroPick(this,'Gemini','Smoove Bapi · prod. outtafunds · 2025')"><span class="htrk-n">05</span><span class="htrk-t">Gemini</span><span class="htrk-d">3:05</span></div>
-        <div class="htrk" onclick="heroPick(this,'Find Luv','Smoove Bapi · prod. renai · 2025')"><span class="htrk-n">06</span><span class="htrk-t">Find Luv</span><span class="htrk-d">2:58</span></div>
-        <div class="htrk" onclick="heroPick(this,'Walk This Way','Smoove Bapi · 2024')"><span class="htrk-n">07</span><span class="htrk-t">Walk This Way</span><span class="htrk-d">3:14</span></div>
-        <div class="htrk" onclick="heroPick(this,'Let\'s jus Dance','Smoove Bapi · 2024')"><span class="htrk-n">08</span><span class="htrk-t">Let's jus Dance</span><span class="htrk-d">3:28</span></div>
-        <div class="htrk" onclick="heroPick(this,'Serenity','Smoove Bapi · SoundCloud')"><span class="htrk-n">09</span><span class="htrk-t">Serenity</span><span class="htrk-d">3:15</span></div>
-        <div class="htrk" onclick="heroPick(this,'Notice','Smoove Bapi · SoundCloud')"><span class="htrk-n">10</span><span class="htrk-t">Notice</span><span class="htrk-d">3:00</span></div>
-        <div class="htrk" onclick="heroPick(this,'Udontknow','Smoove Bapi · SoundCloud')"><span class="htrk-n">11</span><span class="htrk-t">Udontknow</span><span class="htrk-d">3:05</span></div>
-        <div class="htrk" onclick="heroPick(this,'Take a Min','Smoove Bapi · SoundCloud')"><span class="htrk-n">12</span><span class="htrk-t">Take a Min</span><span class="htrk-d">3:20</span></div>
-        <div class="htrk" onclick="heroPick(this,'Slowdowjn','Smoove Bapi · SoundCloud')"><span class="htrk-n">13</span><span class="htrk-t">Slowdowjn</span><span class="htrk-d">3:15</span></div>
-        <div class="htrk" onclick="heroPick(this,'Black Boots','Smoove Bapi · SoundCloud')"><span class="htrk-n">14</span><span class="htrk-t">Black Boots</span><span class="htrk-d">2:55</span></div>
-        <div class="htrk" onclick="heroPick(this,'My Way','Smoove Bapi · SoundCloud')"><span class="htrk-n">15</span><span class="htrk-t">My Way</span><span class="htrk-d">3:18</span></div>
-        <div class="htrk" onclick="heroPick(this,'Sometimez','Smoove Bapi · SoundCloud')"><span class="htrk-n">16</span><span class="htrk-t">Sometimez</span><span class="htrk-d">3:08</span></div>
-        <div class="htrk" onclick="heroPick(this,'Perfect Play','Smoove Bapi · SoundCloud')"><span class="htrk-n">17</span><span class="htrk-t">Perfect Play</span><span class="htrk-d">3:25</span></div>
-        <div class="htrk" onclick="heroPick(this,'Mornin','Smoove Bapi · SoundCloud')"><span class="htrk-n">18</span><span class="htrk-t">Mornin</span><span class="htrk-d">3:10</span></div>
-        <div class="htrk" onclick="heroPick(this,'Memory Loss','Smoove Bapi · SoundCloud')"><span class="htrk-n">19</span><span class="htrk-t">Memory Loss</span><span class="htrk-d">3:05</span></div>
-        <div class="htrk" onclick="heroPick(this,'That Night','Smoove Bapi · SoundCloud')"><span class="htrk-n">20</span><span class="htrk-t">That Night</span><span class="htrk-d">3:15</span></div>
-        <div class="htrk" onclick="heroPick(this,'Left Right','Smoove Bapi · SoundCloud')"><span class="htrk-n">21</span><span class="htrk-t">Left Right</span><span class="htrk-d">2:58</span></div>
-        <div class="htrk" onclick="heroPick(this,'L8ly','Smoove Bapi · SoundCloud')"><span class="htrk-n">22</span><span class="htrk-t">L8ly</span><span class="htrk-d">3:20</span></div>
-        <div class="htrk" onclick="heroPick(this,'My Love','Smoove Bapi · SoundCloud')"><span class="htrk-n">23</span><span class="htrk-t">My Love</span><span class="htrk-d">3:00</span></div>
-        <div class="htrk" onclick="heroPick(this,'Infinite Possibilities','Smoove Bapi · prod. GiobtW')"><span class="htrk-n">24</span><span class="htrk-t">Infinite Possibilities</span><span class="htrk-d">3:30</span></div>
-        <div class="htrk" onclick="heroPick(this,'Crying Out','Smoove Bapi · SoundCloud')"><span class="htrk-n">25</span><span class="htrk-t">Crying Out</span><span class="htrk-d">3:10</span></div>
-        <div class="htrk" onclick="heroPick(this,'What U Need','Smoove Bapi · SoundCloud')"><span class="htrk-n">26</span><span class="htrk-t">What U Need</span><span class="htrk-d">2:55</span></div>
-        <div class="htrk" onclick="heroPick(this,'FADED','Smoove Bapi · prod. SlayingIbis')"><span class="htrk-n">27</span><span class="htrk-t">FADED</span><span class="htrk-d">3:15</span></div>
-        <div class="htrk" onclick="heroPick(this,'Footwork.','Smoove Bapi · SoundCloud')"><span class="htrk-n">28</span><span class="htrk-t">Footwork.</span><span class="htrk-d">2:50</span></div>
-        <div class="htrk" onclick="heroPick(this,'To Myself Freestyle','Smoove Bapi · SoundCloud')"><span class="htrk-n">29</span><span class="htrk-t">To Myself Freestyle</span><span class="htrk-d">3:00</span></div>
+        <div class="htrk" onclick="heroPick(this,'Albaicín','Smoove Bapi · SoundCloud')"><span class="htrk-n">02</span><span class="htrk-t">Albaicín</span><span class="htrk-d">3:05</span></div>
+        <div class="htrk" onclick="heroPick(this,'Woah','Smoove Bapi · prod. ALEC BOi · 2026')"><span class="htrk-n">03</span><span class="htrk-t">Woah</span><span class="htrk-d">2:38</span></div>
+        <div class="htrk" onclick="heroPick(this,'ATP','Smoove Bapi · 2026')"><span class="htrk-n">04</span><span class="htrk-t">ATP</span><span class="htrk-d">3:10</span></div>
+        <div class="htrk" onclick="heroPick(this,'Right Now','Smoove Bapi · 2025')"><span class="htrk-n">05</span><span class="htrk-t">Right Now</span><span class="htrk-d">3:22</span></div>
+        <div class="htrk" onclick="heroPick(this,'Gemini','Smoove Bapi · prod. outtafunds · 2025')"><span class="htrk-n">06</span><span class="htrk-t">Gemini</span><span class="htrk-d">3:05</span></div>
+        <div class="htrk" onclick="heroPick(this,'Find Luv','Smoove Bapi · prod. renai · 2025')"><span class="htrk-n">07</span><span class="htrk-t">Find Luv</span><span class="htrk-d">2:58</span></div>
+        <div class="htrk" onclick="heroPick(this,'Walk This Way','Smoove Bapi · 2024')"><span class="htrk-n">08</span><span class="htrk-t">Walk This Way</span><span class="htrk-d">3:14</span></div>
+        <div class="htrk" onclick="heroPick(this,'Let\'s jus Dance','Smoove Bapi · 2024')"><span class="htrk-n">09</span><span class="htrk-t">Let's jus Dance</span><span class="htrk-d">3:28</span></div>
+        <div class="htrk" onclick="heroPick(this,'Serenity','Smoove Bapi · SoundCloud')"><span class="htrk-n">10</span><span class="htrk-t">Serenity</span><span class="htrk-d">3:15</span></div>
+        <div class="htrk" onclick="heroPick(this,'Notice','Smoove Bapi · SoundCloud')"><span class="htrk-n">11</span><span class="htrk-t">Notice</span><span class="htrk-d">3:00</span></div>
+        <div class="htrk" onclick="heroPick(this,'Udontknow','Smoove Bapi · SoundCloud')"><span class="htrk-n">12</span><span class="htrk-t">Udontknow</span><span class="htrk-d">3:05</span></div>
+        <div class="htrk" onclick="heroPick(this,'Take a Min','Smoove Bapi · SoundCloud')"><span class="htrk-n">13</span><span class="htrk-t">Take a Min</span><span class="htrk-d">3:20</span></div>
+        <div class="htrk" onclick="heroPick(this,'Slowdowjn','Smoove Bapi · SoundCloud')"><span class="htrk-n">14</span><span class="htrk-t">Slowdowjn</span><span class="htrk-d">3:15</span></div>
+        <div class="htrk" onclick="heroPick(this,'Black Boots','Smoove Bapi · SoundCloud')"><span class="htrk-n">15</span><span class="htrk-t">Black Boots</span><span class="htrk-d">2:55</span></div>
+        <div class="htrk" onclick="heroPick(this,'My Way','Smoove Bapi · SoundCloud')"><span class="htrk-n">16</span><span class="htrk-t">My Way</span><span class="htrk-d">3:18</span></div>
+        <div class="htrk" onclick="heroPick(this,'Sometimez','Smoove Bapi · SoundCloud')"><span class="htrk-n">17</span><span class="htrk-t">Sometimez</span><span class="htrk-d">3:08</span></div>
+        <div class="htrk" onclick="heroPick(this,'Perfect Play','Smoove Bapi · SoundCloud')"><span class="htrk-n">18</span><span class="htrk-t">Perfect Play</span><span class="htrk-d">3:25</span></div>
+        <div class="htrk" onclick="heroPick(this,'Mornin','Smoove Bapi · SoundCloud')"><span class="htrk-n">19</span><span class="htrk-t">Mornin</span><span class="htrk-d">3:10</span></div>
+        <div class="htrk" onclick="heroPick(this,'Memory Loss','Smoove Bapi · SoundCloud')"><span class="htrk-n">20</span><span class="htrk-t">Memory Loss</span><span class="htrk-d">3:05</span></div>
+        <div class="htrk" onclick="heroPick(this,'That Night','Smoove Bapi · SoundCloud')"><span class="htrk-n">21</span><span class="htrk-t">That Night</span><span class="htrk-d">3:15</span></div>
+        <div class="htrk" onclick="heroPick(this,'Left Right','Smoove Bapi · SoundCloud')"><span class="htrk-n">22</span><span class="htrk-t">Left Right</span><span class="htrk-d">2:58</span></div>
+        <div class="htrk" onclick="heroPick(this,'L8ly','Smoove Bapi · SoundCloud')"><span class="htrk-n">23</span><span class="htrk-t">L8ly</span><span class="htrk-d">3:20</span></div>
+        <div class="htrk" onclick="heroPick(this,'My Love','Smoove Bapi · SoundCloud')"><span class="htrk-n">24</span><span class="htrk-t">My Love</span><span class="htrk-d">3:00</span></div>
+        <div class="htrk" onclick="heroPick(this,'Infinite Possibilities','Smoove Bapi · prod. GiobtW')"><span class="htrk-n">25</span><span class="htrk-t">Infinite Possibilities</span><span class="htrk-d">3:30</span></div>
+        <div class="htrk" onclick="heroPick(this,'Crying Out','Smoove Bapi · SoundCloud')"><span class="htrk-n">26</span><span class="htrk-t">Crying Out</span><span class="htrk-d">3:10</span></div>
+        <div class="htrk" onclick="heroPick(this,'What U Need','Smoove Bapi · SoundCloud')"><span class="htrk-n">27</span><span class="htrk-t">What U Need</span><span class="htrk-d">2:55</span></div>
+        <div class="htrk" onclick="heroPick(this,'FADED','Smoove Bapi · prod. SlayingIbis')"><span class="htrk-n">28</span><span class="htrk-t">FADED</span><span class="htrk-d">3:15</span></div>
+        <div class="htrk" onclick="heroPick(this,'Footwork.','Smoove Bapi · SoundCloud')"><span class="htrk-n">29</span><span class="htrk-t">Footwork.</span><span class="htrk-d">2:50</span></div>
+        <div class="htrk" onclick="heroPick(this,'To Myself Freestyle','Smoove Bapi · SoundCloud')"><span class="htrk-n">30</span><span class="htrk-t">To Myself Freestyle</span><span class="htrk-d">3:00</span></div>
       </div>
 
       <!-- Listen on -->
@@ -6814,6 +6866,7 @@ allR.forEach(el=>obs.observe(el));
 
 /* ══ SOUNDCLOUD WIDGET API ══ */
 const scTracks = {
+  'Albaicín':       'https://soundcloud.com/smoovebapi/albaicin',
   'The 5':          'https://on.soundcloud.com/C3pGoEyQgs9CkUuGU2',
   'Woah':           'https://soundcloud.com/smoovebapi/woah-prod-alec-boi',
   'ATP':            'https://soundcloud.com/smoovebapi/atp',
