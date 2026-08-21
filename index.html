@@ -3540,7 +3540,7 @@ section [style*="margin:2.5rem 0"]{
     <div class="hero-tracks" style="width:320px;max-width:100%;">
       <p style="font-family:'IBM Plex Mono',monospace;font-size:.42rem;letter-spacing:.25em;text-transform:uppercase;color:var(--forest);margin-bottom:.9rem;">◈ The Catalog &nbsp;·&nbsp; 30 Tracks</p>
       <div class="htrk-scroll">
-        <div class="htrk active" onclick="heroPick(this,'The 5','Smoove Bapi · Out Now · 2026')"><span class="htrk-n">01</span><span class="htrk-t">The 5</span><span class="htrk-d">2:40</span></div>
+        <div class="htrk" onclick="heroPick(this,'The 5','Smoove Bapi · Out Now · 2026')"><span class="htrk-n">01</span><span class="htrk-t">The 5</span><span class="htrk-d">2:40</span></div>
         <div class="htrk" onclick="heroPick(this,'Albaicín','Smoove Bapi · SoundCloud')"><span class="htrk-n">02</span><span class="htrk-t">Albaicín</span><span class="htrk-d">3:05</span></div>
         <div class="htrk" onclick="heroPick(this,'Woah','Smoove Bapi · prod. ALEC BOi · 2026')"><span class="htrk-n">03</span><span class="htrk-t">Woah</span><span class="htrk-d">2:38</span></div>
         <div class="htrk" onclick="heroPick(this,'ATP','Smoove Bapi · 2026')"><span class="htrk-n">04</span><span class="htrk-t">ATP</span><span class="htrk-d">3:10</span></div>
@@ -3548,7 +3548,7 @@ section [style*="margin:2.5rem 0"]{
         <div class="htrk" onclick="heroPick(this,'Gemini','Smoove Bapi · prod. outtafunds · 2025')"><span class="htrk-n">06</span><span class="htrk-t">Gemini</span><span class="htrk-d">3:05</span></div>
         <div class="htrk" onclick="heroPick(this,'Find Luv','Smoove Bapi · prod. renai · 2025')"><span class="htrk-n">07</span><span class="htrk-t">Find Luv</span><span class="htrk-d">2:58</span></div>
         <div class="htrk" onclick="heroPick(this,'Walk This Way','Smoove Bapi · 2024')"><span class="htrk-n">08</span><span class="htrk-t">Walk This Way</span><span class="htrk-d">3:14</span></div>
-        <div class="htrk" onclick="heroPick(this,'Let\'s jus Dance','Smoove Bapi · 2024')"><span class="htrk-n">09</span><span class="htrk-t">Let's jus Dance</span><span class="htrk-d">3:28</span></div>
+        <div class="htrk active" onclick="heroPick(this,'Let\'s jus Dance','Smoove Bapi · 2024')"><span class="htrk-n">09</span><span class="htrk-t">Let's jus Dance</span><span class="htrk-d">3:28</span></div>
         <div class="htrk" onclick="heroPick(this,'Serenity','Smoove Bapi · SoundCloud')"><span class="htrk-n">10</span><span class="htrk-t">Serenity</span><span class="htrk-d">3:15</span></div>
         <div class="htrk" onclick="heroPick(this,'Notice','Smoove Bapi · SoundCloud')"><span class="htrk-n">11</span><span class="htrk-t">Notice</span><span class="htrk-d">3:00</span></div>
         <div class="htrk" onclick="heroPick(this,'Udontknow','Smoove Bapi · SoundCloud')"><span class="htrk-n">12</span><span class="htrk-t">Udontknow</span><span class="htrk-d">3:05</span></div>
@@ -6965,6 +6965,9 @@ function bindWidgetEvents(){
   });
 
   widget.bind(SC.Widget.Events.PAUSE,()=>{
+    if(_priming) return;                 // silent priming pause
+    if(trackLoading) return;             // load() pauses mid-swap — not a real stop
+    if(activeSource!=='stream') return;  // a local track owns the deck right now
     playing=false;
     setVisualPlay(false);
     clearInterval(progressTimer);
@@ -7171,6 +7174,7 @@ function getLocalAudio(){
   _localAudio.addEventListener('play',    function(){ playing=true;  setVisualPlay(true);  });
   _localAudio.addEventListener('pause',   function(){
     if(activeSource!=='local') return;      // ignore when the deck moved on
+    if(trackLoading) return;                // mid-swap, not a real stop
     playing=false; setVisualPlay(false);
   });
   _localAudio.addEventListener('ended', function(){
@@ -7238,14 +7242,24 @@ function playTrackByTitle(title){
     if(!a.src || a.src.indexOf(localTracks[title]) === -1) a.src = localTracks[title];
     a.currentTime = 0;
     var lp = a.play();
-    if(lp && lp.catch) lp.catch(function(){ setVisualPlay(false); });
+    if(lp && lp.then){
+      lp.then(function(){ playing=true; setVisualPlay(true); })
+        .catch(function(){ setVisualPlay(false); });
+    } else { playing=true; setVisualPlay(true); }
     trackLoading = false; clearTimeout(_loadWatch);
+    setVisualPlay(true);
     return;
   }
 
   var url = (typeof scTracks !== 'undefined') ? scTracks[title] : null;
-  if(!url || typeof widget === 'undefined' || !widget){
+  if(!url){                                   // genuinely no track for this title
     trackLoading = false; setVisualPlay(false); return;
+  }
+  if(typeof widget === 'undefined' || !widget){
+    // widget hasn't finished booting — keep the deck spinning and retry shortly
+    pendingPlay = true;
+    setTimeout(function(){ playTrackByTitle(title); }, 300);
+    return;
   }
   try{ if(_localAudio){ _localAudio.pause(); _localAudio.currentTime = 0; } }catch(e){}
 
@@ -8045,6 +8059,30 @@ window.enterLounge = enterLounge;
 document.addEventListener('DOMContentLoaded', function(){
   try{ setVisualPlay(false); }catch(e){}
 });
+
+/* the deck loads Let's jus Dance — show it selected in the catalogue */
+function _markDefaultTrack(){
+  try{
+    var rows=document.querySelectorAll('.htrk');
+    var first=null;
+    rows.forEach(function(r){
+      var t=r.querySelector('.htrk-t');
+      if(t && t.textContent.trim()==="Let's jus Dance") first=r;
+    });
+    if(first && !document.querySelector('.htrk.active')){
+      rows.forEach(function(r){ r.classList.remove('active'); });
+      first.classList.add('active');
+      activeTitle="Let's jus Dance";
+      activeSource='stream';
+      var vt=document.getElementById('vsTitle');
+      if(vt) vt.textContent="Let's jus Dance";
+    }
+  }catch(e){}
+}
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded', _markDefaultTrack);
+}else{ _markDefaultTrack(); }
+setTimeout(_markDefaultTrack, 400);
 </script>
 </body>
 </html>
